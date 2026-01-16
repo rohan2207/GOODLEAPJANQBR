@@ -127,8 +127,8 @@ export default function Finale() {
                                                     <span className="text-[10px] text-white/40">{window.label}</span>
                                                 </div>
                                                 <div className="space-y-1">
-                                                    {[...Array(3)].map((_, i) => (
-                                                        <div key={i} className="h-1.5 bg-white/10 rounded" style={{ width: `${60 + Math.random() * 30}%` }} />
+                                                    {[85, 70, 92].map((width, i) => (
+                                                        <div key={i} className="h-1.5 bg-white/10 rounded" style={{ width: `${width}%` }} />
                                                     ))}
                                                 </div>
                                             </motion.div>
@@ -251,8 +251,8 @@ export default function Finale() {
                                                 </div>
                                                 <h5 className="text-white text-sm font-medium mb-1">{item.label}</h5>
                                                 <div className="space-y-1.5 flex-1">
-                                                    {[...Array(4)].map((_, i) => (
-                                                        <div key={i} className="h-1.5 bg-white/10 rounded" style={{ width: `${70 + Math.random() * 25}%` }} />
+                                                    {[88, 75, 92, 80].map((width, i) => (
+                                                        <div key={i} className="h-1.5 bg-white/10 rounded" style={{ width: `${width}%` }} />
                                                     ))}
                                                 </div>
                                                 <div className="flex items-center gap-1 mt-3 text-[10px] text-green-400">
