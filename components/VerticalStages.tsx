@@ -176,7 +176,7 @@ function StageSection({
     // Phase 2: Valuation panel appears (0.40 - 0.78)
     const valuationPanelOpacity = useTransform(scrollYProgress, [0.40, 0.48, 0.90, 0.97], [0, 1, 1, 0]);
     const valuationPanelScale = useTransform(scrollYProgress, [0.40, 0.48, 0.78, 0.88], [0.85, 1, 1, 0.58]);
-    const valuationPanelX = useTransform(scrollYProgress, [0.48, 0.78, 0.88], [80, 80, 560]);
+    const valuationPanelX = useTransform(scrollYProgress, [0.48, 0.78, 0.88], [60, 60, 420]);
     const valuationPanelBlur = useTransform(scrollYProgress, [0.40, 0.48], [10, 0]);
     const valuationPanelBlurFilter = useTransform(valuationPanelBlur, (v) => `blur(${v}px)`);
 
@@ -198,7 +198,7 @@ function StageSection({
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1, 1, 0.58]
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [80, 80, 560]); // Moved more right + offset
+    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [60, 60, 420]); // Adjusted to sync with viewport
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
     
     // Panel content scrolls LONGER as user scrolls page - reveals all content
@@ -218,7 +218,7 @@ function StageSection({
     const viewportContextScale = useTransform(scrollYProgress, [0.78, 0.88], [0.95, 1]);
     const viewportBlur = useTransform(scrollYProgress, [0.78, 0.86], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
-    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [80, 200]); // Moved more right to sync with panel
+    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [60, 150]); // Synced with panel positioning
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
     // Phase 1: Objection bubbles appear (0.12 - 0.32) - dramatic "dread moment" - EXTENDED
@@ -712,7 +712,7 @@ function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stage
                 </div>
 
                 {/* App content - Dashboard with EMPTY space for panel */}
-                <div className="flex bg-[#f5f5f7] h-[520px]">
+                <div className="flex bg-[#f5f5f7] h-[650px]">
                     {/* Sidebar */}
                     <div className="w-16 bg-[#1a1a2e] flex flex-col items-center py-4 gap-4">
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
@@ -1046,7 +1046,7 @@ function LinkAIAppViewport({ accentColor }: { accentColor: string }) {
                 </div>
 
                 {/* App content - Dashboard with Panel */}
-                <div className="flex bg-[#f5f5f7] h-[520px]">
+                <div className="flex bg-[#f5f5f7] h-[650px]">
                     {/* Sidebar */}
                     <div className="w-16 bg-[#1a1a2e] flex flex-col items-center py-4 gap-4">
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
