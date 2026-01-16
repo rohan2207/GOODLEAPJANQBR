@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function PricingStage() {
+export default function PricingStage({ revealed }: { revealed?: boolean }) {
     return (
         <div className="relative w-full h-full flex items-center justify-center p-8">
             {/* Coming soon overlay */}

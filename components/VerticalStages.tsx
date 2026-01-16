@@ -18,11 +18,12 @@ type StageConfig = {
     title: string;
     subtitle: string;
     description: string;
-    component: React.ComponentType<{ progress: number }>;
+    component: React.ComponentType<any>;
     accentColor: string;
     hasInterface: boolean;
-    buttonLabel: string | null;
-    interfacePlaceholder?: string;
+    buttonLabel?: string | null;
+    buttonSubtext?: string;
+    interfacePlaceholder?: string | null;
 };
 
 
@@ -334,7 +335,7 @@ function StageSection({
                                 
                                 {/* Stage visualization */}
                                 <div className="relative w-full h-full">
-                                    <StageComponent />
+                                    <StageComponent progress={0} />
                                 </div>
 
                                 {/* Label */}
