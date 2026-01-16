@@ -9,6 +9,7 @@ import Agent1Stage from './stages/Agent1Stage';
 import Agent2Stage from './stages/Agent2Stage';
 import Agent3Stage from './stages/Agent3Stage';
 import PricingStage from './stages/PricingStage';
+import SidebarShowcaseStage from './stages/SidebarShowcaseStage';
 
 // Stage configuration type
 type StageConfig = {
@@ -91,8 +92,8 @@ const STAGES = [
         label: "ALL IN ONE",
         title: "Specialized Agents",
         subtitle: "At Your Fingertips",
-        description: "Every tool you need, one click away. AI assistance built into your workflow.",
-        component: PricingStage, // Will show AIAgentsTeaser
+        description: "Every tool you need, always one click away. Not a chatbot, but a complete lending assistant built into your workflow.",
+        component: SidebarShowcaseStage,
         accentColor: "#8B5CF6",
         glowColor: "#8B5CF6", // Purple - matches journey line end
         hasInterface: false,
@@ -100,11 +101,11 @@ const STAGES = [
 ];
 
 // Individual Stage Component with its own scroll tracking
-function StageSection({ 
-    stage, 
-    index 
-}: { 
-    stage: StageConfig; 
+function StageSection({
+    stage,
+    index
+}: {
+    stage: StageConfig;
     index: number;
 }) {
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -116,17 +117,17 @@ function StageSection({
     // ===== FOR STAGES WITHOUT INTERFACE (normal flow) =====
     // Phase 1: Text intro
     const textOpacity = useTransform(
-        scrollYProgress, 
-        stage.hasInterface 
+        scrollYProgress,
+        stage.hasInterface
             ? [0, 0.08, 0.90, 0.97] // STAYS VISIBLE longer - floats to corner
             : [0, 0.12, 0.8, 0.9],
         [0, 1, 1, 0]
     );
     const textY = useTransform(scrollYProgress, [0, 0.1], [50, 0]);
-    
+
     // For interface stages: text floats down and MORE left, shrinks - adjusted for longer panel scroll
     const textFloatX = useTransform(
-        scrollYProgress, 
+        scrollYProgress,
         stage.id === "sales-coach"
             ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Move left EARLIER when menu appears, hold longer
             : stage.id === "valuation"
@@ -140,7 +141,7 @@ function StageSection({
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
     const textFloatScale = useTransform(
-        scrollYProgress, 
+        scrollYProgress,
         stage.id === "sales-coach"
             ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Shrink EARLIER, hold longer
             : stage.id === "valuation"
@@ -155,14 +156,14 @@ function StageSection({
 
     // Phase 2: Visualization - fades out as panel comes in
     const vizOpacity = useTransform(
-        scrollYProgress, 
+        scrollYProgress,
         stage.id === "sales-coach"
             ? [0.06, 0.10, 0.12, 0.18] // Sales Coach: Fade out VERY early before objection bubble
             : stage.id === "valuation"
                 ? [0.06, 0.10, 0.12, 0.18] // Valuation: Fade out early before source cards
-                : stage.hasInterface 
+                : stage.hasInterface
                     ? [0.06, 0.12, 0.22, 0.30] // Fade out before panel
-                    : [0.08, 0.15, 0.7, 0.85], 
+                    : [0.08, 0.15, 0.7, 0.85],
         [0, 1, 1, 0]
     );
     const vizScale = useTransform(scrollYProgress, [0.06, 0.15, 0.22, 0.28], [0.9, 1, 1, 0.95]);
@@ -172,7 +173,7 @@ function StageSection({
     // Phase 1: Source cards converge (0.15 - 0.40)
     const sourceCardsOpacity = useTransform(scrollYProgress, [0.15, 0.20, 0.38, 0.45], [0, 1, 1, 0]);
     const convergenceProgress = useTransform(scrollYProgress, [0.15, 0.40], [0, 1]);
-    
+
     // Phase 2: Valuation panel appears (0.40 - 0.78)
     const valuationPanelOpacity = useTransform(scrollYProgress, [0.40, 0.48, 0.90, 0.97], [0, 1, 1, 0]);
     const valuationPanelScale = useTransform(scrollYProgress, [0.40, 0.48, 0.78, 0.88], [0.85, 1, 1, 0.58]);
@@ -183,16 +184,16 @@ function StageSection({
     // ===== FOR STAGES WITH INTERFACE (3-phase transition) =====
     // For Rapport Builder: Panel appears at 0.25, fades out BEFORE viewport appears
     const focusedPanelOpacity = useTransform(
-        scrollYProgress, 
-        stage.id === "sales-coach" 
+        scrollYProgress,
+        stage.id === "sales-coach"
             ? [0.50, 0.58, 0.78, 0.85]  // Sales Coach: Fade out before viewport
             : [0.25, 0.32, 0.75, 0.82], // Rapport Builder: Fade out before viewport (0.78)
         [0, 1, 1, 0]
     );
-    
+
     // Panel morphs: starts centered/large, stays longer, then shrinks and moves right
     const panelScale = useTransform(
-        scrollYProgress, 
+        scrollYProgress,
         stage.id === "sales-coach"
             ? [0.50, 0.58, 0.78, 0.88]  // Sales Coach: Later start
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
@@ -200,16 +201,16 @@ function StageSection({
     );
     const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [60, 60, 420]); // Adjusted to sync with viewport
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
-    
+
     // Panel content scrolls LONGER as user scrolls page - reveals all content
     const panelContentScroll = useTransform(
-        scrollYProgress, 
+        scrollYProgress,
         stage.id === "sales-coach"
             ? [0.58, 0.78]  // Sales Coach: Shorter scroll range to avoid white space
             : [0.32, 0.78], // Rapport Builder: Scroll longer
         [0, -800] // Reduced scroll amount
     );
-    
+
     const focusedPanelBlur = useTransform(scrollYProgress, [0.25, 0.32], [10, 0]);
     const focusedPanelBlurFilter = useTransform(focusedPanelBlur, (v) => `blur(${v}px)`);
 
@@ -226,13 +227,13 @@ function StageSection({
     const objectionScale = useTransform(scrollYProgress, [0.12, 0.16, 0.28, 0.35], [0.8, 1, 1, 0.9]);
     const objectionRotateY = useTransform(scrollYProgress, [0.28, 0.36], [0, 90]);
     const objectionX = useTransform(scrollYProgress, [0.12, 0.22], [50, 200]); // Move MORE right
-    
+
     // Phase 2: Menu panel flips in (0.30 - 0.55) - Stays until response panel appears
     const menuPanelOpacity = useTransform(scrollYProgress, [0.30, 0.35, 0.50, 0.58], [0, 1, 1, 0]);
     const menuPanelRotateY = useTransform(scrollYProgress, [0.30, 0.38], [-90, 0]);
     const menuPanelRotateYOut = useTransform(scrollYProgress, [0.50, 0.58], [0, 90]);
     const menuPanelX = useTransform(scrollYProgress, [0.30, 0.38], [0, 150]); // Move menu right
-    
+
     // Phase 3: Response panel flips in (0.50+) - matches focusedPanelOpacity timing
     const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.50, 0.58], [-90, 0]);
 
@@ -240,15 +241,15 @@ function StageSection({
     const isAlternate = index % 2 === 1;
 
     return (
-        <div 
+        <div
             ref={sectionRef}
             className={`relative ${stage.hasInterface ? 'min-h-[700vh]' : 'min-h-[120vh]'}`}
         >
             {/* Sticky container for the stage content */}
             <div className="sticky top-0 min-h-screen flex items-center py-16 overflow-hidden">
-                
+
                 {/* ===== FLOWING BACKGROUND GLOW (matches line color) ===== */}
-                <motion.div 
+                <motion.div
                     className="absolute inset-0 pointer-events-none"
                     style={{ opacity: useTransform(scrollYProgress, [0.05, 0.15, 0.85, 0.95], [0, 0.7, 0.7, 0]) }}
                 >
@@ -278,14 +279,13 @@ function StageSection({
                 </motion.div>
 
                 <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-                    
+
                     {/* PHASE 1 & 2: Text + Visualization - CENTERED layout that floats */}
                     <motion.div
-                        className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                            isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
-                        }`}
-                        style={{ 
-                            opacity: textOpacity, 
+                        className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
+                            }`}
+                        style={{
+                            opacity: textOpacity,
                             y: textY,
                             // For interface stages: float down and left, shrink
                             x: stage.hasInterface ? textFloatX : 0,
@@ -293,16 +293,15 @@ function StageSection({
                         }}
                     >
                         {/* Text Content - floats down for interface stages */}
-                        <motion.div 
-                            className={`space-y-6 ${
-                                (stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-4" : ""
-                            }`}
+                        <motion.div
+                            className={`space-y-6 ${(stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-4" : ""
+                                }`}
                             style={{ y: stage.hasInterface ? textFloatY : 0 }}
                         >
                             <div className="flex items-center gap-3">
-                                <span 
+                                <span
                                     className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold"
-                                    style={{ 
+                                    style={{
                                         backgroundColor: `${stage.accentColor}20`,
                                         color: stage.accentColor,
                                         border: `1px solid ${stage.accentColor}40`
@@ -315,56 +314,53 @@ function StageSection({
                                 </span>
                             </div>
 
-                            <h3 className={`font-bold text-white ${
-                                (stage.id === "rapport" || stage.id === "sales-coach") 
-                                    ? "text-6xl md:text-7xl lg:text-8xl" 
-                                    : "text-4xl md:text-5xl lg:text-6xl"
-                            }`}>
+                            <h3 className={`font-bold text-white ${(stage.id === "rapport" || stage.id === "sales-coach")
+                                ? "text-6xl md:text-7xl lg:text-8xl"
+                                : "text-4xl md:text-5xl lg:text-6xl"
+                                }`}>
                                 {stage.title}
                             </h3>
-                            <p 
-                                className={`font-medium ${
-                                    (stage.id === "rapport" || stage.id === "sales-coach")
-                                        ? "text-3xl md:text-4xl"
-                                        : "text-xl md:text-2xl"
-                                }`}
+                            <p
+                                className={`font-medium ${(stage.id === "rapport" || stage.id === "sales-coach")
+                                    ? "text-3xl md:text-4xl"
+                                    : "text-xl md:text-2xl"
+                                    }`}
                                 style={{ color: stage.accentColor }}
                             >
                                 {stage.subtitle}
                             </p>
-                            <p className={`text-white/50 leading-relaxed ${
-                                (stage.id === "rapport" || stage.id === "sales-coach")
-                                    ? "text-2xl max-w-2xl"
-                                    : "text-lg max-w-lg"
-                            }`}>
+                            <p className={`text-white/50 leading-relaxed ${(stage.id === "rapport" || stage.id === "sales-coach")
+                                ? "text-2xl max-w-2xl"
+                                : "text-lg max-w-lg"
+                                }`}>
                                 {stage.description}
                             </p>
 
                             {/* Button - shown for stages with buttonLabel */}
                             {stage.buttonLabel && (
-                                <motion.div 
+                                <motion.div
                                     className="relative pt-4"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
                                 >
                                     {/* Glow behind button */}
-                                    <motion.div 
+                                    <motion.div
                                         className="absolute inset-0 rounded-xl blur-xl"
                                         style={{ backgroundColor: stage.accentColor }}
-                                        animate={{ 
+                                        animate={{
                                             opacity: [0.2, 0.4, 0.2],
                                             scale: [1, 1.05, 1]
                                         }}
                                         transition={{ duration: 2, repeat: Infinity }}
                                     />
-                                    
+
                                     {/* Button */}
-                                    <div 
+                                    <div
                                         className="relative flex items-center gap-4 p-5 bg-white border-2 rounded-2xl shadow-2xl max-w-[380px]"
                                         style={{ borderColor: stage.accentColor }}
                                     >
-                                        <div 
+                                        <div
                                             className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0"
                                             style={{ backgroundColor: `${stage.accentColor}20`, color: stage.accentColor }}
                                         >
@@ -382,21 +378,19 @@ function StageSection({
 
                         {/* PHASE 2: AI Visualization - fades out for interface stages */}
                         <motion.div
-                            className={`relative z-10 ${
-                                (stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-8" : ""
-                            }`}
-                            style={{ 
-                                opacity: vizOpacity, 
+                            className={`relative z-10 ${(stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-8" : ""
+                                }`}
+                            style={{
+                                opacity: vizOpacity,
                                 scale: vizScale,
                                 y: vizY
                             }}
                         >
-                            <div 
-                                className={`relative rounded-2xl overflow-hidden ${
-                                    (stage.id === "rapport" || stage.id === "sales-coach") 
-                                        ? "aspect-[4/3] scale-110" 
-                                        : "aspect-[4/3]"
-                                }`}
+                            <div
+                                className={`relative rounded-2xl overflow-hidden ${(stage.id === "rapport" || stage.id === "sales-coach")
+                                    ? "aspect-[4/3] scale-110"
+                                    : "aspect-[4/3]"
+                                    }`}
                                 style={{
                                     background: `linear-gradient(135deg, ${stage.accentColor}10, ${stage.accentColor}02)`,
                                     border: `1px solid ${stage.accentColor}25`,
@@ -404,14 +398,14 @@ function StageSection({
                                 }}
                             >
                                 {/* Grid pattern */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-[0.04]"
                                     style={{
                                         backgroundImage: `linear-gradient(${stage.accentColor} 1px, transparent 1px), linear-gradient(90deg, ${stage.accentColor} 1px, transparent 1px)`,
                                         backgroundSize: '32px 32px'
                                     }}
                                 />
-                                
+
                                 {/* Stage visualization */}
                                 <div className="relative w-full h-full">
                                     <StageComponent progress={0} />
@@ -423,7 +417,7 @@ function StageSection({
                                 </div>
 
                                 {/* Corner glow */}
-                                <div 
+                                <div
                                     className="absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl"
                                     style={{ backgroundColor: `${stage.accentColor}20` }}
                                 />
@@ -435,9 +429,9 @@ function StageSection({
                     {stage.hasInterface && stage.id === "rapport" && (
                         <>
                             {/* App Context - fades in around the panel */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center"
-                                style={{ 
+                                style={{
                                     opacity: viewportContextOpacity,
                                     scale: viewportContextScale,
                                     filter: viewportBlurFilter,
@@ -448,17 +442,17 @@ function StageSection({
                             </motion.div>
 
                             {/* Floating Panel - morphs from center to right position */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                                style={{ 
+                                style={{
                                     opacity: focusedPanelOpacity,
                                     filter: focusedPanelBlurFilter
                                 }}
                             >
                                 {/* The Panel itself - floats and morphs into position */}
-                                <motion.div 
+                                <motion.div
                                     className="relative"
-                                    style={{ 
+                                    style={{
                                         scale: panelScale,
                                         x: panelX,
                                         y: panelY,
@@ -469,14 +463,14 @@ function StageSection({
                             </motion.div>
                         </>
                     )}
-                    
+
                     {/* SALES COACH: Objection → Menu → Response → Viewport */}
                     {stage.hasInterface && stage.id === "sales-coach" && (
                         <>
                             {/* Phase 1: Objection Bubble - appears first */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center"
-                                style={{ 
+                                style={{
                                     opacity: objectionOpacity,
                                     perspective: 1000,
                                     x: objectionX,
@@ -494,9 +488,9 @@ function StageSection({
                             </motion.div>
 
                             {/* Phase 2: Sales Coach Menu - shows options */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                                style={{ 
+                                style={{
                                     opacity: menuPanelOpacity,
                                     perspective: 1000,
                                     x: menuPanelX,
@@ -513,17 +507,17 @@ function StageSection({
                             </motion.div>
 
                             {/* Phase 3: Sales Coach Response Panel - flips in with answer */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                                style={{ 
+                                style={{
                                     opacity: focusedPanelOpacity,
                                     filter: focusedPanelBlurFilter,
                                     perspective: 1000,
                                 }}
                             >
-                                <motion.div 
+                                <motion.div
                                     className="relative"
-                                    style={{ 
+                                    style={{
                                         scale: panelScale,
                                         x: panelX,
                                         y: panelY,
@@ -536,9 +530,9 @@ function StageSection({
                             </motion.div>
 
                             {/* Phase 4: App Context - fades in around the panel */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center"
-                                style={{ 
+                                style={{
                                     opacity: viewportContextOpacity,
                                     scale: viewportContextScale,
                                     filter: viewportBlurFilter,
@@ -554,30 +548,30 @@ function StageSection({
                     {stage.hasInterface && stage.id === "valuation" && (
                         <>
                             {/* Phase 1: Source Cards - converge from corners */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center"
-                                style={{ 
+                                style={{
                                     opacity: sourceCardsOpacity,
                                     x: 80, // Offset to match other panels
                                 }}
                             >
-                                <ValuationSourceCards 
-                                    accentColor={stage.accentColor} 
+                                <ValuationSourceCards
+                                    accentColor={stage.accentColor}
                                     convergenceProgress={convergenceProgress}
                                 />
                             </motion.div>
 
                             {/* Phase 2: Valuation Panel - appears after cards converge */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                                style={{ 
+                                style={{
                                     opacity: valuationPanelOpacity,
                                     filter: valuationPanelBlurFilter,
                                 }}
                             >
-                                <motion.div 
+                                <motion.div
                                     className="relative"
-                                    style={{ 
+                                    style={{
                                         scale: valuationPanelScale,
                                         x: valuationPanelX,
                                         y: panelY,
@@ -588,9 +582,9 @@ function StageSection({
                             </motion.div>
 
                             {/* Phase 3: App Context - fades in around the panel */}
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 flex items-center justify-center"
-                                style={{ 
+                                style={{
                                     opacity: viewportContextOpacity,
                                     scale: viewportContextScale,
                                     filter: viewportBlurFilter,
@@ -604,9 +598,9 @@ function StageSection({
 
                     {/* For other interface stages (not rapport, not sales-coach, not valuation) */}
                     {stage.hasInterface && stage.id !== "rapport" && stage.id !== "sales-coach" && stage.id !== "valuation" && (
-                        <motion.div 
+                        <motion.div
                             className="absolute inset-0 flex items-center justify-center px-8 md:px-16"
-                            style={{ 
+                            style={{
                                 opacity: focusedPanelOpacity,
                                 filter: focusedPanelBlurFilter
                             }}
@@ -626,7 +620,7 @@ function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
         <div className="px-6 md:px-12">
             <div className="max-w-[1380px] mx-auto">
                 {/* Device frame */}
-                <div 
+                <div
                     className="relative rounded-2xl overflow-hidden"
                     style={{
                         background: 'linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))',
@@ -660,9 +654,9 @@ function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
                             />
                         ) : (
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <div 
+                                <div
                                     className="w-24 h-24 rounded-2xl flex items-center justify-center mb-6"
-                                    style={{ 
+                                    style={{
                                         backgroundColor: `${stage.accentColor}10`,
                                         border: `2px dashed ${stage.accentColor}30`
                                     }}
@@ -677,7 +671,7 @@ function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
                 </div>
 
                 {/* Floating glow behind */}
-                <div 
+                <div
                     className="absolute -inset-8 -z-10 rounded-3xl blur-3xl"
                     style={{ backgroundColor: `${stage.accentColor}15` }}
                 />
@@ -692,7 +686,7 @@ function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stage
     return (
         <div className="relative w-full max-w-[1380px] mx-auto">
             {/* Browser-like viewport */}
-            <div 
+            <div
                 className="rounded-xl overflow-hidden shadow-2xl border border-white/10"
                 style={{ boxShadow: `0 0 80px ${accentColor}15, 0 40px 60px rgba(0,0,0,0.5)` }}
             >
@@ -736,9 +730,9 @@ function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stage
                             </div>
                         </div>
                         {/* AI Assistant indicator - glowing */}
-                        <motion.div 
+                        <motion.div
                             className="w-10 h-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center"
-                            animate={{ 
+                            animate={{
                                 boxShadow: [
                                     '0 0 0 0 rgba(217, 70, 239, 0)',
                                     '0 0 20px 4px rgba(217, 70, 239, 0.4)',
@@ -986,7 +980,7 @@ function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stage
                                             <div className="p-2 bg-white rounded-lg border border-black/5">
                                                 <p className="text-[10px] font-medium text-[#1d1d1f]">What do you see?</p>
                                             </div>
-                                            <motion.div 
+                                            <motion.div
                                                 className="p-2 bg-rose-50 rounded-lg border border-rose-300"
                                                 animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 8px 2px rgba(244,63,94,0.3)', '0 0 0 0 rgba(244,63,94,0)'] }}
                                                 transition={{ duration: 2, repeat: Infinity }}
@@ -1044,7 +1038,7 @@ function LinkAIAppViewport({ accentColor }: { accentColor: string }) {
     return (
         <div className="relative">
             {/* Browser-like viewport */}
-            <div 
+            <div
                 className="rounded-xl overflow-hidden shadow-2xl border border-white/10"
                 style={{ boxShadow: `0 0 80px ${accentColor}15, 0 40px 60px rgba(0,0,0,0.5)` }}
             >
@@ -1088,9 +1082,9 @@ function LinkAIAppViewport({ accentColor }: { accentColor: string }) {
                             </div>
                         </div>
                         {/* AI Assistant indicator - glowing */}
-                        <motion.div 
+                        <motion.div
                             className="w-10 h-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center"
-                            animate={{ 
+                            animate={{
                                 boxShadow: [
                                     '0 0 0 0 rgba(217, 70, 239, 0)',
                                     '0 0 20px 4px rgba(217, 70, 239, 0.4)',
@@ -1183,7 +1177,7 @@ function LinkAIAppViewport({ accentColor }: { accentColor: string }) {
                     </div>
 
                     {/* AI Panel - Slide out from right */}
-                    <motion.div 
+                    <motion.div
                         className="w-[300px] bg-white border-l border-black/5 flex flex-col shadow-[-20px_0_40px_-10px_rgba(0,0,0,0.15)]"
                         initial={{ x: 100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -1332,15 +1326,15 @@ function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentCol
     return (
         <div className="relative w-[700px]">
             {/* Outer glow */}
-            <motion.div 
+            <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
                 style={{ backgroundColor: `${accentColor}25` }}
                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
-            
+
             {/* Panel container - clips content properly */}
-            <div 
+            <div
                 className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
@@ -1371,297 +1365,297 @@ function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentCol
 
                 {/* Scrollable Content - auto-scrolls as page scrolls */}
                 <div className="flex-1 overflow-hidden">
-                    <motion.div 
+                    <motion.div
                         className="p-6 bg-[#f5f5f7]"
                         style={{ y: contentScrollY || 0 }}
                     >
-                    <div className="space-y-4 max-w-2xl mx-auto">
-                        {/* Summary Card with copy */}
-                        <div className="bg-white rounded-xl p-6 shadow-sm">
-                            <div className="flex items-start justify-between gap-4">
-                                <p className="text-lg font-medium text-[#1d1d1f] leading-relaxed">
-                                    The customer is a near-prime borrower in McKinney, TX, looking for options to manage their debt and improve their financial situation.
-                                </p>
-                                <button className="p-2 rounded-lg hover:bg-black/5 flex-shrink-0">
-                                    <svg className="w-[18px] h-[18px] text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" strokeWidth={2}></rect>
-                                        <path strokeWidth={2} d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                                    </svg>
-                                </button>
+                        <div className="space-y-4 max-w-2xl mx-auto">
+                            {/* Summary Card with copy */}
+                            <div className="bg-white rounded-xl p-6 shadow-sm">
+                                <div className="flex items-start justify-between gap-4">
+                                    <p className="text-lg font-medium text-[#1d1d1f] leading-relaxed">
+                                        The customer is a near-prime borrower in McKinney, TX, looking for options to manage their debt and improve their financial situation.
+                                    </p>
+                                    <button className="p-2 rounded-lg hover:bg-black/5 flex-shrink-0">
+                                        <svg className="w-[18px] h-[18px] text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" strokeWidth={2}></rect>
+                                            <path strokeWidth={2} d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="text-xs text-[#86868b] mt-3">Press <kbd className="px-1.5 py-0.5 bg-black/5 rounded text-[10px] font-mono">C</kbd> to copy</p>
                             </div>
-                            <p className="text-xs text-[#86868b] mt-3">Press <kbd className="px-1.5 py-0.5 bg-black/5 rounded text-[10px] font-mono">C</kbd> to copy</p>
-                        </div>
 
-                        {/* Financial Stats Row 1 */}
-                        <div className="grid grid-cols-3 gap-3">
-                            <div className="bg-white rounded-xl p-4 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-[#1d1d1f]">$785K</p>
-                                <p className="text-xs text-[#86868b] mt-1">Property Value</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-[#1d1d1f]">$428K</p>
-                                <p className="text-xs text-[#86868b] mt-1">Total Liens</p>
-                            </div>
-                            <div className="bg-green-50 rounded-xl p-4 shadow-sm border border-green-100">
-                                <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-green-600">$358K</p>
-                                <p className="text-xs text-green-700 mt-1">Equity</p>
-                            </div>
-                        </div>
-
-                        {/* Financial Stats Row 2 */}
-                        <div className="grid grid-cols-3 gap-3">
-                            <div className="bg-white rounded-xl p-4 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <rect width="20" height="14" x="2" y="5" rx="2" strokeWidth={2}></rect>
-                                        <line x1="2" x2="22" y1="10" y2="10" strokeWidth={2}></line>
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-[#1d1d1f]">$56K</p>
-                                <p className="text-xs text-[#86868b] mt-1">Other Debt</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <line x1="12" x2="12" y1="2" y2="22" strokeWidth={2}></line>
-                                        <path strokeWidth={2} d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-[#1d1d1f]">$1,196</p>
-                                <p className="text-xs text-[#86868b] mt-1">Monthly</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-4 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center mb-3">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                </div>
-                                <p className="text-2xl font-bold text-[#1d1d1f]">608 / 650</p>
-                                <p className="text-xs text-[#86868b] mt-1">Credit</p>
-                            </div>
-                        </div>
-
-                        {/* How We Can Help */}
-                        <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                            <div className="p-5 bg-purple-50/50">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                            {/* Financial Stats Row 1 */}
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center mb-3">
                                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
                                     </div>
-                                    <h3 className="font-semibold text-[#1d1d1f]">How We Can Help</h3>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$785K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Property Value</p>
                                 </div>
-                                <div className="space-y-3">
-                                    {["explore debt consolidation options", "potential for rate and term refinance", "discuss credit improvement strategies"].map((item, i) => (
-                                        <div key={i} className="flex items-start gap-3">
-                                            <svg className="w-[18px] h-[18px] text-purple-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$428K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Total Liens</p>
+                                </div>
+                                <div className="bg-green-50 rounded-xl p-4 shadow-sm border border-green-100">
+                                    <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-green-600">$358K</p>
+                                    <p className="text-xs text-green-700 mt-1">Equity</p>
+                                </div>
+                            </div>
+
+                            {/* Financial Stats Row 2 */}
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect width="20" height="14" x="2" y="5" rx="2" strokeWidth={2}></rect>
+                                            <line x1="2" x2="22" y1="10" y2="10" strokeWidth={2}></line>
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$56K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Other Debt</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <line x1="12" x2="12" y1="2" y2="22" strokeWidth={2}></line>
+                                            <path strokeWidth={2} d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$1,196</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Monthly</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">608 / 650</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Credit</p>
+                                </div>
+                            </div>
+
+                            {/* How We Can Help */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-5 bg-purple-50/50">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
+                                        </div>
+                                        <h3 className="font-semibold text-[#1d1d1f]">How We Can Help</h3>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {["explore debt consolidation options", "potential for rate and term refinance", "discuss credit improvement strategies"].map((item, i) => (
+                                            <div key={i} className="flex items-start gap-3">
+                                                <svg className="w-[18px] h-[18px] text-purple-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <p className="text-sm text-[#1d1d1f]">{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="p-4 border-t border-black/5">
+                                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-medium">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" strokeWidth={2}></circle>
+                                            <circle cx="12" cy="12" r="6" strokeWidth={2}></circle>
+                                            <circle cx="12" cy="12" r="2" strokeWidth={2}></circle>
+                                        </svg>
+                                        View Recommended Payoff Plan
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Suggested Talk Track */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-5 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="font-semibold text-[#1d1d1f]">Suggested Talk Track</h3>
+                                    </div>
+                                    <svg className="w-5 h-5 text-[#86868b] rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                                <div className="px-5 pb-5 space-y-3">
+                                    <div className="p-4 rounded-xl bg-orange-50 border border-orange-100">
+                                        <p className="text-xs font-semibold text-orange-600 mb-2">Opening Line</p>
+                                        <p className="text-sm text-[#1d1d1f] italic">&quot;Thank you for taking the time to speak with me today about your financial goals.&quot;</p>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                        <p className="text-xs font-semibold text-slate-600 mb-2">Discovery Questions</p>
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-[#1d1d1f]">• &quot;What are your primary financial goals at this time?&quot;</p>
+                                            <p className="text-sm text-[#1d1d1f]">• &quot;How do you feel about your current monthly payments and debts?&quot;</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-green-50 border border-green-100">
+                                        <p className="text-xs font-semibold text-green-600 mb-2">Value Statement</p>
+                                        <p className="text-sm text-[#1d1d1f] italic">&quot;We can look into options that may simplify your payments and potentially lower your interest rates.&quot;</p>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                                        <p className="text-xs font-semibold text-blue-600 mb-2">Close for Next Step</p>
+                                        <p className="text-sm text-[#1d1d1f] italic">&quot;Shall we schedule a follow-up to dive deeper into your options?&quot;</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* What We See */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-[#1d1d1f]">What We See</h3>
+                                    <span className="text-[10px] px-2 py-0.5 bg-gray-100 rounded-full text-gray-500">Credit Report</span>
+                                </div>
+                                <div className="space-y-2">
+                                    {["equity assessment", "debt assessment", "credit flags", "complexity note"].map((item, i) => (
+                                        <div key={i} className="flex items-start gap-3">
+                                            <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                                             <p className="text-sm text-[#1d1d1f]">{item}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                            <div className="p-4 border-t border-black/5">
-                                <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-medium">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10" strokeWidth={2}></circle>
-                                        <circle cx="12" cy="12" r="6" strokeWidth={2}></circle>
-                                        <circle cx="12" cy="12" r="2" strokeWidth={2}></circle>
-                                    </svg>
-                                    View Recommended Payoff Plan
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
 
-                        {/* Suggested Talk Track */}
-                        <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                            <div className="p-5 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="font-semibold text-[#1d1d1f]">Suggested Talk Track</h3>
-                                </div>
-                                <svg className="w-5 h-5 text-[#86868b] rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                            <div className="px-5 pb-5 space-y-3">
-                                <div className="p-4 rounded-xl bg-orange-50 border border-orange-100">
-                                    <p className="text-xs font-semibold text-orange-600 mb-2">Opening Line</p>
-                                    <p className="text-sm text-[#1d1d1f] italic">&quot;Thank you for taking the time to speak with me today about your financial goals.&quot;</p>
-                                </div>
-                                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                                    <p className="text-xs font-semibold text-slate-600 mb-2">Discovery Questions</p>
-                                    <div className="space-y-2">
-                                        <p className="text-sm text-[#1d1d1f]">• &quot;What are your primary financial goals at this time?&quot;</p>
-                                        <p className="text-sm text-[#1d1d1f]">• &quot;How do you feel about your current monthly payments and debts?&quot;</p>
-                                    </div>
-                                </div>
-                                <div className="p-4 rounded-xl bg-green-50 border border-green-100">
-                                    <p className="text-xs font-semibold text-green-600 mb-2">Value Statement</p>
-                                    <p className="text-sm text-[#1d1d1f] italic">&quot;We can look into options that may simplify your payments and potentially lower your interest rates.&quot;</p>
-                                </div>
-                                <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                                    <p className="text-xs font-semibold text-blue-600 mb-2">Close for Next Step</p>
-                                    <p className="text-sm text-[#1d1d1f] italic">&quot;Shall we schedule a follow-up to dive deeper into your options?&quot;</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* What We See */}
-                        <div className="bg-white rounded-xl p-5 shadow-sm">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                    </svg>
-                                </div>
-                                <h3 className="font-semibold text-[#1d1d1f]">What We See</h3>
-                                <span className="text-[10px] px-2 py-0.5 bg-gray-100 rounded-full text-gray-500">Credit Report</span>
-                            </div>
-                            <div className="space-y-2">
-                                {["equity assessment", "debt assessment", "credit flags", "complexity note"].map((item, i) => (
-                                    <div key={i} className="flex items-start gap-3">
-                                        <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                                        <p className="text-sm text-[#1d1d1f]">{item}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Local Context */}
-                        <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                            <div className="p-5 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="font-semibold text-[#1d1d1f]">Local Context</h3>
-                                    <span className="text-[10px] px-2 py-0.5 bg-gray-100 rounded-full text-gray-500">Conversation Only</span>
-                                </div>
-                                <svg className="w-5 h-5 text-[#86868b] rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                            <div className="px-5 pb-5 space-y-4">
-                                {/* Weather */}
-                                <div className="p-4 rounded-xl bg-blue-50/70">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <svg className="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                                        </svg>
-                                        <div>
-                                            <p className="text-lg font-semibold text-[#1d1d1f]">54°F</p>
-                                            <p className="text-sm text-[#86868b]">Cloudy in McKinney, TX</p>
+                            {/* Local Context */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-5 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
                                         </div>
+                                        <h3 className="font-semibold text-[#1d1d1f]">Local Context</h3>
+                                        <span className="text-[10px] px-2 py-0.5 bg-gray-100 rounded-full text-gray-500">Conversation Only</span>
                                     </div>
-                                    <div className="flex gap-2">
-                                        {[{d:"Thu",t:"56°",icon:"cloud"},{d:"Fri",t:"60°",icon:"sun"},{d:"Sat",t:"57°",icon:"sun"},{d:"Sun",t:"60°",icon:"cloud"},{d:"Mon",t:"55°",icon:"sun"}].map((day, i) => (
-                                            <div key={i} className="flex-1 text-center p-2 rounded-lg bg-white/60">
-                                                <p className="text-[10px] text-[#86868b]">{day.d}</p>
-                                                {day.icon === "sun" ? (
-                                                    <svg className="w-4 h-4 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <circle cx="12" cy="12" r="5" strokeWidth={2}></circle>
-                                                        <path strokeWidth={2} d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                                                    </svg>
-                                                ) : (
-                                                    <svg className="w-4 h-4 mx-auto text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                                                    </svg>
-                                                )}
-                                                <p className="text-xs font-semibold text-[#1d1d1f]">{day.t}</p>
+                                    <svg className="w-5 h-5 text-[#86868b] rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                                <div className="px-5 pb-5 space-y-4">
+                                    {/* Weather */}
+                                    <div className="p-4 rounded-xl bg-blue-50/70">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <svg className="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                            </svg>
+                                            <div>
+                                                <p className="text-lg font-semibold text-[#1d1d1f]">54°F</p>
+                                                <p className="text-sm text-[#86868b]">Cloudy in McKinney, TX</p>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                
-                                {/* Sports */}
-                                <div>
-                                    <p className="text-xs text-[#86868b] mb-2 flex items-center gap-2">
-                                        <svg className="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                        </svg>
-                                        Local Sports
-                                    </p>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
-                                            <span className="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-600 rounded font-medium">Cowboys</span>
-                                            <p className="text-sm text-[#1d1d1f] flex-1">Follow the Cowboys this season</p>
-                                            <span className="text-xs text-[#86868b]">Live</span>
                                         </div>
-                                        <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
-                                            <span className="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-600 rounded font-medium">Mavericks</span>
-                                            <p className="text-sm text-[#1d1d1f] flex-1">Follow the Mavericks this season</p>
-                                            <span className="text-xs text-[#86868b]">Live</span>
+                                        <div className="flex gap-2">
+                                            {[{ d: "Thu", t: "56°", icon: "cloud" }, { d: "Fri", t: "60°", icon: "sun" }, { d: "Sat", t: "57°", icon: "sun" }, { d: "Sun", t: "60°", icon: "cloud" }, { d: "Mon", t: "55°", icon: "sun" }].map((day, i) => (
+                                                <div key={i} className="flex-1 text-center p-2 rounded-lg bg-white/60">
+                                                    <p className="text-[10px] text-[#86868b]">{day.d}</p>
+                                                    {day.icon === "sun" ? (
+                                                        <svg className="w-4 h-4 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <circle cx="12" cy="12" r="5" strokeWidth={2}></circle>
+                                                            <path strokeWidth={2} d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 mx-auto text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                                        </svg>
+                                                    )}
+                                                    <p className="text-xs font-semibold text-[#1d1d1f]">{day.t}</p>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                </div>
-                                
-                                {/* Market */}
-                                <div className="p-4 rounded-xl bg-green-50/70">
-                                    <p className="text-xs text-green-600 mb-2 flex items-center gap-2">
-                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                        </svg>
-                                        Local Market
-                                    </p>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#1d1d1f]">Median: $540,104</span>
-                                        <span className="text-[10px] px-2 py-0.5 bg-green-200 text-green-700 rounded-full font-medium">+5.5% YoY</span>
+
+                                    {/* Sports */}
+                                    <div>
+                                        <p className="text-xs text-[#86868b] mb-2 flex items-center gap-2">
+                                            <svg className="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                            </svg>
+                                            Local Sports
+                                        </p>
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+                                                <span className="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-600 rounded font-medium">Cowboys</span>
+                                                <p className="text-sm text-[#1d1d1f] flex-1">Follow the Cowboys this season</p>
+                                                <span className="text-xs text-[#86868b]">Live</span>
+                                            </div>
+                                            <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+                                                <span className="text-[10px] px-2 py-0.5 bg-orange-100 text-orange-600 rounded font-medium">Mavericks</span>
+                                                <p className="text-sm text-[#1d1d1f] flex-1">Follow the Mavericks this season</p>
+                                                <span className="text-xs text-[#86868b]">Live</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-[#86868b] mt-1">Seller&apos;s Market • 42 avg days</p>
+
+                                    {/* Market */}
+                                    <div className="p-4 rounded-xl bg-green-50/70">
+                                        <p className="text-xs text-green-600 mb-2 flex items-center gap-2">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                            </svg>
+                                            Local Market
+                                        </p>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-[#1d1d1f]">Median: $540,104</span>
+                                            <span className="text-[10px] px-2 py-0.5 bg-green-200 text-green-700 rounded-full font-medium">+5.5% YoY</span>
+                                        </div>
+                                        <p className="text-xs text-[#86868b] mt-1">Seller&apos;s Market • 42 avg days</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Confirm on Call */}
-                        <div className="bg-white rounded-xl p-5 shadow-sm">
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                            {/* Confirm on Call */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-[#1d1d1f]">Confirm on Call</h3>
                                 </div>
-                                <h3 className="font-semibold text-[#1d1d1f]">Confirm on Call</h3>
+                                <div className="space-y-1">
+                                    <p className="text-sm text-[#86868b]">• Current employment status</p>
+                                    <p className="text-sm text-[#86868b]">• Monthly income</p>
+                                    <p className="text-sm text-[#86868b]">• Any upcoming large expenses or financial changes</p>
+                                </div>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-sm text-[#86868b]">• Current employment status</p>
-                                <p className="text-sm text-[#86868b]">• Monthly income</p>
-                                <p className="text-sm text-[#86868b]">• Any upcoming large expenses or financial changes</p>
-                            </div>
-                        </div>
 
-                        {/* Footer note */}
-                        <p className="text-xs text-[#86868b] text-center py-2">
-                            Some interest rates estimated based on debt type. Property values from internal AVM.
-                        </p>
-                    </div>
+                            {/* Footer note */}
+                            <p className="text-xs text-[#86868b] text-center py-2">
+                                Some interest rates estimated based on debt type. Property values from internal AVM.
+                            </p>
+                        </div>
                     </motion.div>
                 </div>
             </div>
@@ -1674,15 +1668,15 @@ function SalesCoachMenuPanel({ accentColor }: { accentColor: string }) {
     return (
         <div className="relative w-[570px]">
             {/* Outer glow */}
-            <motion.div 
+            <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
                 style={{ backgroundColor: `${accentColor}20` }}
                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
-            
+
             {/* Panel */}
-            <div 
+            <div
                 className="rounded-xl bg-white overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.3)` }}
             >
@@ -1795,14 +1789,14 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
     return (
         <div className="relative w-[675px] h-[470px]">
             {/* Background anxiety glow */}
-            <motion.div 
+            <motion.div
                 className="absolute inset-0 rounded-3xl blur-3xl -z-10 bg-gradient-to-br from-rose-500/20 to-red-500/20"
                 animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
 
             {/* Secondary objection - top left */}
-            <motion.div 
+            <motion.div
                 className="absolute -top-2 -left-8 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-rose-100"
                 initial={{ opacity: 0, y: 20, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1812,7 +1806,7 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
             </motion.div>
 
             {/* Secondary objection - top right */}
-            <motion.div 
+            <motion.div
                 className="absolute top-8 -right-4 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-amber-100"
                 initial={{ opacity: 0, y: 20, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1822,7 +1816,7 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
             </motion.div>
 
             {/* Secondary objection - bottom left */}
-            <motion.div 
+            <motion.div
                 className="absolute bottom-16 -left-12 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-orange-100"
                 initial={{ opacity: 0, y: -20, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1832,32 +1826,32 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
             </motion.div>
 
             {/* MAIN objection bubble - center */}
-            <motion.div 
+            <motion.div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.5, type: "spring" }}
             >
-                <div 
+                <div
                     className="relative bg-white rounded-2xl p-6 shadow-2xl"
                     style={{ boxShadow: `0 0 60px rgba(244,63,94,0.2), 0 25px 50px rgba(0,0,0,0.25)` }}
                 >
                     {/* Quote icon */}
-                    <motion.div 
+                    <motion.div
                         className="absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center shadow-lg"
                         animate={{ rotate: [0, -5, 5, 0] }}
                         transition={{ duration: 2, repeat: Infinity }}
                     >
                         <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                         </svg>
                     </motion.div>
-                    
+
                     {/* The main objection text */}
                     <p className="text-xl font-bold text-[#1d1d1f] leading-relaxed mb-4">
                         &ldquo;Your rates are too high&rdquo;
                     </p>
-                    
+
                     {/* Borrower indicator */}
                     <div className="flex items-center gap-3 pt-3 border-t border-black/5">
                         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
@@ -1870,20 +1864,20 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
                             <p className="text-xs text-rose-500 font-medium">The moment every LO dreads...</p>
                         </div>
                     </div>
-                    
+
                     {/* Speech bubble tail */}
                     <div className="absolute -bottom-3 left-10 w-6 h-6 bg-white transform rotate-45" style={{ boxShadow: '4px 4px 8px rgba(0,0,0,0.1)' }} />
                 </div>
             </motion.div>
 
             {/* Stress indicator */}
-            <motion.div 
+            <motion.div
                 className="absolute bottom-2 right-0 flex items-center gap-2 px-3 py-1.5 bg-rose-100 rounded-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.9 }}
             >
-                <motion.span 
+                <motion.span
                     className="text-lg"
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 0.5, repeat: Infinity }}
@@ -1901,15 +1895,15 @@ function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: 
     return (
         <div className="relative w-[700px]">
             {/* Outer glow */}
-            <motion.div 
+            <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
                 style={{ backgroundColor: `${accentColor}25` }}
                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
-            
+
             {/* Panel container */}
-            <div 
+            <div
                 className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
@@ -1943,7 +1937,7 @@ function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: 
 
                 {/* Scrollable Content */}
                 <div className="flex-1 overflow-hidden">
-                    <motion.div 
+                    <motion.div
                         className="p-6 bg-[#f5f5f7]"
                         style={{ y: contentScrollY || 0 }}
                     >
@@ -2117,7 +2111,7 @@ function ValuationSourceCards({ accentColor, convergenceProgress }: { accentColo
     const card2Y = useTransform(convergenceProgress, [0, 0.5, 1], [120, 40, 0]);
     const card3X = useTransform(convergenceProgress, [0, 0.5, 1], [180, 60, 0]);
     const card3Y = useTransform(convergenceProgress, [0, 0.5, 1], [120, 40, 0]);
-    
+
     const cardTransforms = [
         { x: card0X, y: card0Y },
         { x: card1X, y: card1Y },
@@ -2131,16 +2125,16 @@ function ValuationSourceCards({ accentColor, convergenceProgress }: { accentColo
     return (
         <div className="relative w-[700px] h-[500px]">
             {/* Background glow */}
-            <motion.div 
+            <motion.div
                 className="absolute inset-0 rounded-3xl blur-3xl -z-10"
-                style={{ 
+                style={{
                     backgroundColor: `${accentColor}20`,
                     scale: useTransform(convergenceProgress, [0, 1], [1.2, 0.8])
                 }}
             />
-            
+
             {/* Floating source cards */}
-            <motion.div 
+            <motion.div
                 className="absolute inset-0 flex items-center justify-center"
                 style={{ opacity: cardsOpacity }}
             >
@@ -2173,7 +2167,7 @@ function ValuationSourceCards({ accentColor, convergenceProgress }: { accentColo
             </motion.div>
 
             {/* Center convergence indicator */}
-            <motion.div 
+            <motion.div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                 style={{ scale: centerScale, opacity: centerScale }}
             >
@@ -2185,7 +2179,7 @@ function ValuationSourceCards({ accentColor, convergenceProgress }: { accentColo
             </motion.div>
 
             {/* Analyzing text */}
-            <motion.div 
+            <motion.div
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center"
                 style={{ opacity: useTransform(convergenceProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0]) }}
             >
@@ -2201,15 +2195,15 @@ function ValuationAIPresentation({ accentColor, contentScrollY }: { accentColor:
     return (
         <div className="relative w-[700px]">
             {/* Outer glow */}
-            <motion.div 
+            <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
                 style={{ backgroundColor: `${accentColor}25` }}
                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
-            
+
             {/* Panel container */}
-            <div 
+            <div
                 className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
@@ -2250,7 +2244,7 @@ function ValuationAIPresentation({ accentColor, contentScrollY }: { accentColor:
 
                 {/* Scrollable Content */}
                 <div className="flex-1 overflow-hidden bg-[#f5f5f7]">
-                    <motion.div 
+                    <motion.div
                         className="p-6"
                         style={{ y: contentScrollY || 0 }}
                     >
@@ -2459,35 +2453,7 @@ export default function VerticalStages() {
 
     return (
         <section ref={containerRef} className="relative w-full">
-            {/* Section Header */}
-            <div className="relative z-10 text-center py-32 px-4">
-                <motion.p 
-                    className="text-sm tracking-[0.3em] text-purple-400 mb-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                >
-                    THE JOURNEY
-                </motion.p>
-                <motion.h2 
-                    className="text-4xl md:text-6xl font-bold text-white mb-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                >
-                    From Zero to Understanding
-                </motion.h2>
-                <motion.p 
-                    className="text-white/50 text-lg max-w-xl mx-auto"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                >
-                    See how AI transforms the first 5 minutes with every borrower
-                </motion.p>
-            </div>
+
 
             {/* Journey Path SVG */}
             <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
@@ -2545,10 +2511,10 @@ export default function VerticalStages() {
                     <g opacity="0.35">
                         {/* Path that wanders left then crosses */}
                         <path d="M 280 100 C 320 400 80 600 60 900 C 40 1200 180 1500 220 1800" stroke="#A78BFA" strokeWidth="1.5" strokeDasharray="4 8" fill="none" />
-                        
+
                         {/* Path that starts right, drifts */}
                         <path d="M 100 500 C 140 800 340 1100 320 1500 C 300 1900 120 2200 150 2600" stroke="#F9A8D4" strokeWidth="1.5" strokeDasharray="3 7" fill="none" />
-                        
+
                         {/* Shorter accent path */}
                         <path d="M 320 2000 C 280 2300 100 2500 80 2900 C 60 3200 180 3400 200 3600" stroke="#FDBA74" strokeWidth="1.5" strokeDasharray="5 10" fill="none" />
                     </g>
@@ -2593,10 +2559,10 @@ export default function VerticalStages() {
                     <g filter="url(#path-glow)" opacity="0.5">
                         {["#8B5CF6", "#D946EF", "#F97316", "#F59E0B", "#FBBF24"].map((color, i) => (
                             <circle key={i} r="2.5" fill={color}>
-                                <animateMotion 
-                                    dur={`${18 + i * 2}s`} 
-                                    repeatCount="indefinite" 
-                                    path="M 200 0 C 200 300 50 400 50 700 C 50 1000 350 1100 350 1400 C 350 1700 50 1800 50 2100 C 50 2400 350 2500 350 2800 C 350 3100 200 3200 200 3500" 
+                                <animateMotion
+                                    dur={`${18 + i * 2}s`}
+                                    repeatCount="indefinite"
+                                    path="M 200 0 C 200 300 50 400 50 700 C 50 1000 350 1100 350 1400 C 350 1700 50 1800 50 2100 C 50 2400 350 2500 350 2800 C 350 3100 200 3200 200 3500"
                                     begin={`${i * 3}s`}
                                 />
                                 <animate attributeName="opacity" values="0;0.8;0" dur={`${18 + i * 2}s`} repeatCount="indefinite" begin={`${i * 3}s`} />
@@ -2609,9 +2575,9 @@ export default function VerticalStages() {
             {/* Stages */}
             <div className="relative z-10">
                 {STAGES.map((stage, index) => (
-                    <StageSection 
-                        key={stage.id} 
-                        stage={stage} 
+                    <StageSection
+                        key={stage.id}
+                        stage={stage}
                         index={index}
                     />
                 ))}

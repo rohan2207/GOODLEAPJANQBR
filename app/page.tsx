@@ -3,6 +3,7 @@
 import AgentTeaser from '@/components/AgentTeaser'
 import VerticalStages from '@/components/VerticalStages'
 import FigureIntegration from '@/components/FigureIntegration'
+import BeforeAfterShowstopper from '@/components/BeforeAfterShowstopper'
 import AgentSummary from '@/components/AgentSummary'
 import FeatureGrid from '@/components/FeatureGrid'
 import Finale from '@/components/Finale'
@@ -18,9 +19,9 @@ export default function Home() {
       {/* Preloader overlay - fades out when complete */}
       <AnimatePresence mode="wait">
         {showPreloader && (
-          <Preloader 
+          <Preloader
             key="preloader"
-            onComplete={() => setShowPreloader(false)} 
+            onComplete={() => setShowPreloader(false)}
           />
         )}
       </AnimatePresence>
@@ -30,7 +31,13 @@ export default function Home() {
       <AgentTeaser />
       <VerticalStages />
       <FigureIntegration />
-      <AgentSummary />
+      <BeforeAfterShowstopper 
+        oldSrc="https://s70uuy1ofcxlqlip.public.blob.vercel-storage.com/Pricing%20and%20Locking%20Process%20-%20Conforming%20to%20FHA%20%2B%20LA%20Increase%20%2B%20PE%20%281%29.mp4"
+        newSrc={undefined} // Add new video URL when ready
+        oldStartMode="half"
+        pipDelaySeconds={5}
+      />
+      {/* <AgentSummary /> Removed to consolidate with VerticalStages finale */}
       <FeatureGrid />
       <Finale />
     </main>

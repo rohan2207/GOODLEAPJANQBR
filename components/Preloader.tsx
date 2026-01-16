@@ -15,18 +15,18 @@ function HurricaneParticle({ index, total, active }: { index: number; total: num
     const distance = 200 + Math.random() * 150;
     const size = 3 + Math.random() * 6;
     const duration = 0.6 + Math.random() * 0.3;
-    
+
     const radians = (angle * Math.PI) / 180;
     const spiralRotation = 180 + Math.random() * 360;
-    
+
     const finalX = Math.cos(radians) * distance;
     const finalY = Math.sin(radians) * distance;
-    
+
     const midAngle = radians + (Math.PI / 4);
     const midDistance = distance * 0.5;
     const midX = Math.cos(midAngle) * midDistance;
     const midY = Math.sin(midAngle) * midDistance;
-    
+
     const colors = ["#f97316", "#3b82f6", "#f59e0b", "#60a5fa", "#ffffff"];
     const color = colors[index % colors.length];
 
@@ -53,7 +53,7 @@ function HurricaneParticle({ index, total, active }: { index: number; total: num
 function ConfettiPiece({ index, active }: { index: number; active: boolean }) {
     const colors = ["#f97316", "#3b82f6", "#fbbf24", "#60a5fa", "#ffffff", "#f59e0b", "#93c5fd"];
     const color = colors[index % colors.length];
-    
+
     const startX = (Math.random() - 0.5) * 600;
     const startY = -100 - Math.random() * 200;
     const endY = 400 + Math.random() * 200;
@@ -62,10 +62,10 @@ function ConfettiPiece({ index, active }: { index: number; active: boolean }) {
     const delay = Math.random() * 1.5;
     const duration = 2 + Math.random() * 1.5;
     const size = 6 + Math.random() * 10;
-    
+
     const shapes = ["rectangle", "square", "circle"];
     const shape = shapes[Math.floor(Math.random() * shapes.length)];
-    
+
     const getShapeStyle = () => {
         switch (shape) {
             case "rectangle": return { width: size * 0.4, height: size, borderRadius: 2 };
@@ -159,7 +159,7 @@ function StartButton({ onClick }: { onClick: () => void }) {
         >
             {/* OLD white logo - keeps the new colorful one as a surprise */}
             <OldLinkAILogo className="opacity-50" />
-            
+
             <motion.button
                 onClick={onClick}
                 className="group relative px-12 py-4 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-display font-semibold text-lg tracking-wide overflow-hidden"
@@ -176,15 +176,15 @@ function StartButton({ onClick }: { onClick: () => void }) {
                     animate={{ x: "100%" }}
                     transition={{ repeat: Infinity, duration: 2, ease: "linear", repeatDelay: 1 }}
                 />
-                
+
                 <span className="relative z-10 flex items-center gap-3">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
+                        <path d="M8 5v14l11-7z" />
                     </svg>
                     Start Experience
                 </span>
             </motion.button>
-            
+
             <motion.p
                 className="text-white/30 text-sm font-body tracking-wide"
                 initial={{ opacity: 0 }}
@@ -204,7 +204,7 @@ export function HeroSection() {
     return (
         <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#08080b]">
             {/* Grain overlay */}
-            <div 
+            <div
                 className="absolute inset-0 pointer-events-none opacity-[0.04]"
                 style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -218,21 +218,21 @@ export function HeroSection() {
             {/* Logo + GoodLeap at top - matches preloader final state */}
             <div className="absolute top-[6%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
                 <LinkAILogo className="w-[154px] md:w-[209px]" />
-                
-                {/* GoodLeap branding */}
-                <div className="mt-4 flex flex-col items-center gap-2">
-                    <span className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-body">
+
+                {/* GoodLeap branding - Updated to match Preloader's "Prominent" look (approx 200px * 0.55 scale = 110px) */}
+                <div className="mt-[18px] flex flex-col items-center gap-[7px]">
+                    <span className="text-[6.5px] uppercase tracking-[0.4em] text-white/50 font-display font-medium">
                         by
                     </span>
                     <Image
                         src="https://cdn.bfldr.com/Q445447Z/at/r8mz3sj9btg5khst4twv5q8/goodleap-gradient-cR.svg?auto=webp&format=png"
                         alt="GoodLeap"
-                        width={80}
-                        height={20}
-                        className="opacity-60"
+                        width={110}
+                        height={28}
+                        className="opacity-100"
                         style={{ objectFit: "contain" }}
                     />
-                    <span className="text-[10px] text-white/30 font-body font-light tracking-wide">
+                    <span className="text-[9px] text-white/50 font-body font-light tracking-wide mt-0.5">
                         One Platform. One Experience.
                     </span>
                 </div>
@@ -292,7 +292,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     // Loading progress - 1.8s
     useEffect(() => {
         if (phase !== "loading") return;
-        
+
         const duration = 1800;
         const interval = 20;
         const steps = duration / interval;
@@ -379,7 +379,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             transition={{ duration: 0.5, ease: MOTION_EASE }}
         >
             {/* Grain overlay */}
-            <div 
+            <div
                 className="absolute inset-0 pointer-events-none opacity-[0.04]"
                 style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -387,13 +387,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             />
 
             {/* Aurora backgrounds */}
-            <motion.div 
+            <motion.div
                 className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#f97316]/15 rounded-full blur-[120px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isLogoMovedUp ? 1 : 0 }}
                 transition={{ duration: 1 }}
             />
-            <motion.div 
+            <motion.div
                 className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#3b82f6]/15 rounded-full blur-[120px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isLogoMovedUp ? 1 : 0 }}
@@ -468,15 +468,16 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                         } : {}}
                         transition={{ duration: 0.8, ease: "easeIn", times: [0, 0.4, 1] }}
                     >
-                        <div className="relative text-6xl md:text-8xl font-display font-medium tracking-[0.15em] uppercase">
+                        {/* Reduced tracking to make the "bar" shorter */}
+                        <div className="relative text-6xl md:text-8xl font-display font-medium tracking-tight uppercase">
                             <span className="text-white/10">LinkAI</span>
                             <motion.div
-                        className="absolute inset-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500"
-                        style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
-                    >
-                        LinkAI
+                                className="absolute inset-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500"
+                                style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
+                            >
+                                LinkAI
                             </motion.div>
-                    </div>
+                        </div>
                         <motion.div
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: phase === "loading" ? 0.5 : 0, y: 0 }}
@@ -494,10 +495,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 {(phase === "celebration" || phase === "moveUp" || phase === "showHeadline") && (
                     <motion.div
                         key="new-logo"
-                        className="absolute z-20 flex flex-col items-center w-full"
+                        className="absolute z-20 flex flex-col items-center w-full origin-top"
                         initial={{ opacity: 0, scale: 0.95, top: "50%", y: "-50%", filter: "blur(10px)" }}
-                        animate={{ 
-                            opacity: 1, 
+                        animate={{
+                            opacity: 1,
                             scale: isLogoMovedUp ? 0.55 : 1,
                             top: isLogoMovedUp ? "8%" : "50%",
                             y: isLogoMovedUp ? "0%" : "-50%",
@@ -509,29 +510,29 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                         }}
                     >
                         <LinkAILogo className="w-[280px] md:w-[380px]" />
-                        
-                        {/* GoodLeap branding - stays visible through all phases after celebration */}
+
+                        {/* GoodLeap branding - Bigger and more prominent */}
                         <motion.div
                             className="mt-8 flex flex-col items-center gap-3"
                             initial={{ opacity: 0, y: 10 }}
-                            animate={{ 
+                            animate={{
                                 opacity: 1,
                                 y: 0
                             }}
                             transition={{ delay: 0.5, duration: 0.6, ease: MOTION_EASE }}
                         >
-                            <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-body">
+                            <span className="text-xs uppercase tracking-[0.4em] text-white/50 font-display font-medium">
                                 by
                             </span>
                             <Image
                                 src="https://cdn.bfldr.com/Q445447Z/at/r8mz3sj9btg5khst4twv5q8/goodleap-gradient-cR.svg?auto=webp&format=png"
                                 alt="GoodLeap"
-                                width={140}
-                                height={35}
-                                className="opacity-70"
+                                width={200}
+                                height={50}
+                                className="opacity-100"
                                 style={{ objectFit: "contain" }}
                             />
-                            <span className="text-sm text-white/40 font-body font-light tracking-wide">
+                            <span className="text-base text-white/50 font-body font-light tracking-wide mt-1">
                                 One Platform. One Experience.
                             </span>
                         </motion.div>
@@ -542,11 +543,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             {/* HEADLINE - Comes down from above */}
             <AnimatePresence>
                 {showHeadline && (
-                <motion.div
+                    <motion.div
                         className="absolute z-10 text-center px-4 w-full"
                         style={{ top: "50%", transform: "translateY(-50%)" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
                         <h1 className="mb-8">
@@ -591,7 +592,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                             <span className="text-[10px] uppercase tracking-[0.2em] font-body font-light text-white/30">Scroll to Explore</span>
                             <div className="w-[1px] h-12 bg-gradient-to-b from-orange-500/0 via-orange-500 to-orange-500/0" />
                         </motion.div>
-                </motion.div>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </motion.div>
