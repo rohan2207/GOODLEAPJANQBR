@@ -214,7 +214,7 @@ function StageSection({
     return (
         <div 
             ref={sectionRef}
-            className={`relative ${stage.hasInterface ? 'min-h-[550vh]' : 'min-h-[120vh]'}`}
+            className={`relative ${stage.hasInterface ? 'min-h-[700vh]' : 'min-h-[120vh]'}`}
         >
             {/* Sticky container for the stage content */}
             <div className="sticky top-0 min-h-screen flex items-center py-16">
