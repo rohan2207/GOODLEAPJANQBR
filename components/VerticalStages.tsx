@@ -217,8 +217,39 @@ function StageSection({
             className={`relative ${stage.hasInterface ? 'min-h-[700vh]' : 'min-h-[120vh]'}`}
         >
             {/* Sticky container for the stage content */}
-            <div className="sticky top-0 min-h-screen flex items-center py-16">
-                <div className="w-full max-w-7xl mx-auto px-6 md:px-12">
+            <div className="sticky top-0 min-h-screen flex items-center py-16 overflow-hidden">
+                
+                {/* ===== FLOWING BACKGROUND GLOW (matches line color) ===== */}
+                <motion.div 
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ opacity: useTransform(scrollYProgress, [0.05, 0.15, 0.85, 0.95], [0, 0.7, 0.7, 0]) }}
+                >
+                    {/* Main glow - accent color */}
+                    <motion.div
+                        className="absolute w-[900px] h-[900px] rounded-full blur-[180px]"
+                        style={{
+                            backgroundColor: stage.accentColor,
+                            opacity: 0.12,
+                            left: '50%',
+                            top: '50%',
+                            x: useTransform(scrollYProgress, [0, 0.5, 1], ['-60%', '-50%', '-40%']),
+                            y: '-50%',
+                            scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.2, 1]),
+                        }}
+                    />
+                    {/* Secondary glow */}
+                    <motion.div
+                        className="absolute w-[600px] h-[600px] rounded-full blur-[120px]"
+                        style={{
+                            backgroundColor: stage.accentColor,
+                            opacity: 0.08,
+                            right: '5%',
+                            top: '20%',
+                        }}
+                    />
+                </motion.div>
+
+                <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
                     
                     {/* PHASE 1 & 2: Text + Visualization - CENTERED layout that floats */}
                     <motion.div
@@ -235,7 +266,9 @@ function StageSection({
                     >
                         {/* Text Content - floats down for interface stages */}
                         <motion.div 
-                            className="space-y-6"
+                            className={`space-y-6 ${
+                                (stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-4" : ""
+                            }`}
                             style={{ y: stage.hasInterface ? textFloatY : 0 }}
                         >
                             <div className="flex items-center gap-3">
@@ -254,16 +287,28 @@ function StageSection({
                                 </span>
                             </div>
 
-                            <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+                            <h3 className={`font-bold text-white ${
+                                (stage.id === "rapport" || stage.id === "sales-coach") 
+                                    ? "text-5xl md:text-6xl lg:text-7xl" 
+                                    : "text-4xl md:text-5xl lg:text-6xl"
+                            }`}>
                                 {stage.title}
                             </h3>
                             <p 
-                                className="text-xl md:text-2xl font-medium"
+                                className={`font-medium ${
+                                    (stage.id === "rapport" || stage.id === "sales-coach")
+                                        ? "text-2xl md:text-3xl"
+                                        : "text-xl md:text-2xl"
+                                }`}
                                 style={{ color: stage.accentColor }}
                             >
                                 {stage.subtitle}
                             </p>
-                            <p className="text-white/50 text-lg leading-relaxed max-w-lg">
+                            <p className={`text-white/50 leading-relaxed ${
+                                (stage.id === "rapport" || stage.id === "sales-coach")
+                                    ? "text-xl max-w-xl"
+                                    : "text-lg max-w-lg"
+                            }`}>
                                 {stage.description}
                             </p>
 
@@ -309,7 +354,9 @@ function StageSection({
 
                         {/* PHASE 2: AI Visualization - fades out for interface stages */}
                         <motion.div
-                            className="relative z-10"
+                            className={`relative z-10 ${
+                                (stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-8" : ""
+                            }`}
                             style={{ 
                                 opacity: vizOpacity, 
                                 scale: vizScale,
@@ -317,7 +364,11 @@ function StageSection({
                             }}
                         >
                             <div 
-                                className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+                                className={`relative rounded-2xl overflow-hidden ${
+                                    (stage.id === "rapport" || stage.id === "sales-coach") 
+                                        ? "aspect-[4/3] scale-110" 
+                                        : "aspect-[4/3]"
+                                }`}
                                 style={{
                                     background: `linear-gradient(135deg, ${stage.accentColor}10, ${stage.accentColor}02)`,
                                     border: `1px solid ${stage.accentColor}25`,
