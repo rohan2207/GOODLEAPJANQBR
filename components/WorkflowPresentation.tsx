@@ -139,7 +139,7 @@ export default function WorkflowPresentation() {
                             {activeNode === 1 && <Agent1Stage />}
                             {activeNode === 2 && <Agent2Stage />}
                             {activeNode === 3 && <Agent3Stage />}
-                            {activeNode === 4 && <PricingStage revealed={pricingRevealed} />}
+                            {activeNode === 4 && <PricingStage />}
                         </motion.div>
                     </AnimatePresence>
                 </div>
