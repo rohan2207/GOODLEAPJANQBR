@@ -129,20 +129,28 @@ function StageSection({
         scrollYProgress, 
         stage.id === "sales-coach"
             ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Move left EARLIER when menu appears, hold longer
-            : [0.18, 0.32, 0.78, 0.88],
+            : stage.id === "valuation"
+                ? [0.15, 0.30, 0.78, 0.88] // Valuation: Move left as cards converge
+                : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
             ? [0, -420, -520, -720] // Sales Coach: Move MORE left (increased spacing)
-            : [0, -320, -320, -700] // Rapport: Move MORE left (increased spacing)
+            : stage.id === "valuation"
+                ? [0, -350, -350, -680] // Valuation: Similar movement
+                : [0, -320, -320, -700] // Rapport: Move MORE left (increased spacing)
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
     const textFloatScale = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
             ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Shrink EARLIER, hold longer
-            : [0.18, 0.32, 0.78, 0.88],
+            : stage.id === "valuation"
+                ? [0.15, 0.30, 0.78, 0.88] // Valuation: Shrink as cards converge
+                : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
             ? [1, 0.55, 0.5, 0.4] // Sales Coach: Shrink more
-            : [1, 0.6, 0.6, 0.45]
+            : stage.id === "valuation"
+                ? [1, 0.6, 0.55, 0.42] // Valuation: Similar shrink
+                : [1, 0.6, 0.6, 0.45]
     );
 
     // Phase 2: Visualization - fades out as panel comes in
@@ -150,13 +158,27 @@ function StageSection({
         scrollYProgress, 
         stage.id === "sales-coach"
             ? [0.06, 0.10, 0.12, 0.18] // Sales Coach: Fade out VERY early before objection bubble
-            : stage.hasInterface 
-                ? [0.06, 0.12, 0.22, 0.30] // Fade out before panel
-                : [0.08, 0.15, 0.7, 0.85], 
+            : stage.id === "valuation"
+                ? [0.06, 0.10, 0.12, 0.18] // Valuation: Fade out early before source cards
+                : stage.hasInterface 
+                    ? [0.06, 0.12, 0.22, 0.30] // Fade out before panel
+                    : [0.08, 0.15, 0.7, 0.85], 
         [0, 1, 1, 0]
     );
     const vizScale = useTransform(scrollYProgress, [0.06, 0.15, 0.22, 0.28], [0.9, 1, 1, 0.95]);
     const vizY = useTransform(scrollYProgress, [0.06, 0.15], [30, 0]);
+
+    // ===== VALUATION AI SPECIFIC TRANSFORMS =====
+    // Phase 1: Source cards converge (0.15 - 0.40)
+    const sourceCardsOpacity = useTransform(scrollYProgress, [0.15, 0.20, 0.38, 0.45], [0, 1, 1, 0]);
+    const convergenceProgress = useTransform(scrollYProgress, [0.15, 0.40], [0, 1]);
+    
+    // Phase 2: Valuation panel appears (0.40 - 0.78)
+    const valuationPanelOpacity = useTransform(scrollYProgress, [0.40, 0.48, 0.90, 0.97], [0, 1, 1, 0]);
+    const valuationPanelScale = useTransform(scrollYProgress, [0.40, 0.48, 0.78, 0.88], [0.85, 1, 1, 0.58]);
+    const valuationPanelX = useTransform(scrollYProgress, [0.48, 0.78, 0.88], [80, 80, 560]);
+    const valuationPanelBlur = useTransform(scrollYProgress, [0.40, 0.48], [10, 0]);
+    const valuationPanelBlurFilter = useTransform(valuationPanelBlur, (v) => `blur(${v}px)`);
 
     // ===== FOR STAGES WITH INTERFACE (3-phase transition) =====
     // For Rapport Builder: Panel appears at 0.25
@@ -422,7 +444,7 @@ function StageSection({
                                     x: viewportX
                                 }}
                             >
-                                <LinkAIAppContext accentColor={stage.accentColor} />
+                                <LinkAIAppContext accentColor={stage.accentColor} stageId={stage.id} />
                             </motion.div>
 
                             {/* Floating Panel - morphs from center to right position */}
@@ -523,13 +545,65 @@ function StageSection({
                                     x: viewportX
                                 }}
                             >
-                                <LinkAIAppContext accentColor={stage.accentColor} />
+                                <LinkAIAppContext accentColor={stage.accentColor} stageId={stage.id} />
                             </motion.div>
                         </>
                     )}
 
-                    {/* For other interface stages (not rapport, not sales-coach) */}
-                    {stage.hasInterface && stage.id !== "rapport" && stage.id !== "sales-coach" && (
+                    {/* VALUATION AI: Source Cards Converge → Panel → Viewport */}
+                    {stage.hasInterface && stage.id === "valuation" && (
+                        <>
+                            {/* Phase 1: Source Cards - converge from corners */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ 
+                                    opacity: sourceCardsOpacity,
+                                    x: 80, // Offset to match other panels
+                                }}
+                            >
+                                <ValuationSourceCards 
+                                    accentColor={stage.accentColor} 
+                                    convergenceProgress={convergenceProgress}
+                                />
+                            </motion.div>
+
+                            {/* Phase 2: Valuation Panel - appears after cards converge */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                                style={{ 
+                                    opacity: valuationPanelOpacity,
+                                    filter: valuationPanelBlurFilter,
+                                }}
+                            >
+                                <motion.div 
+                                    className="relative"
+                                    style={{ 
+                                        scale: valuationPanelScale,
+                                        x: valuationPanelX,
+                                        y: panelY,
+                                    }}
+                                >
+                                    <ValuationAIPresentation accentColor={stage.accentColor} contentScrollY={panelContentScroll} />
+                                </motion.div>
+                            </motion.div>
+
+                            {/* Phase 3: App Context - fades in around the panel */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ 
+                                    opacity: viewportContextOpacity,
+                                    scale: viewportContextScale,
+                                    filter: viewportBlurFilter,
+                                    x: viewportX
+                                }}
+                            >
+                                <LinkAIAppContext accentColor={stage.accentColor} stageId={stage.id} />
+                            </motion.div>
+                        </>
+                    )}
+
+                    {/* For other interface stages (not rapport, not sales-coach, not valuation) */}
+                    {stage.hasInterface && stage.id !== "rapport" && stage.id !== "sales-coach" && stage.id !== "valuation" && (
                         <motion.div 
                             className="absolute inset-0 flex items-center justify-center px-8 md:px-16"
                             style={{ 
@@ -614,7 +688,7 @@ function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
 
 // LinkAI App Viewport - Shows the dashboard with panel overlaid
 // App context WITHOUT the panel - for the floating puzzle piece effect
-function LinkAIAppContext({ accentColor }: { accentColor: string }) {
+function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stageId?: string }) {
     return (
         <div className="relative w-full max-w-[1380px] mx-auto">
             {/* Browser-like viewport */}
@@ -756,100 +830,191 @@ function LinkAIAppContext({ accentColor }: { accentColor: string }) {
                         </div>
                     </div>
 
-                    {/* Sales Coach panel - showing all options */}
+                    {/* Right panel - changes based on stageId */}
                     <div className="w-[320px] bg-white border-l border-black/5 flex flex-col overflow-hidden">
-                        {/* Header */}
-                        <div className="px-4 py-3 bg-white border-b border-black/5">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h1 className="text-sm font-bold text-[#1d1d1f]">Sales Coach</h1>
-                                    <p className="text-[10px] text-[#86868b]">Objection Handling & Benefit Calc</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* AI Banner */}
-                        <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-100">
-                            <p className="text-[10px] text-amber-700"><span className="font-semibold">AI Sales Coach</span> - Personalized guidance</p>
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 p-3 bg-[#f5f5f7] space-y-3 overflow-auto">
-                            {/* Handle Objections */}
-                            <div>
-                                <div className="flex items-center gap-1.5 mb-2">
-                                    <div className="w-4 h-4 rounded bg-rose-100 flex items-center justify-center">
-                                        <svg className="w-2.5 h-2.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="M12 17h.01" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Handle Objections</h3>
-                                </div>
-                                <div className="grid grid-cols-2 gap-1.5">
-                                    <div className="p-2 bg-white rounded-lg border border-black/5 hover:border-rose-200">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">What do you see?</p>
-                                    </div>
-                                    <motion.div 
-                                        className="p-2 bg-rose-50 rounded-lg border border-rose-300"
-                                        animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 8px 2px rgba(244,63,94,0.3)', '0 0 0 0 rgba(244,63,94,0)'] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    >
-                                        <p className="text-[10px] font-medium text-rose-700">Rate too high</p>
-                                    </motion.div>
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Closing costs</p>
-                                    </div>
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Wants to wait</p>
+                        {stageId === "valuation" ? (
+                            <>
+                                {/* Valuation AI Header */}
+                                <div className="px-4 py-3 bg-white border-b border-black/5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h1 className="text-sm font-bold text-[#1d1d1f]">Property AVM</h1>
+                                            <p className="text-[10px] text-[#86868b]">Working Value for AUS</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Calculate Benefits */}
-                            <div>
-                                <div className="flex items-center gap-1.5 mb-2">
-                                    <div className="w-4 h-4 rounded bg-teal-100 flex items-center justify-center">
-                                        <svg className="w-2.5 h-2.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <rect width="16" height="20" x="4" y="2" rx="2" />
-                                            <line x1="8" x2="16" y1="6" y2="6" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Calculate Benefits</h3>
+                                <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-100">
+                                    <p className="text-[10px] text-amber-700"><span className="font-semibold">AI-Generated</span> - Verify with appraisal</p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-1.5">
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Blended rate</p>
+                                <div className="flex-1 p-3 bg-[#f5f5f7] space-y-3 overflow-auto">
+                                    {/* AUS Recommended */}
+                                    <div className="p-3 bg-white rounded-xl border-2 border-green-500">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-[10px] font-bold text-green-700 uppercase">AUS Recommended</span>
+                                            <span className="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">High</span>
+                                        </div>
+                                        <p className="text-2xl font-bold text-[#1d1d1f]">$785,000</p>
+                                        <p className="text-[9px] text-green-600 mt-1">✓ Selected for AUS</p>
                                     </div>
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Cash flow</p>
+                                    {/* Source Comparison */}
+                                    <div className="p-3 bg-white rounded-xl border border-black/5">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-[10px] font-bold text-[#1d1d1f] uppercase">Source Comparison</span>
+                                            <span className="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">4%</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="text-center p-2 rounded-lg bg-purple-50">
+                                                <p className="text-[9px] text-purple-700 font-semibold">Internal</p>
+                                                <p className="text-sm font-bold text-purple-700">$785K</p>
+                                            </div>
+                                            <div className="text-center p-2 rounded-lg bg-blue-50">
+                                                <p className="text-[9px] text-blue-700 font-semibold">Zillow</p>
+                                                <p className="text-sm font-bold text-blue-700">$769K</p>
+                                            </div>
+                                            <div className="text-center p-2 rounded-lg bg-red-50">
+                                                <p className="text-[9px] text-red-700 font-semibold">Redfin</p>
+                                                <p className="text-sm font-bold text-red-700">$801K</p>
+                                            </div>
+                                            <div className="text-center p-2 rounded-lg bg-slate-50">
+                                                <p className="text-[9px] text-slate-700 font-semibold">Realtor</p>
+                                                <p className="text-sm font-bold text-slate-700">$777K</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Credit impact</p>
-                                    </div>
-                                    <div className="p-2 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Interest savings</p>
+                                    {/* Underwriting Ready */}
+                                    <div className="p-2.5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                                        <p className="text-[10px] text-green-700 font-medium mb-1">✓ Underwriting Ready</p>
+                                        <p className="text-[9px] text-green-600/80">Low variance, multiple sources confirmed.</p>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Answer more questions hint */}
-                            <div className="p-2.5 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
-                                <p className="text-[10px] text-orange-700 font-medium mb-1">💡 Answer similar questions</p>
-                                <p className="text-[9px] text-orange-600/80">Overcome objections with data-backed responses personalized to each borrower.</p>
-                            </div>
-
-                            {/* Loaded Scenario */}
-                            <div className="p-2 bg-white rounded-lg border border-black/5">
-                                <p className="text-[9px] text-[#86868b] uppercase font-semibold">Loaded Scenario</p>
-                                <p className="text-[10px] text-[#1d1d1f]">7 debts • <span className="text-amber-600 font-medium">$1,196/mo</span></p>
-                            </div>
-                        </div>
+                            </>
+                        ) : stageId === "rapport" ? (
+                            <>
+                                {/* Rapport Builder Header */}
+                                <div className="px-4 py-3 bg-white border-b border-black/5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h1 className="text-sm font-bold text-[#1d1d1f]">Call Prep Brief</h1>
+                                            <p className="text-[10px] text-[#86868b]">Everything for the first 5 min</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="px-3 py-1.5 bg-fuchsia-50 border-b border-fuchsia-100">
+                                    <p className="text-[10px] text-fuchsia-700"><span className="font-semibold">AI-Assembled</span> - Verify all info</p>
+                                </div>
+                                <div className="flex-1 p-3 bg-[#f5f5f7] space-y-2 overflow-auto">
+                                    <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[9px] text-[#86868b] uppercase font-semibold mb-1">Property</p>
+                                        <p className="text-sm font-bold text-[#1d1d1f]">$785K</p>
+                                        <p className="text-[10px] text-[#86868b]">2116 Shrewsbury Dr</p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                            <p className="text-[9px] text-[#86868b] uppercase font-semibold">Total Liens</p>
+                                            <p className="text-sm font-bold text-[#1d1d1f]">$428K</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                            <p className="text-[9px] text-[#86868b] uppercase font-semibold">Equity</p>
+                                            <p className="text-sm font-bold text-green-600">$358K</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-2.5 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-200">
+                                        <p className="text-[10px] text-fuchsia-700 font-medium mb-1">🎯 Talk Track Ready</p>
+                                        <p className="text-[9px] text-fuchsia-600/80">Personalized context for John Doe.</p>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Sales Coach Header (default) */}
+                                <div className="px-4 py-3 bg-white border-b border-black/5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h1 className="text-sm font-bold text-[#1d1d1f]">Sales Coach</h1>
+                                            <p className="text-[10px] text-[#86868b]">Objection Handling & Benefit Calc</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-100">
+                                    <p className="text-[10px] text-amber-700"><span className="font-semibold">AI Sales Coach</span> - Personalized guidance</p>
+                                </div>
+                                <div className="flex-1 p-3 bg-[#f5f5f7] space-y-3 overflow-auto">
+                                    <div>
+                                        <div className="flex items-center gap-1.5 mb-2">
+                                            <div className="w-4 h-4 rounded bg-rose-100 flex items-center justify-center">
+                                                <svg className="w-2.5 h-2.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <path d="M12 17h.01" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Handle Objections</h3>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-1.5">
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">What do you see?</p>
+                                            </div>
+                                            <motion.div 
+                                                className="p-2 bg-rose-50 rounded-lg border border-rose-300"
+                                                animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 8px 2px rgba(244,63,94,0.3)', '0 0 0 0 rgba(244,63,94,0)'] }}
+                                                transition={{ duration: 2, repeat: Infinity }}
+                                            >
+                                                <p className="text-[10px] font-medium text-rose-700">Rate too high</p>
+                                            </motion.div>
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Closing costs</p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Wants to wait</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-1.5 mb-2">
+                                            <div className="w-4 h-4 rounded bg-teal-100 flex items-center justify-center">
+                                                <svg className="w-2.5 h-2.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <rect width="16" height="20" x="4" y="2" rx="2" />
+                                                    <line x1="8" x2="16" y1="6" y2="6" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Calculate Benefits</h3>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-1.5">
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Blended rate</p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Cash flow</p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Credit impact</p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                                <p className="text-[10px] font-medium text-[#1d1d1f]">Interest savings</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-2.5 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                                        <p className="text-[10px] text-orange-700 font-medium mb-1">💡 Answer similar questions</p>
+                                        <p className="text-[9px] text-orange-600/80">Overcome objections with data-backed responses.</p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -1907,6 +2072,350 @@ function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: 
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ValuationSourceCards - 4 cards that converge from corners
+function ValuationSourceCards({ accentColor, convergenceProgress }: { accentColor: string; convergenceProgress: any }) {
+    const sources = [
+        { name: "Internal", value: "$785K", color: "purple", bgColor: "bg-purple-50", borderColor: "border-purple-200", textColor: "text-purple-700", position: "top-left" },
+        { name: "Zillow", value: "$769K", color: "blue", bgColor: "bg-blue-50", borderColor: "border-blue-200", textColor: "text-blue-700", position: "top-right" },
+        { name: "Redfin", value: "$801K", color: "red", bgColor: "bg-red-50", borderColor: "border-red-200", textColor: "text-red-700", position: "bottom-left" },
+        { name: "Realtor", value: "$777K", color: "slate", bgColor: "bg-slate-50", borderColor: "border-slate-200", textColor: "text-slate-700", position: "bottom-right" },
+    ];
+
+    // Transform convergence progress to individual card positions
+    const card0X = useTransform(convergenceProgress, [0, 0.5, 1], [-180, -60, 0]);
+    const card0Y = useTransform(convergenceProgress, [0, 0.5, 1], [-120, -40, 0]);
+    const card1X = useTransform(convergenceProgress, [0, 0.5, 1], [180, 60, 0]);
+    const card1Y = useTransform(convergenceProgress, [0, 0.5, 1], [-120, -40, 0]);
+    const card2X = useTransform(convergenceProgress, [0, 0.5, 1], [-180, -60, 0]);
+    const card2Y = useTransform(convergenceProgress, [0, 0.5, 1], [120, 40, 0]);
+    const card3X = useTransform(convergenceProgress, [0, 0.5, 1], [180, 60, 0]);
+    const card3Y = useTransform(convergenceProgress, [0, 0.5, 1], [120, 40, 0]);
+    
+    const cardTransforms = [
+        { x: card0X, y: card0Y },
+        { x: card1X, y: card1Y },
+        { x: card2X, y: card2Y },
+        { x: card3X, y: card3Y },
+    ];
+
+    const centerScale = useTransform(convergenceProgress, [0.7, 1], [0, 1]);
+    const cardsOpacity = useTransform(convergenceProgress, [0.8, 1], [1, 0]);
+
+    return (
+        <div className="relative w-[700px] h-[500px]">
+            {/* Background glow */}
+            <motion.div 
+                className="absolute inset-0 rounded-3xl blur-3xl -z-10"
+                style={{ 
+                    backgroundColor: `${accentColor}20`,
+                    scale: useTransform(convergenceProgress, [0, 1], [1.2, 0.8])
+                }}
+            />
+            
+            {/* Floating source cards */}
+            <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                style={{ opacity: cardsOpacity }}
+            >
+                <div className="relative w-full h-full">
+                    {sources.map((source, index) => (
+                        <motion.div
+                            key={source.name}
+                            className={`absolute ${source.bgColor} ${source.borderColor} border-2 rounded-2xl p-6 shadow-xl backdrop-blur-sm`}
+                            style={{
+                                x: cardTransforms[index].x,
+                                y: cardTransforms[index].y,
+                                left: '50%',
+                                top: '50%',
+                                marginLeft: index % 2 === 0 ? '-200px' : '40px',
+                                marginTop: index < 2 ? '-140px' : '40px',
+                            }}
+                        >
+                            <div className="text-center">
+                                <div className={`w-12 h-12 rounded-xl ${source.bgColor} border ${source.borderColor} flex items-center justify-center mx-auto mb-3`}>
+                                    <svg className={`w-6 h-6 ${source.textColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                </div>
+                                <p className={`text-xs font-bold uppercase tracking-wide ${source.textColor} mb-1`}>{source.name}</p>
+                                <p className={`text-2xl font-bold ${source.textColor}`}>{source.value}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </motion.div>
+
+            {/* Center convergence indicator */}
+            <motion.div 
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{ scale: centerScale, opacity: centerScale }}
+            >
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-2xl">
+                    <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+            </motion.div>
+
+            {/* Analyzing text */}
+            <motion.div 
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center"
+                style={{ opacity: useTransform(convergenceProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0]) }}
+            >
+                <p className="text-lg font-semibold text-white/80">Comparing valuations...</p>
+                <p className="text-sm text-white/50 mt-1">Finding the best recommendation</p>
+            </motion.div>
+        </div>
+    );
+}
+
+// ValuationAIPresentation - Full property valuation panel
+function ValuationAIPresentation({ accentColor, contentScrollY }: { accentColor: string; contentScrollY?: any }) {
+    return (
+        <div className="relative w-[700px]">
+            {/* Outer glow */}
+            <motion.div 
+                className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
+                style={{ backgroundColor: `${accentColor}25` }}
+                animate={{ opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Panel container */}
+            <div 
+                className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
+                style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
+            >
+                {/* Header */}
+                <div className="px-6 py-5 bg-white border-b border-black/5 flex-shrink-0">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 className="text-xl font-bold text-[#1d1d1f] tracking-tight">Working Value for AUS</h1>
+                                <p className="text-sm text-[#86868b]">Property Valuation Analysis</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button className="p-2 rounded-lg hover:bg-black/5 transition-colors border border-stone-200">
+                                <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </button>
+                            <button className="p-2 rounded-lg hover:bg-black/5 transition-colors border border-stone-200">
+                                <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* AI Warning Banner */}
+                <div className="px-4 py-2 bg-amber-50 border-b border-amber-100 flex-shrink-0">
+                    <p className="text-xs text-amber-700"><span className="font-semibold">AI-Generated</span> — Verify with appraisal</p>
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-hidden bg-[#f5f5f7]">
+                    <motion.div 
+                        className="p-6"
+                        style={{ y: contentScrollY || 0 }}
+                    >
+                        <div className="space-y-4 max-w-2xl mx-auto">
+                            {/* Property Address Card */}
+                            <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-base font-semibold text-[#1d1d1f] truncate">2116 Shrewsbury Dr</p>
+                                    <p className="text-sm text-[#86868b]">McKinney, TX • 5bd 4.5ba • 3,850 sqft</p>
+                                </div>
+                            </div>
+
+                            {/* AUS Recommended Card */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm ring-2 ring-green-500">
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                                            </svg>
+                                            <span className="text-xs font-bold text-green-700 uppercase tracking-wide">AUS Recommended</span>
+                                        </div>
+                                        <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">High</span>
+                                    </div>
+                                    <p className="text-5xl font-bold text-[#1d1d1f] mb-4">$785,000</p>
+                                    <div className="flex items-center gap-2 p-3 rounded-xl bg-green-50 border border-green-100 mb-4">
+                                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm text-green-700">Supported by multiple sources with low variance</span>
+                                    </div>
+                                    <p className="text-sm text-[#86868b]">The internal AVM value is supported by a low variance and high confidence level.</p>
+                                    <div className="mt-4 pt-4 border-t border-black/5 text-center">
+                                        <span className="text-sm text-green-600 font-semibold">✓ Currently selected for AUS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Alternative Options */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5">
+                                    <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Alternative Options</span>
+                                </div>
+                                <div className="divide-y divide-black/5">
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div>
+                                                <p className="text-sm font-semibold text-[#1d1d1f]">Safest for underwriting</p>
+                                                <p className="text-xs text-[#86868b]">Lowest defensible value across all sources</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$769K</span>
+                                    </div>
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div>
+                                                <p className="text-sm font-semibold text-[#1d1d1f]">Balanced estimate</p>
+                                                <p className="text-xs text-[#86868b]">Median of all available sources</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$785K</span>
+                                    </div>
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <p className="text-sm font-semibold text-[#1d1d1f]">Best case (not recommended)</p>
+                                                    <p className="text-xs text-[#86868b]">Upper bound - may increase appraisal risk</p>
+                                                </div>
+                                                <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$801K</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Source Comparison */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                                    <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Source Comparison</span>
+                                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">4% variance</span>
+                                </div>
+                                <div className="p-5">
+                                    <div className="grid grid-cols-4 gap-3 mb-4">
+                                        <div className="text-center p-3 rounded-xl bg-purple-50 border border-purple-100">
+                                            <p className="text-[10px] text-purple-700 font-semibold uppercase">Internal</p>
+                                            <p className="text-base font-bold text-purple-700 mt-1">$785K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-blue-50 border border-blue-100">
+                                            <p className="text-[10px] text-blue-700 font-semibold uppercase">Zillow</p>
+                                            <p className="text-base font-bold text-blue-700 mt-1">$769K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-red-50 border border-red-100">
+                                            <p className="text-[10px] text-red-700 font-semibold uppercase">Redfin</p>
+                                            <p className="text-base font-bold text-red-700 mt-1">$801K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                            <p className="text-[10px] text-slate-700 font-semibold uppercase">Realtor</p>
+                                            <p className="text-base font-bold text-slate-700 mt-1">$777K</p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style={{ width: '80%' }} />
+                                        </div>
+                                        <p className="text-xs text-[#86868b] text-center">Values within 5% variance are typically considered stable across AVMs</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Why This Value */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-pointer">
+                                    <div className="flex items-center gap-3">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm font-semibold text-[#1d1d1f]">Why This Value?</span>
+                                    </div>
+                                    <svg className="w-5 h-5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Underwriting Readiness */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Underwriting Readiness</span>
+                                    </div>
+                                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Yes</span>
+                                </div>
+                                <div className="p-4 space-y-1">
+                                    <div className="flex items-center justify-between py-2 border-b border-black/5">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Multiple sources present</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">Yes</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2 border-b border-black/5">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Variance within tolerance</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">4%</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Internal model alignment</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">Yes</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Disclaimer */}
+                            <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <p className="text-xs text-[#86868b]">AVMs are estimates; final value determined by appraisal or underwriting. Selected value prioritizes stability and defensibility.</p>
                             </div>
                         </div>
                     </motion.div>
