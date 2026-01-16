@@ -54,16 +54,18 @@ const STAGES = [
         buttonSubtext: "Build customer context",
     },
     {
-        id: "structuring",
+        id: "sales-coach",
         number: "03",
         label: "AI AGENT",
-        title: "Structuring AI",
-        subtitle: "Optimal Loan Options",
-        description: "Intelligent analysis presents the best loan structures tailored to each borrower.",
+        title: "Sales Coach",
+        subtitle: "Turn Objections into Opportunities",
+        description: "Real-time guidance to handle objections and calculate benefits—personalized to each borrower's data.",
         component: Agent2Stage,
         accentColor: "#F97316",
         hasInterface: true,
         interfacePlaceholder: null,
+        buttonLabel: "Sales Coach",
+        buttonSubtext: "Objection handling & benefit calc",
     },
     {
         id: "valuation",
@@ -152,6 +154,15 @@ function StageSection({
     const viewportBlur = useTransform(scrollYProgress, [0.68, 0.76], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
     const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 60]); // Shift viewport right
+
+    // ===== SALES COACH SPECIFIC TRANSFORMS =====
+    // Phase 1: Objection bubble appears
+    const objectionOpacity = useTransform(scrollYProgress, [0.12, 0.20, 0.28, 0.35], [0, 1, 1, 0]);
+    const objectionScale = useTransform(scrollYProgress, [0.12, 0.20, 0.28, 0.35], [0.8, 1, 1, 0.9]);
+    const objectionRotateY = useTransform(scrollYProgress, [0.28, 0.38], [0, 90]);
+    
+    // Phase 2: Panel flips in from the other side
+    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.25, 0.35], [-90, 0]);
 
     const StageComponent = stage.component;
     const isAlternate = index % 2 === 1;
@@ -336,8 +347,68 @@ function StageSection({
                         </>
                     )}
                     
-                    {/* For other interface stages (not rapport) */}
-                    {stage.hasInterface && stage.id !== "rapport" && (
+                    {/* SALES COACH: Objection → Flip → Panel → Viewport */}
+                    {stage.hasInterface && stage.id === "sales-coach" && (
+                        <>
+                            {/* Phase 1: Objection Bubble - appears first */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ 
+                                    opacity: objectionOpacity,
+                                    perspective: 1000,
+                                }}
+                            >
+                                <motion.div
+                                    style={{
+                                        scale: objectionScale,
+                                        rotateY: objectionRotateY,
+                                        transformStyle: "preserve-3d",
+                                    }}
+                                >
+                                    <ObjectionBubble accentColor={stage.accentColor} />
+                                </motion.div>
+                            </motion.div>
+
+                            {/* Phase 2: Sales Coach Panel - flips in */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                                style={{ 
+                                    opacity: focusedPanelOpacity,
+                                    filter: focusedPanelBlurFilter,
+                                    perspective: 1000,
+                                }}
+                            >
+                                <motion.div 
+                                    className="relative"
+                                    style={{ 
+                                        scale: panelScale,
+                                        x: panelX,
+                                        y: panelY,
+                                        rotateY: salesCoachPanelRotateY,
+                                        transformStyle: "preserve-3d",
+                                    }}
+                                >
+                                    <SalesCoachPresentation accentColor={stage.accentColor} contentScrollY={panelContentScroll} />
+                                </motion.div>
+                            </motion.div>
+
+                            {/* Phase 3: App Context - fades in around the panel */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center"
+                                style={{ 
+                                    opacity: viewportContextOpacity,
+                                    scale: viewportContextScale,
+                                    filter: viewportBlurFilter,
+                                    x: viewportX
+                                }}
+                            >
+                                <LinkAIAppContext accentColor={stage.accentColor} />
+                            </motion.div>
+                        </>
+                    )}
+
+                    {/* For other interface stages (not rapport, not sales-coach) */}
+                    {stage.hasInterface && stage.id !== "rapport" && stage.id !== "sales-coach" && (
                         <motion.div 
                             className="absolute inset-0 flex items-center justify-center px-8 md:px-16"
                             style={{ 
@@ -1215,6 +1286,255 @@ function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentCol
                             Some interest rates estimated based on debt type. Property values from internal AVM.
                         </p>
                     </div>
+                    </motion.div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ObjectionBubble component - shows the borrower's objection as a speech bubble
+function ObjectionBubble({ accentColor }: { accentColor: string }) {
+    return (
+        <div className="relative">
+            {/* Outer glow */}
+            <motion.div 
+                className="absolute -inset-6 rounded-3xl blur-3xl -z-10"
+                style={{ backgroundColor: `${accentColor}20` }}
+                animate={{ opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Speech bubble */}
+            <div 
+                className="relative bg-white rounded-2xl p-8 shadow-2xl max-w-md"
+                style={{ boxShadow: `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.3)` }}
+            >
+                {/* Quote icon */}
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center shadow-lg">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                    </svg>
+                </div>
+                
+                {/* The objection text */}
+                <p className="text-2xl font-semibold text-[#1d1d1f] leading-relaxed">
+                    &ldquo;Your rates are too high&rdquo;
+                </p>
+                
+                {/* Borrower indicator */}
+                <div className="mt-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-[#1d1d1f]">Borrower Objection</p>
+                        <p className="text-xs text-[#86868b]">The moment every LO dreads...</p>
+                    </div>
+                </div>
+                
+                {/* Speech bubble tail */}
+                <div className="absolute -bottom-3 left-12 w-6 h-6 bg-white transform rotate-45" style={{ boxShadow: '4px 4px 8px rgba(0,0,0,0.1)' }} />
+            </div>
+        </div>
+    );
+}
+
+// SalesCoachPresentation component - the AI response panel
+function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: string; contentScrollY?: any }) {
+    return (
+        <div className="relative w-[520px]">
+            {/* Outer glow */}
+            <motion.div 
+                className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
+                style={{ backgroundColor: `${accentColor}25` }}
+                animate={{ opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Panel container */}
+            <div 
+                className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
+                style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
+            >
+                {/* Header */}
+                <div className="px-6 py-5 bg-white border-b border-black/5 flex-shrink-0">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 className="text-xl font-bold text-[#1d1d1f] tracking-tight">Sales Coach</h1>
+                                <p className="text-sm text-[#86868b]">Rate too high objection</p>
+                            </div>
+                        </div>
+                        <button className="p-2 rounded-lg hover:bg-black/5 transition-colors">
+                            <svg className="w-5 h-5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {/* AI Warning Banner */}
+                <div className="px-4 py-2 bg-amber-50 border-b border-amber-100 flex-shrink-0">
+                    <p className="text-xs text-amber-700"><span className="font-semibold">AI Sales Coach</span> - Uses your loan scenario data for personalized guidance</p>
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-hidden">
+                    <motion.div 
+                        className="p-6 bg-[#f5f5f7]"
+                        style={{ y: contentScrollY || 0 }}
+                    >
+                        <div className="space-y-4">
+                            {/* AI Avatar */}
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-[#1d1d1f]">AI Sales Coach</p>
+                                    <p className="text-xs text-[#86868b]">Rate too high objection</p>
+                                </div>
+                            </div>
+
+                            {/* Response Card */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="space-y-4">
+                                    <p className="text-sm text-[#1d1d1f] leading-relaxed">
+                                        I understand your client&apos;s concern about the mortgage rate. Let&apos;s look at how a blended rate can actually work in their favor by considering their current debts.
+                                    </p>
+
+                                    {/* Current Mortgages */}
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-orange-100 text-orange-600">1</span>
+                                            <p className="text-sm text-[#1d1d1f] font-semibold">Current Mortgages:</p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">1st Mortgage: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$247,500</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">3.75%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">2nd Mortgage/HELOC: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$180,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">4.25%</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Selected Debts */}
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-orange-100 text-orange-600">2</span>
+                                            <p className="text-sm text-[#1d1d1f] font-semibold">Selected Debts for Payoff:</p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">CHASE AUTO: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$18,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">6.9%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">5/3 DIVIDEND: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$12,645</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">5.5%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">WFBNA AUTO: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$11,219</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">7.2%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">WFBNA CARD: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$10,200</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">24.99%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">AMERICAN EXPRESS: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$2,500</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">19.99%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">CITI BANK: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$750</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">22.99%</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Debt Summary */}
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <div className="w-5 h-5 rounded bg-stone-100 flex items-center justify-center text-stone-500">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                        </div>
+                                        <h4 className="font-medium text-sm text-[#1d1d1f]">Current Debt Summary:</h4>
+                                    </div>
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">Total Debt to Pay Off: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$55,814</span></p>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">Monthly Payments Eliminated: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$1,196</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Blended Rate - THE MIC DROP */}
+                                    <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-5 border border-orange-200">
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <div className="w-6 h-6 rounded bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <h4 className="font-semibold text-sm text-orange-800">Blended Rate Calculation:</h4>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-[#1d1d1f]">Total Debt (including mortgages): <span className="font-semibold text-emerald-600">$483,314</span></p>
+                                            <p className="text-sm text-[#1d1d1f]">Total Estimated Interest: <span className="font-semibold text-emerald-600">$23,494/year</span></p>
+                                            <div className="pt-2 border-t border-orange-200 mt-3">
+                                                <p className="text-lg font-bold text-orange-700">
+                                                    Blended Rate = <span className="text-2xl text-orange-600 bg-white px-3 py-1 rounded-lg shadow-sm">4.86%</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Conclusion */}
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <div className="w-5 h-5 rounded bg-green-100 flex items-center justify-center text-green-600">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                        </div>
+                                        <h4 className="font-medium text-sm text-[#1d1d1f]">Conclusion:</h4>
+                                    </div>
+                                    <p className="text-sm text-[#1d1d1f] leading-relaxed bg-green-50 p-4 rounded-xl border border-green-100">
+                                        While the mortgage rate may seem high, consolidating high-interest debt could <span className="font-semibold text-green-700">lower their overall financial burden</span>, leading to savings in monthly payments and interest costs. Would your client be open to exploring this option further?
+                                    </p>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-2 pt-2">
+                                        <button className="flex-1 py-3 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                            Try Another Topic
+                                        </button>
+                                        <button className="px-5 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl text-sm font-medium flex items-center gap-2 shadow-md">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>
