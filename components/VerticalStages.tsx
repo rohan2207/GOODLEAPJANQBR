@@ -181,12 +181,12 @@ function StageSection({
     const valuationPanelBlurFilter = useTransform(valuationPanelBlur, (v) => `blur(${v}px)`);
 
     // ===== FOR STAGES WITH INTERFACE (3-phase transition) =====
-    // For Rapport Builder: Panel appears at 0.25
+    // For Rapport Builder: Panel appears at 0.25, fades out BEFORE viewport appears
     const focusedPanelOpacity = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach" 
-            ? [0.50, 0.58, 0.88, 0.95]  // Sales Coach: Later start, ends sooner to avoid white space
-            : [0.25, 0.32, 0.90, 0.97], // Rapport Builder: Hold longer too
+            ? [0.50, 0.58, 0.78, 0.85]  // Sales Coach: Fade out before viewport
+            : [0.25, 0.32, 0.75, 0.82], // Rapport Builder: Fade out before viewport (0.78)
         [0, 1, 1, 0]
     );
     
@@ -912,25 +912,43 @@ function LinkAIAppContext({ accentColor, stageId }: { accentColor: string; stage
                                 <div className="px-3 py-1.5 bg-fuchsia-50 border-b border-fuchsia-100">
                                     <p className="text-[10px] text-fuchsia-700"><span className="font-semibold">AI-Assembled</span> - Verify all info</p>
                                 </div>
-                                <div className="flex-1 p-3 bg-[#f5f5f7] space-y-2 overflow-auto">
-                                    <div className="p-2.5 bg-white rounded-lg border border-black/5">
-                                        <p className="text-[9px] text-[#86868b] uppercase font-semibold mb-1">Property</p>
-                                        <p className="text-sm font-bold text-[#1d1d1f]">$785K</p>
-                                        <p className="text-[10px] text-[#86868b]">2116 Shrewsbury Dr</p>
+                                <div className="flex-1 p-3 bg-[#f5f5f7] space-y-2 overflow-y-auto text-[10px]">
+                                    {/* Opening Line */}
+                                    <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
+                                        <p className="text-[9px] text-amber-700 font-semibold mb-1">Opening Line</p>
+                                        <p className="text-[9px] text-amber-800">&ldquo;Thank you for taking the time to speak with me today about your financial goals.&rdquo;</p>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div className="p-2.5 bg-white rounded-lg border border-black/5">
-                                            <p className="text-[9px] text-[#86868b] uppercase font-semibold">Total Liens</p>
-                                            <p className="text-sm font-bold text-[#1d1d1f]">$428K</p>
+                                    {/* Discovery Questions */}
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[9px] text-[#86868b] font-semibold mb-1">Discovery Questions</p>
+                                        <p className="text-[9px] text-[#1d1d1f]">• What are your primary financial goals?</p>
+                                        <p className="text-[9px] text-[#1d1d1f]">• How do you feel about current payments?</p>
+                                    </div>
+                                    {/* What We See */}
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[9px] text-fuchsia-600 font-semibold mb-1">What We See</p>
+                                        <div className="space-y-0.5">
+                                            <p className="text-[9px] text-[#1d1d1f]">1. equity assessment</p>
+                                            <p className="text-[9px] text-[#1d1d1f]">2. debt assessment</p>
+                                            <p className="text-[9px] text-[#1d1d1f]">3. credit flags</p>
+                                            <p className="text-[9px] text-[#1d1d1f]">4. complexity note</p>
                                         </div>
-                                        <div className="p-2.5 bg-white rounded-lg border border-black/5">
-                                            <p className="text-[9px] text-[#86868b] uppercase font-semibold">Equity</p>
+                                    </div>
+                                    {/* Local Context */}
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[9px] text-fuchsia-600 font-semibold mb-1">Local Context</p>
+                                        <p className="text-[9px] text-[#1d1d1f]">54°F Cloudy in McKinney, TX</p>
+                                    </div>
+                                    {/* Stats row */}
+                                    <div className="grid grid-cols-2 gap-1.5">
+                                        <div className="p-2 bg-white rounded-lg border border-black/5 text-center">
+                                            <p className="text-[9px] text-[#86868b]">Property</p>
+                                            <p className="text-sm font-bold text-[#1d1d1f]">$785K</p>
+                                        </div>
+                                        <div className="p-2 bg-white rounded-lg border border-black/5 text-center">
+                                            <p className="text-[9px] text-[#86868b]">Equity</p>
                                             <p className="text-sm font-bold text-green-600">$358K</p>
                                         </div>
-                                    </div>
-                                    <div className="p-2.5 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-200">
-                                        <p className="text-[10px] text-fuchsia-700 font-medium mb-1">🎯 Talk Track Ready</p>
-                                        <p className="text-[9px] text-fuchsia-600/80">Personalized context for John Doe.</p>
                                     </div>
                                 </div>
                             </>
