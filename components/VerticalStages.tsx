@@ -20,6 +20,7 @@ type StageConfig = {
     description: string;
     component: React.ComponentType<any>;
     accentColor: string;
+    glowColor: string; // Color that matches the journey line at this section
     hasInterface: boolean;
     buttonLabel?: string | null;
     buttonSubtext?: string;
@@ -37,6 +38,7 @@ const STAGES = [
         description: "Credit history, liabilities, assets, past loans, property info—all scattered. Loan officers build rapport while flying blind.",
         component: BeforeStage,
         accentColor: "#8B5CF6",
+        glowColor: "#8B5CF6", // Purple - matches journey line
         hasInterface: false,
         buttonLabel: null,
     },
@@ -49,6 +51,7 @@ const STAGES = [
         description: "Credit, property, assets, liabilities—assembled in seconds. Walk into every call prepared.",
         component: Agent1Stage,
         accentColor: "#D946EF",
+        glowColor: "#D946EF", // Fuchsia - matches journey line
         hasInterface: true,
         interfacePlaceholder: "/assets/brief-ai/dashboard-base.png",
         buttonLabel: "Rapport Builder",
@@ -63,6 +66,7 @@ const STAGES = [
         description: "Real-time guidance to handle objections and calculate benefits—personalized to each borrower's data.",
         component: Agent2Stage,
         accentColor: "#F97316",
+        glowColor: "#D946EF", // Fuchsia - matches journey line at this position
         hasInterface: true,
         interfacePlaceholder: null,
         buttonLabel: "Sales Coach",
@@ -77,6 +81,7 @@ const STAGES = [
         description: "Real-time property valuation and market comparables for confident recommendations.",
         component: Agent3Stage,
         accentColor: "#F59E0B",
+        glowColor: "#F97316", // Orange - matches journey line
         hasInterface: true,
         interfacePlaceholder: null,
     },
@@ -89,6 +94,7 @@ const STAGES = [
         description: "Dynamic pricing adapts to market conditions and borrower profiles.",
         component: PricingStage,
         accentColor: "#FBBF24",
+        glowColor: "#F59E0B", // Amber - matches journey line
         hasInterface: false,
     },
 ];
@@ -224,11 +230,11 @@ function StageSection({
                     className="absolute inset-0 pointer-events-none"
                     style={{ opacity: useTransform(scrollYProgress, [0.05, 0.15, 0.85, 0.95], [0, 0.7, 0.7, 0]) }}
                 >
-                    {/* Main glow - accent color */}
+                    {/* Main glow - matches journey line color */}
                     <motion.div
                         className="absolute w-[900px] h-[900px] rounded-full blur-[180px]"
                         style={{
-                            backgroundColor: stage.accentColor,
+                            backgroundColor: stage.glowColor,
                             opacity: 0.12,
                             left: '50%',
                             top: '50%',
@@ -241,7 +247,7 @@ function StageSection({
                     <motion.div
                         className="absolute w-[600px] h-[600px] rounded-full blur-[120px]"
                         style={{
-                            backgroundColor: stage.accentColor,
+                            backgroundColor: stage.glowColor,
                             opacity: 0.08,
                             right: '5%',
                             top: '20%',
