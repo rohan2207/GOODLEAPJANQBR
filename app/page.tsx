@@ -2,6 +2,7 @@
 
 import AgentTeaser from '@/components/AgentTeaser'
 import VerticalStages from '@/components/VerticalStages'
+import FigureIntegration from '@/components/FigureIntegration'
 import AgentSummary from '@/components/AgentSummary'
 import FeatureGrid from '@/components/FeatureGrid'
 import Finale from '@/components/Finale'
@@ -28,6 +29,7 @@ export default function Home() {
       <HeroSection />
       <AgentTeaser />
       <VerticalStages />
+      <FigureIntegration />
       <AgentSummary />
       <FeatureGrid />
       <Finale />
