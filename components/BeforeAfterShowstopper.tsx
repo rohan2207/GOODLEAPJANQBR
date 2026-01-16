@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, RotateCcw, Maximize, Minimize, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { Play, RotateCcw, Maximize, Minimize, Loader2 } from "lucide-react";
 import { useFullscreen } from "@/hooks/useFullscreen";
 
 // Types
-type PlayState = "teaser" | "idle" | "disabled" | "ready" | "playingSplit" | "playingPip" | "ended" | "error";
+type PlayState = "teaser" | "idle" | "ready" | "playingSplit" | "playingPip" | "ended" | "error";
 
 interface BeforeAfterShowstopperProps {
     oldSrc: string;
@@ -14,6 +14,7 @@ interface BeforeAfterShowstopperProps {
     oldStartMode?: "half" | "seconds";
     oldStartSeconds?: number;
     pipDelaySeconds?: number; // Time before transitioning to PiP (default 5)
+    testDuration?: number; // For testing without new video, simulate a duration (seconds)
 }
 
 export default function BeforeAfterShowstopper({
@@ -22,6 +23,7 @@ export default function BeforeAfterShowstopper({
     oldStartMode = "half",
     oldStartSeconds = 0,
     pipDelaySeconds = 5,
+    testDuration = 180, // Default 3 minutes for testing
 }: BeforeAfterShowstopperProps) {
     // Refs
     const containerRef = useRef<HTMLDivElement>(null);
@@ -30,16 +32,28 @@ export default function BeforeAfterShowstopper({
     const newVideoRef = useRef<HTMLVideoElement>(null);
     const syncIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const pipTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const testTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // State
     const [playState, setPlayState] = useState<PlayState>("teaser");
     const [oldDuration, setOldDuration] = useState(0);
-    const [newDuration, setNewDuration] = useState(0);
     const [oldReady, setOldReady] = useState(false);
     const [newReady, setNewReady] = useState(false);
     const [isInView, setIsInView] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [oldStartTime, setOldStartTime] = useState(0);
+    const [oldCurrentTime, setOldCurrentTime] = useState(0);
+    const [newCurrentTime, setNewCurrentTime] = useState(0);
+
+    // Check if we have a new video
+    const hasNewVideo = !!newSrc;
+
+    // Format time as MM:SS
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
     // Fullscreen
     const { isFullscreen, toggle: toggleFullscreen, isSupported: fullscreenSupported } = useFullscreen(stageRef);
@@ -53,7 +67,7 @@ export default function BeforeAfterShowstopper({
         return oldDuration / 2;
     }, [oldStartMode, oldStartSeconds, oldDuration]);
 
-    // Intersection Observer for lazy loading and teaser trigger
+    // Intersection Observer for teaser trigger - only when section is actually visible
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -63,7 +77,7 @@ export default function BeforeAfterShowstopper({
                     }
                 });
             },
-            { rootMargin: "300px", threshold: 0.1 }
+            { rootMargin: "0px", threshold: 0.5 } // Only trigger when 50% visible
         );
 
         if (containerRef.current) {
@@ -77,39 +91,22 @@ export default function BeforeAfterShowstopper({
     useEffect(() => {
         if (playState === "teaser" && isInView) {
             const timer = setTimeout(() => {
-                if (!newSrc) {
-                    setPlayState("disabled");
-                } else {
-                    setPlayState("idle");
-                }
+                setPlayState("idle");
             }, 2500); // 2.5 second teaser
 
             return () => clearTimeout(timer);
         }
-    }, [playState, isInView, newSrc]);
+    }, [playState, isInView]);
 
-    // Preload videos when in view
-    useEffect(() => {
-        if (isInView && playState !== "teaser") {
-            // Load old video
-            if (oldVideoRef.current) {
-                oldVideoRef.current.preload = "auto";
-                oldVideoRef.current.load();
-            }
-            // Load new video if available
-            if (newVideoRef.current && newSrc) {
-                newVideoRef.current.preload = "auto";
-                newVideoRef.current.load();
-            }
-        }
-    }, [isInView, playState, newSrc]);
+    // Videos auto-load with preload="auto" - no manual load() needed
+    // Manual load() calls can interrupt play() and cause AbortError
 
-    // Check if ready to play
+    // Check if ready to play - ready when old video is loaded (new video optional)
     useEffect(() => {
-        if (playState === "idle" && oldReady && (newReady || !newSrc)) {
-            setPlayState(newSrc ? "ready" : "disabled");
+        if (playState === "idle" && oldReady && (newReady || !hasNewVideo)) {
+            setPlayState("ready");
         }
-    }, [playState, oldReady, newReady, newSrc]);
+    }, [playState, oldReady, newReady, hasNewVideo]);
 
     // Handle old video metadata
     const handleOldLoadedMetadata = useCallback(() => {
@@ -118,11 +115,9 @@ export default function BeforeAfterShowstopper({
         }
     }, []);
 
-    // Handle new video metadata
+    // Handle new video metadata (duration tracked internally by video element)
     const handleNewLoadedMetadata = useCallback(() => {
-        if (newVideoRef.current) {
-            setNewDuration(newVideoRef.current.duration);
-        }
+        // New video metadata loaded - duration available via newVideoRef.current.duration if needed
     }, []);
 
     // Handle video ready states
@@ -150,6 +145,9 @@ export default function BeforeAfterShowstopper({
         }
         if (pipTimerRef.current) {
             clearTimeout(pipTimerRef.current);
+        }
+        if (testTimerRef.current) {
+            clearTimeout(testTimerRef.current);
         }
         
         // Pause old video
@@ -195,25 +193,53 @@ export default function BeforeAfterShowstopper({
         const oldVideo = oldVideoRef.current;
         const newVideo = newVideoRef.current;
 
-        if (!oldVideo || !newVideo) return;
+        if (!oldVideo) {
+            console.error("Old video ref not available");
+            return;
+        }
 
         try {
-            // Calculate and set old video start time
-            const startTime = calculateOldStartTime();
+            // Calculate and set old video start time (use 0 if duration not available)
+            const duration = oldVideo.duration;
+            const startTime = duration && !isNaN(duration) && duration > 0 ? calculateOldStartTime() : 0;
             setOldStartTime(startTime);
-            oldVideo.currentTime = startTime;
-            newVideo.currentTime = 0;
-
-            // Start both videos
-            setPlayState("playingSplit");
             
-            await Promise.all([
-                oldVideo.play(),
-                newVideo.play()
-            ]);
+            // Set start positions
+            oldVideo.currentTime = startTime;
+            if (hasNewVideo && newVideo) {
+                newVideo.currentTime = 0;
+            }
+            
+            // Start playback
+            setPlayState("playingSplit");
 
-            // Start sync loop
-            startSyncLoop();
+            if (hasNewVideo && newVideo) {
+                // Play both videos - use catch to handle AbortError gracefully
+                const playOld = oldVideo.play().catch(e => {
+                    if (e.name !== 'AbortError') throw e;
+                });
+                const playNew = newVideo.play().catch(e => {
+                    if (e.name !== 'AbortError') throw e;
+                });
+                await Promise.all([playOld, playNew]);
+                
+                // Start sync loop
+                startSyncLoop();
+            } else {
+                // No new video - just play old video
+                await oldVideo.play().catch(e => {
+                    if (e.name !== 'AbortError') throw e;
+                });
+                
+                // Set up test end timer (simulate new video ending)
+                testTimerRef.current = setTimeout(() => {
+                    if (oldVideo) {
+                        oldVideo.pause();
+                        oldVideo.playbackRate = 1;
+                    }
+                    setPlayState("ended");
+                }, testDuration * 1000);
+            }
 
             // Set timer for PiP transition
             pipTimerRef.current = setTimeout(() => {
@@ -228,7 +254,7 @@ export default function BeforeAfterShowstopper({
             setErrorMessage("Failed to play videos. Please try again.");
             setPlayState("error");
         }
-    }, [playState, calculateOldStartTime, startSyncLoop, pipDelaySeconds]);
+    }, [playState, calculateOldStartTime, startSyncLoop, pipDelaySeconds, hasNewVideo, testDuration]);
 
     // Replay handler
     const handleReplay = useCallback(() => {
@@ -248,6 +274,9 @@ export default function BeforeAfterShowstopper({
         if (pipTimerRef.current) {
             clearTimeout(pipTimerRef.current);
         }
+        if (testTimerRef.current) {
+            clearTimeout(testTimerRef.current);
+        }
 
         setPlayState("ready");
     }, []);
@@ -257,8 +286,29 @@ export default function BeforeAfterShowstopper({
         return () => {
             if (syncIntervalRef.current) clearInterval(syncIntervalRef.current);
             if (pipTimerRef.current) clearTimeout(pipTimerRef.current);
+            if (testTimerRef.current) clearTimeout(testTimerRef.current);
         };
     }, []);
+
+    // Track video timestamps during playback
+    useEffect(() => {
+        if (playState !== "playingSplit" && playState !== "playingPip") return;
+
+        const updateTimes = () => {
+            if (oldVideoRef.current) {
+                setOldCurrentTime(oldVideoRef.current.currentTime);
+            }
+            if (newVideoRef.current) {
+                setNewCurrentTime(newVideoRef.current.currentTime);
+            }
+        };
+
+        // Update every 100ms for smooth display
+        const interval = setInterval(updateTimes, 100);
+        updateTimes(); // Initial update
+
+        return () => clearInterval(interval);
+    }, [playState]);
 
     // Determine if old video should be in PiP mode
     const isOldPip = playState === "playingPip";
@@ -328,41 +378,145 @@ export default function BeforeAfterShowstopper({
                                 </motion.p>
                             </div>
 
-                            {/* Video Stage */}
+                            {/* Video Stage - Larger container */}
                             <div 
                                 ref={stageRef}
                                 className={`relative rounded-2xl overflow-hidden border border-white/10 bg-black/50 backdrop-blur-xl ${
-                                    isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'aspect-video max-h-[70vh]'
+                                    isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'aspect-video min-h-[500px] md:min-h-[600px] lg:min-h-[700px]'
                                 }`}
                             >
-                                {/* Split View Container */}
-                                <div className={`relative w-full h-full flex ${isOldPip ? '' : 'gap-1'}`}>
+                                {/* Main Video Container */}
+                                <div className="relative w-full h-full">
                                     
-                                    {/* OLD Video Panel */}
-                                    <motion.div
-                                        className={`relative overflow-hidden ${
-                                            isOldPip 
-                                                ? 'absolute top-4 left-4 z-30 w-72 rounded-xl ring-2 ring-white/20 shadow-2xl' 
-                                                : 'flex-1'
-                                        }`}
-                                        layout
-                                        transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                                    >
+                                    {/* NEW Video - Takes full space in PiP mode */}
+                                    <div className={`absolute inset-0 ${isOldPip ? 'z-10' : 'right-0 left-1/2'} bg-slate-900 transition-all duration-500`}>
+                                        {/* NEW Label */}
+                                        <div className="absolute top-4 right-4 z-20 px-4 py-2 rounded-xl bg-emerald-500/90 backdrop-blur-sm">
+                                            <span className="font-semibold text-white">The New Way</span>
+                                        </div>
+
+                                        {/* NEW Timestamp - Big and prominent */}
+                                        <AnimatePresence>
+                                            {isPlaying && hasNewVideo && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0 }}
+                                                    className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20"
+                                                >
+                                                    <div className="bg-black/60 backdrop-blur-md px-8 py-4 rounded-2xl border border-emerald-500/30">
+                                                        <p className="text-emerald-400 text-sm font-medium text-center mb-1">Elapsed Time</p>
+                                                        <p className="text-white text-5xl md:text-6xl font-mono font-bold tracking-wider">
+                                                            {formatTime(newCurrentTime)}
+                                                        </p>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+
+                                        {hasNewVideo ? (
+                                            <video
+                                                ref={newVideoRef}
+                                                src={newSrc}
+                                                className="w-full h-full object-cover"
+                                                preload="auto"
+                                                muted
+                                                playsInline
+                                                crossOrigin="anonymous"
+                                                onLoadedMetadata={handleNewLoadedMetadata}
+                                                onCanPlayThrough={handleNewCanPlay}
+                                                onError={handleVideoError("new")}
+                                                onEnded={handleNewVideoEnded}
+                                            />
+                                        ) : (
+                                            /* Animated placeholder for new video area */
+                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-950/50 to-slate-900 relative overflow-hidden">
+                                                {/* Animated gradient background */}
+                                                <div className="absolute inset-0">
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent to-emerald-500/5 animate-pulse" />
+                                                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+                                                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+                                                </div>
+                                                
+                                                {/* Content */}
+                                                <div className="relative text-center p-8">
+                                                    {isPlaying ? (
+                                                        /* During playback - show preview message */
+                                                        <>
+                                                            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                                                                <motion.div
+                                                                    animate={{ scale: [1, 1.1, 1] }}
+                                                                    transition={{ duration: 2, repeat: Infinity }}
+                                                                >
+                                                                    <Play className="w-10 h-10 text-emerald-400" />
+                                                                </motion.div>
+                                                            </div>
+                                                            <p className="text-emerald-300 text-xl font-semibold mb-2">
+                                                                LINK&apos;s New Experience
+                                                            </p>
+                                                            <p className="text-white/40 text-sm max-w-xs mx-auto">
+                                                                Imagine completing this workflow in seconds...
+                                                            </p>
+                                                        </>
+                                                    ) : (
+                                                        /* Before playback - show coming soon */
+                                                        <>
+                                                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
+                                                                <Play className="w-8 h-8 text-white/40" />
+                                                            </div>
+                                                            <p className="text-white/60 text-lg font-medium mb-2">
+                                                                New experience video
+                                                            </p>
+                                                            <p className="text-white/40 text-sm">
+                                                                Coming soon
+                                                            </p>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* OLD Video - Left half in split, PiP overlay when in PiP mode */}
+                                    <div className={`${
+                                        isOldPip 
+                                            ? 'absolute top-6 left-6 z-40 w-80 aspect-video rounded-2xl overflow-hidden ring-4 ring-red-500/50 shadow-2xl shadow-red-500/20' 
+                                            : 'absolute inset-0 right-1/2 z-10'
+                                    } transition-all duration-700 ease-out`}>
                                         {/* OLD Label */}
                                         <div className={`absolute top-3 left-3 z-20 px-3 py-1.5 rounded-lg bg-red-500/90 backdrop-blur-sm ${isOldPip ? 'text-xs' : 'text-sm'}`}>
                                             <span className="font-semibold text-white">The Old Way</span>
                                         </div>
 
-                                        {/* 5x Badge */}
+                                        {/* 5x Speed Badge */}
                                         <AnimatePresence>
                                             {isOldPip && (
                                                 <motion.div
                                                     initial={{ opacity: 0, scale: 0.8 }}
                                                     animate={{ opacity: 1, scale: 1 }}
                                                     exit={{ opacity: 0, scale: 0.8 }}
-                                                    className="absolute top-3 right-3 z-20 px-2 py-1 rounded-md bg-orange-500 text-white text-xs font-bold"
+                                                    className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-bold flex items-center gap-1"
                                                 >
-                                                    5x
+                                                    ⚡ 5x SPEED
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+
+                                        {/* OLD Timestamp - Prominent in PiP mode */}
+                                        <AnimatePresence>
+                                            {isOldPip && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0 }}
+                                                    className="absolute bottom-3 left-3 right-3 z-20"
+                                                >
+                                                    <div className="bg-black/70 backdrop-blur-sm px-4 py-2 rounded-xl">
+                                                        <p className="text-red-400 text-xs font-medium mb-0.5">Old Way Time</p>
+                                                        <p className="text-white text-2xl font-mono font-bold">
+                                                            {formatTime(oldCurrentTime)}
+                                                        </p>
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
@@ -371,63 +525,20 @@ export default function BeforeAfterShowstopper({
                                             ref={oldVideoRef}
                                             src={oldSrc}
                                             className="w-full h-full object-cover"
-                                            preload="metadata"
+                                            preload="auto"
                                             muted
                                             playsInline
+                                            crossOrigin="anonymous"
                                             onLoadedMetadata={handleOldLoadedMetadata}
                                             onCanPlayThrough={handleOldCanPlay}
                                             onError={handleVideoError("old")}
                                         />
-                                    </motion.div>
-
-                                    {/* NEW Video Panel */}
-                                    <motion.div
-                                        className={`relative overflow-hidden bg-slate-900 ${
-                                            isOldPip ? 'flex-1' : 'flex-1'
-                                        }`}
-                                        layout
-                                        transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                                    >
-                                        {/* NEW Label */}
-                                        <div className={`absolute top-3 ${isOldPip ? 'left-3' : 'right-3'} z-20 px-3 py-1.5 rounded-lg bg-emerald-500/90 backdrop-blur-sm text-sm`}>
-                                            <span className="font-semibold text-white">The New Way</span>
-                                        </div>
-
-                                        {newSrc ? (
-                                            <video
-                                                ref={newVideoRef}
-                                                src={newSrc}
-                                                className="w-full h-full object-cover"
-                                                preload="metadata"
-                                                muted
-                                                playsInline
-                                                onLoadedMetadata={handleNewLoadedMetadata}
-                                                onCanPlayThrough={handleNewCanPlay}
-                                                onError={handleVideoError("new")}
-                                                onEnded={handleNewVideoEnded}
-                                            />
-                                        ) : (
-                                            /* Placeholder for missing new video */
-                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                                                <div className="text-center p-8">
-                                                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                                                        <Play className="w-8 h-8 text-white/40" />
-                                                    </div>
-                                                    <p className="text-white/60 text-lg font-medium mb-2">
-                                                        New experience video
-                                                    </p>
-                                                    <p className="text-white/40 text-sm">
-                                                        Coming soon
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </motion.div>
+                                    </div>
                                 </div>
 
                                 {/* Central Play Button Overlay */}
                                 <AnimatePresence>
-                                    {(playState === "ready" || playState === "disabled") && (
+                                    {playState === "ready" && (
                                         <motion.div
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
@@ -436,26 +547,19 @@ export default function BeforeAfterShowstopper({
                                         >
                                             <motion.button
                                                 onClick={handlePlay}
-                                                disabled={playState === "disabled"}
-                                                className={`group relative flex items-center gap-4 px-8 py-4 rounded-2xl transition-all ${
-                                                    playState === "disabled"
-                                                        ? 'bg-white/10 cursor-not-allowed'
-                                                        : 'bg-white/20 hover:bg-white/30 hover:scale-105'
-                                                }`}
-                                                whileHover={playState !== "disabled" ? { scale: 1.05 } : {}}
-                                                whileTap={playState !== "disabled" ? { scale: 0.95 } : {}}
+                                                className="group relative flex items-center gap-4 px-8 py-4 rounded-2xl bg-white/20 hover:bg-white/30 transition-all"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                             >
-                                                <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                                                    playState === "disabled" ? 'bg-white/20' : 'bg-white/30 group-hover:bg-white/40'
-                                                }`}>
-                                                    <Play className={`w-8 h-8 ml-1 ${playState === "disabled" ? 'text-white/40' : 'text-white'}`} />
+                                                <div className="w-16 h-16 rounded-full flex items-center justify-center bg-white/30 group-hover:bg-white/40">
+                                                    <Play className="w-8 h-8 ml-1 text-white" />
                                                 </div>
                                                 <div className="text-left">
-                                                    <p className={`text-lg font-semibold ${playState === "disabled" ? 'text-white/40' : 'text-white'}`}>
-                                                        {playState === "disabled" ? "Video Not Ready" : "Watch the Difference"}
+                                                    <p className="text-lg font-semibold text-white">
+                                                        Watch the Difference
                                                     </p>
-                                                    <p className={`text-sm ${playState === "disabled" ? 'text-white/30' : 'text-white/60'}`}>
-                                                        {playState === "disabled" ? "New video coming soon" : "Side by side comparison"}
+                                                    <p className="text-sm text-white/60">
+                                                        {hasNewVideo ? "Side by side comparison" : "Experience the transformation"}
                                                     </p>
                                                 </div>
                                             </motion.button>
@@ -592,19 +696,6 @@ export default function BeforeAfterShowstopper({
                                 </div>
                             </div>
 
-                            {/* Labels below video */}
-                            {!isPlaying && playState !== "ended" && (
-                                <div className="flex justify-center gap-12 mt-8">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                                        <span className="text-white/60">45+ min of manual work</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                                        <span className="text-white/60">Seconds with LINK</span>
-                                    </div>
-                                </div>
-                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>
