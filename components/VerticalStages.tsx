@@ -118,16 +118,34 @@ function StageSection({
     const textY = useTransform(scrollYProgress, [0, 0.1], [50, 0]);
     
     // For interface stages: text floats down and MORE left, shrinks - adjusted for longer panel scroll
-    const textFloatX = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [0, -250, -250, -620]); // Move even MORE left at end
+    const textFloatX = useTransform(
+        scrollYProgress, 
+        stage.id === "sales-coach"
+            ? [0.15, 0.25, 0.30, 0.78] // Sales Coach: Move left EARLIER when menu appears
+            : [0.18, 0.32, 0.68, 0.78],
+        stage.id === "sales-coach"
+            ? [0, -350, -450, -650] // Sales Coach: Move MORE left
+            : [0, -250, -250, -620]
+    );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
-    const textFloatScale = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [1, 0.6, 0.6, 0.45]); // Shrink more
+    const textFloatScale = useTransform(
+        scrollYProgress, 
+        stage.id === "sales-coach"
+            ? [0.15, 0.25, 0.30, 0.78] // Sales Coach: Shrink EARLIER
+            : [0.18, 0.32, 0.68, 0.78],
+        stage.id === "sales-coach"
+            ? [1, 0.55, 0.5, 0.4] // Sales Coach: Shrink more
+            : [1, 0.6, 0.6, 0.45]
+    );
 
     // Phase 2: Visualization - fades out as panel comes in
     const vizOpacity = useTransform(
         scrollYProgress, 
-        stage.hasInterface 
-            ? [0.06, 0.12, 0.22, 0.30] // Fade out before panel
-            : [0.08, 0.15, 0.7, 0.85], 
+        stage.id === "sales-coach"
+            ? [0.06, 0.10, 0.12, 0.18] // Sales Coach: Fade out VERY early before objection bubble
+            : stage.hasInterface 
+                ? [0.06, 0.12, 0.22, 0.30] // Fade out before panel
+                : [0.08, 0.15, 0.7, 0.85], 
         [0, 1, 1, 0]
     );
     const vizScale = useTransform(scrollYProgress, [0.06, 0.15, 0.22, 0.28], [0.9, 1, 1, 0.95]);
@@ -174,15 +192,17 @@ function StageSection({
     const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 120]); // Shift viewport more right
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
-    // Phase 1: Objection bubble appears (0.10 - 0.25)
-    const objectionOpacity = useTransform(scrollYProgress, [0.10, 0.15, 0.22, 0.28], [0, 1, 1, 0]);
-    const objectionScale = useTransform(scrollYProgress, [0.10, 0.15, 0.22, 0.28], [0.8, 1, 1, 0.9]);
-    const objectionRotateY = useTransform(scrollYProgress, [0.22, 0.30], [0, 90]);
+    // Phase 1: Objection bubble appears (0.15 - 0.28) - starts AFTER viz fades
+    const objectionOpacity = useTransform(scrollYProgress, [0.15, 0.20, 0.24, 0.30], [0, 1, 1, 0]);
+    const objectionScale = useTransform(scrollYProgress, [0.15, 0.20, 0.24, 0.30], [0.8, 1, 1, 0.9]);
+    const objectionRotateY = useTransform(scrollYProgress, [0.24, 0.32], [0, 90]);
+    const objectionX = useTransform(scrollYProgress, [0.15, 0.22], [0, 100]); // Move right
     
     // Phase 2: Menu panel flips in (0.25 - 0.45)
     const menuPanelOpacity = useTransform(scrollYProgress, [0.25, 0.30, 0.42, 0.48], [0, 1, 1, 0]);
     const menuPanelRotateY = useTransform(scrollYProgress, [0.25, 0.32], [-90, 0]);
     const menuPanelRotateYOut = useTransform(scrollYProgress, [0.42, 0.50], [0, 90]);
+    const menuPanelX = useTransform(scrollYProgress, [0.25, 0.32], [0, 150]); // Move menu right
     
     // Phase 3: Response panel flips in (0.45+)
     const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.45, 0.52], [-90, 0]);
@@ -379,6 +399,7 @@ function StageSection({
                                 style={{ 
                                     opacity: objectionOpacity,
                                     perspective: 1000,
+                                    x: objectionX,
                                 }}
                             >
                                 <motion.div
@@ -398,6 +419,7 @@ function StageSection({
                                 style={{ 
                                     opacity: menuPanelOpacity,
                                     perspective: 1000,
+                                    x: menuPanelX,
                                 }}
                             >
                                 <motion.div
