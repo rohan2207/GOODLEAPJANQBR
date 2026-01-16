@@ -86,15 +86,15 @@ const STAGES = [
         interfacePlaceholder: null,
     },
     {
-        id: "pricing",
+        id: "agents-teaser",
         number: "05",
-        label: "COMING SOON",
-        title: "Pricing Engine",
-        subtitle: "Best Rates, Instantly",
-        description: "Dynamic pricing adapts to market conditions and borrower profiles.",
-        component: PricingStage,
-        accentColor: "#FBBF24",
-        glowColor: "#F59E0B", // Amber - matches journey line
+        label: "ALL IN ONE",
+        title: "Specialized Agents",
+        subtitle: "At Your Fingertips",
+        description: "Every tool you need, one click away. AI assistance built into your workflow.",
+        component: PricingStage, // Will show AIAgentsTeaser
+        accentColor: "#8B5CF6",
+        glowColor: "#8B5CF6", // Purple - matches journey line end
         hasInterface: false,
     },
 ];
