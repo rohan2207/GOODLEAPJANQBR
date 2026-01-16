@@ -550,7 +550,7 @@ function StageSection({
 function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
     return (
         <div className="px-6 md:px-12">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-[1380px] mx-auto">
                 {/* Device frame */}
                 <div 
                     className="relative rounded-2xl overflow-hidden"
@@ -616,7 +616,7 @@ function DefaultInterfaceReveal({ stage }: { stage: StageConfig }) {
 // App context WITHOUT the panel - for the floating puzzle piece effect
 function LinkAIAppContext({ accentColor }: { accentColor: string }) {
     return (
-        <div className="relative w-full max-w-5xl mx-auto">
+        <div className="relative w-full max-w-[1380px] mx-auto">
             {/* Browser-like viewport */}
             <div 
                 className="rounded-xl overflow-hidden shadow-2xl border border-white/10"
@@ -1147,7 +1147,7 @@ function LinkAIAppViewport({ accentColor }: { accentColor: string }) {
 // Premium Rapport Builder Presentation - Full Panel with all sections
 function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentColor: string; contentScrollY?: any }) {
     return (
-        <div className="relative w-[520px]">
+        <div className="relative w-[700px]">
             {/* Outer glow */}
             <motion.div 
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
@@ -1489,7 +1489,7 @@ function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentCol
 // SalesCoachMenuPanel - shows the options menu (Handle Objections + Calculate Benefits)
 function SalesCoachMenuPanel({ accentColor }: { accentColor: string }) {
     return (
-        <div className="relative w-[420px]">
+        <div className="relative w-[570px]">
             {/* Outer glow */}
             <motion.div 
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
@@ -1610,7 +1610,7 @@ function SalesCoachMenuPanel({ accentColor }: { accentColor: string }) {
 // ObjectionBubble component - shows the borrower's objection as a speech bubble
 function ObjectionBubble({ accentColor }: { accentColor: string }) {
     return (
-        <div className="relative w-[500px] h-[350px]">
+        <div className="relative w-[675px] h-[470px]">
             {/* Background anxiety glow */}
             <motion.div 
                 className="absolute inset-0 rounded-3xl blur-3xl -z-10 bg-gradient-to-br from-rose-500/20 to-red-500/20"
@@ -1716,7 +1716,7 @@ function ObjectionBubble({ accentColor }: { accentColor: string }) {
 // SalesCoachPresentation component - the AI response panel
 function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: string; contentScrollY?: any }) {
     return (
-        <div className="relative w-[520px]">
+        <div className="relative w-[700px]">
             {/* Outer glow */}
             <motion.div 
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
