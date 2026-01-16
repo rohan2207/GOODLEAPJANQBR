@@ -192,11 +192,11 @@ function StageSection({
     const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 120]); // Shift viewport more right
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
-    // Phase 1: Objection bubble appears (0.15 - 0.28) - starts AFTER viz fades
-    const objectionOpacity = useTransform(scrollYProgress, [0.15, 0.20, 0.24, 0.30], [0, 1, 1, 0]);
-    const objectionScale = useTransform(scrollYProgress, [0.15, 0.20, 0.24, 0.30], [0.8, 1, 1, 0.9]);
+    // Phase 1: Objection bubbles appear (0.12 - 0.28) - dramatic "dread moment"
+    const objectionOpacity = useTransform(scrollYProgress, [0.12, 0.16, 0.24, 0.30], [0, 1, 1, 0]);
+    const objectionScale = useTransform(scrollYProgress, [0.12, 0.16, 0.24, 0.30], [0.8, 1, 1, 0.9]);
     const objectionRotateY = useTransform(scrollYProgress, [0.24, 0.32], [0, 90]);
-    const objectionX = useTransform(scrollYProgress, [0.15, 0.22], [0, 100]); // Move right
+    const objectionX = useTransform(scrollYProgress, [0.12, 0.20], [50, 200]); // Move MORE right
     
     // Phase 2: Menu panel flips in (0.25 - 0.45)
     const menuPanelOpacity = useTransform(scrollYProgress, [0.25, 0.30, 0.42, 0.48], [0, 1, 1, 0]);
@@ -1552,48 +1552,105 @@ function SalesCoachMenuPanel({ accentColor }: { accentColor: string }) {
 // ObjectionBubble component - shows the borrower's objection as a speech bubble
 function ObjectionBubble({ accentColor }: { accentColor: string }) {
     return (
-        <div className="relative">
-            {/* Outer glow */}
+        <div className="relative w-[500px] h-[350px]">
+            {/* Background anxiety glow */}
             <motion.div 
-                className="absolute -inset-6 rounded-3xl blur-3xl -z-10"
-                style={{ backgroundColor: `${accentColor}20` }}
-                animate={{ opacity: [0.3, 0.5, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-3xl blur-3xl -z-10 bg-gradient-to-br from-rose-500/20 to-red-500/20"
+                animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
-            
-            {/* Speech bubble */}
-            <div 
-                className="relative bg-white rounded-2xl p-8 shadow-2xl max-w-md"
-                style={{ boxShadow: `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.3)` }}
+
+            {/* Secondary objection - top left */}
+            <motion.div 
+                className="absolute -top-2 -left-8 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-rose-100"
+                initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
             >
-                {/* Quote icon */}
-                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center shadow-lg">
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                    </svg>
-                </div>
-                
-                {/* The objection text */}
-                <p className="text-2xl font-semibold text-[#1d1d1f] leading-relaxed">
-                    &ldquo;Your rates are too high&rdquo;
-                </p>
-                
-                {/* Borrower indicator */}
-                <div className="mt-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <p className="text-sm text-rose-600 font-medium">&ldquo;Why is this so expensive?&rdquo;</p>
+            </motion.div>
+
+            {/* Secondary objection - top right */}
+            <motion.div 
+                className="absolute top-8 -right-4 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-amber-100"
+                initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+            >
+                <p className="text-sm text-amber-600 font-medium">&ldquo;I want to wait...&rdquo;</p>
+            </motion.div>
+
+            {/* Secondary objection - bottom left */}
+            <motion.div 
+                className="absolute bottom-16 -left-12 px-4 py-2 bg-white/90 rounded-xl shadow-lg border border-orange-100"
+                initial={{ opacity: 0, y: -20, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
+            >
+                <p className="text-sm text-orange-600 font-medium">&ldquo;Closing costs seem high&rdquo;</p>
+            </motion.div>
+
+            {/* MAIN objection bubble - center */}
+            <motion.div 
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.5, type: "spring" }}
+            >
+                <div 
+                    className="relative bg-white rounded-2xl p-6 shadow-2xl"
+                    style={{ boxShadow: `0 0 60px rgba(244,63,94,0.2), 0 25px 50px rgba(0,0,0,0.25)` }}
+                >
+                    {/* Quote icon */}
+                    <motion.div 
+                        className="absolute -top-4 -left-4 w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center shadow-lg"
+                        animate={{ rotate: [0, -5, 5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                    >
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                         </svg>
+                    </motion.div>
+                    
+                    {/* The main objection text */}
+                    <p className="text-xl font-bold text-[#1d1d1f] leading-relaxed mb-4">
+                        &ldquo;Your rates are too high&rdquo;
+                    </p>
+                    
+                    {/* Borrower indicator */}
+                    <div className="flex items-center gap-3 pt-3 border-t border-black/5">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-[#1d1d1f]">Borrower Objection</p>
+                            <p className="text-xs text-rose-500 font-medium">The moment every LO dreads...</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-sm font-medium text-[#1d1d1f]">Borrower Objection</p>
-                        <p className="text-xs text-[#86868b]">The moment every LO dreads...</p>
-                    </div>
+                    
+                    {/* Speech bubble tail */}
+                    <div className="absolute -bottom-3 left-10 w-6 h-6 bg-white transform rotate-45" style={{ boxShadow: '4px 4px 8px rgba(0,0,0,0.1)' }} />
                 </div>
-                
-                {/* Speech bubble tail */}
-                <div className="absolute -bottom-3 left-12 w-6 h-6 bg-white transform rotate-45" style={{ boxShadow: '4px 4px 8px rgba(0,0,0,0.1)' }} />
-            </div>
+            </motion.div>
+
+            {/* Stress indicator */}
+            <motion.div 
+                className="absolute bottom-2 right-0 flex items-center gap-2 px-3 py-1.5 bg-rose-100 rounded-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+            >
+                <motion.span 
+                    className="text-lg"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                    😰
+                </motion.span>
+                <span className="text-xs font-medium text-rose-600">What do you say?</span>
+            </motion.div>
         </div>
     );
 }
