@@ -118,9 +118,9 @@ function StageSection({
     const textY = useTransform(scrollYProgress, [0, 0.1], [50, 0]);
     
     // For interface stages: text floats down and MORE left, shrinks - adjusted for longer panel scroll
-    const textFloatX = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [0, -250, -250, -520]); // Move MORE left at end
+    const textFloatX = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [0, -250, -250, -620]); // Move even MORE left at end
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
-    const textFloatScale = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [1, 0.6, 0.6, 0.5]); // Shrink later
+    const textFloatScale = useTransform(scrollYProgress, [0.18, 0.32, 0.68, 0.78], [1, 0.6, 0.6, 0.45]); // Shrink more
 
     // Phase 2: Visualization - fades out as panel comes in
     const vizOpacity = useTransform(
@@ -151,7 +151,7 @@ function StageSection({
             : [0.25, 0.32, 0.68, 0.78], // Rapport Builder: Original
         [0.85, 1, 1, 0.58]
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.68, 0.78], [0, 0, 420]); // Moves right more to fit viewport
+    const panelX = useTransform(scrollYProgress, [0.52, 0.68, 0.78], [0, 0, 480]); // Moves right more to fit viewport
     const panelY = useTransform(scrollYProgress, [0.68, 0.78], [0, 15]); // Slight down later
     
     // Panel content scrolls LONGER as user scrolls page - reveals all content
@@ -171,7 +171,7 @@ function StageSection({
     const viewportContextScale = useTransform(scrollYProgress, [0.68, 0.78], [0.95, 1]);
     const viewportBlur = useTransform(scrollYProgress, [0.68, 0.76], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
-    const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 60]); // Shift viewport right
+    const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 120]); // Shift viewport more right
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
     // Phase 1: Objection bubble appears (0.10 - 0.25)
@@ -676,28 +676,100 @@ function LinkAIAppContext({ accentColor }: { accentColor: string }) {
                         </div>
                     </div>
 
-                    {/* Empty space where the panel will land - with subtle docked indicator */}
-                    <div className="w-[300px] bg-white/50 border-l border-black/5 flex flex-col items-center justify-center">
-                        <motion.div 
-                            className="border-2 border-dashed border-fuchsia-300/40 rounded-xl w-[280px] h-[480px] flex items-center justify-center"
-                            animate={{ 
-                                borderColor: ['rgba(217, 70, 239, 0.2)', 'rgba(217, 70, 239, 0.4)', 'rgba(217, 70, 239, 0.2)'],
-                            }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
-                            <div className="text-center">
-                                <motion.div 
-                                    className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-fuchsia-500/20 to-purple-500/20 flex items-center justify-center"
-                                    animate={{ scale: [1, 1.1, 1] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    <svg className="w-6 h-6 text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    {/* Sales Coach panel - showing all options */}
+                    <div className="w-[320px] bg-white border-l border-black/5 flex flex-col overflow-hidden">
+                        {/* Header */}
+                        <div className="px-4 py-3 bg-white border-b border-black/5">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
-                                </motion.div>
-                                <p className="text-sm text-fuchsia-400/60 font-medium">AI Panel</p>
+                                </div>
+                                <div>
+                                    <h1 className="text-sm font-bold text-[#1d1d1f]">Sales Coach</h1>
+                                    <p className="text-[10px] text-[#86868b]">Objection Handling & Benefit Calc</p>
+                                </div>
                             </div>
-                        </motion.div>
+                        </div>
+
+                        {/* AI Banner */}
+                        <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-100">
+                            <p className="text-[10px] text-amber-700"><span className="font-semibold">AI Sales Coach</span> - Personalized guidance</p>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 p-3 bg-[#f5f5f7] space-y-3 overflow-auto">
+                            {/* Handle Objections */}
+                            <div>
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <div className="w-4 h-4 rounded bg-rose-100 flex items-center justify-center">
+                                        <svg className="w-2.5 h-2.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M12 17h.01" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Handle Objections</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-1.5">
+                                    <div className="p-2 bg-white rounded-lg border border-black/5 hover:border-rose-200">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">What do you see?</p>
+                                    </div>
+                                    <motion.div 
+                                        className="p-2 bg-rose-50 rounded-lg border border-rose-300"
+                                        animate={{ boxShadow: ['0 0 0 0 rgba(244,63,94,0)', '0 0 8px 2px rgba(244,63,94,0.3)', '0 0 0 0 rgba(244,63,94,0)'] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                    >
+                                        <p className="text-[10px] font-medium text-rose-700">Rate too high</p>
+                                    </motion.div>
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Closing costs</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Wants to wait</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Calculate Benefits */}
+                            <div>
+                                <div className="flex items-center gap-1.5 mb-2">
+                                    <div className="w-4 h-4 rounded bg-teal-100 flex items-center justify-center">
+                                        <svg className="w-2.5 h-2.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect width="16" height="20" x="4" y="2" rx="2" />
+                                            <line x1="8" x2="16" y1="6" y2="6" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-[10px] font-semibold text-[#1d1d1f]">Calculate Benefits</h3>
+                                </div>
+                                <div className="grid grid-cols-2 gap-1.5">
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Blended rate</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Cash flow</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Credit impact</p>
+                                    </div>
+                                    <div className="p-2 bg-white rounded-lg border border-black/5">
+                                        <p className="text-[10px] font-medium text-[#1d1d1f]">Interest savings</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Answer more questions hint */}
+                            <div className="p-2.5 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                                <p className="text-[10px] text-orange-700 font-medium mb-1">💡 Answer similar questions</p>
+                                <p className="text-[9px] text-orange-600/80">Overcome objections with data-backed responses personalized to each borrower.</p>
+                            </div>
+
+                            {/* Loaded Scenario */}
+                            <div className="p-2 bg-white rounded-lg border border-black/5">
+                                <p className="text-[9px] text-[#86868b] uppercase font-semibold">Loaded Scenario</p>
+                                <p className="text-[10px] text-[#1d1d1f]">7 debts • <span className="text-amber-600 font-medium">$1,196/mo</span></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
