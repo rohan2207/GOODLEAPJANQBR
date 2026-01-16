@@ -12,62 +12,194 @@ type SlideContent = {
     content: React.ReactNode;
 };
 
-// Placeholder slides - will be replaced with actual HTML content
+// LINK Loan Application Form - Slide 1
+function LinkLoanApplicationForm() {
+    return (
+        <div className="w-[850px] h-[520px] rounded-2xl overflow-hidden bg-white shadow-2xl border border-black/10">
+            {/* Browser chrome */}
+            <div className="h-9 bg-slate-100 border-b border-black/5 flex items-center px-4 gap-2">
+                <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                    <div className="px-3 py-0.5 rounded bg-white border border-black/10 text-[10px] text-black/50">
+                        link.goodleap.com
+                    </div>
+                </div>
+            </div>
+            
+            {/* Sticky Header */}
+            <div className="bg-white border-b border-neutral-200 px-4 py-2.5 shadow-sm">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-base font-semibold text-slate-900">Loan Application</h2>
+                    <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5 bg-white rounded p-0.5 border border-neutral-200">
+                            <button className="py-1 px-3 text-xs font-medium rounded text-slate-500 bg-white border-none">Refinance</button>
+                            <button className="py-1 px-3 text-xs font-medium rounded text-white bg-blue-600 border-none">HELOC</button>
+                        </div>
+                        <button className="py-1.5 px-4 text-xs font-medium rounded text-white bg-blue-600 flex items-center gap-1.5">
+                            Submit to Figure
+                            <ExternalLink className="w-3 h-3" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Form Content - Scrollable */}
+            <div className="h-[calc(100%-85px)] overflow-y-auto bg-slate-50 p-3 space-y-3">
+                {/* Borrower Information */}
+                <div className="p-4 border border-neutral-200 rounded-lg bg-white">
+                    <div className="mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900">Borrower Information</h3>
+                        <p className="text-[10px] text-slate-500">Primary borrower details and contact information</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 mb-3">
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">First Name<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="Ken" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Middle Name</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white text-slate-400" placeholder="Optional" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Last Name<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="Customer" readOnly />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Date of Birth<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="01/01/1980" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">SSN</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="•••-••-7000" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Home Phone</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="555-555-5555" readOnly />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Loan Details */}
+                <div className="p-4 border border-neutral-200 rounded-lg bg-white">
+                    <div className="mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900">Loan Details</h3>
+                        <p className="text-[10px] text-slate-500">Loan purpose and amount information</p>
+                    </div>
+                    <div className="w-1/2">
+                        <label className="text-[10px] font-medium text-slate-600 block mb-1">Loan Amount Requested<span className="text-red-500">*</span></label>
+                        <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white font-semibold" value="$222,001" readOnly />
+                    </div>
+                </div>
+
+                {/* Subject Property */}
+                <div className="p-4 border border-neutral-200 rounded-lg bg-white">
+                    <div className="mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900">Subject Property</h3>
+                        <p className="text-[10px] text-slate-500">Property address and details</p>
+                    </div>
+                    <div className="mb-3">
+                        <label className="text-[10px] font-medium text-slate-600 block mb-1">Street Address<span className="text-red-500">*</span></label>
+                        <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="2933 AVON RD" readOnly />
+                    </div>
+                    <div className="grid grid-cols-4 gap-3 mb-3">
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">City<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="ROCKLIN" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">State<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="CA" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Zip<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="95765" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Property Value (AVM)</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white font-semibold text-green-600" value="$840,000" readOnly />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="text-[10px] font-medium text-slate-600 block mb-1">Occupancy<span className="text-red-500">*</span></label>
+                        <div className="flex gap-2">
+                            <button className="py-1.5 px-3 text-[10px] font-medium rounded border bg-blue-600 text-white border-blue-600">Primary</button>
+                            <button className="py-1.5 px-3 text-[10px] font-medium rounded border bg-white text-slate-600 border-neutral-200">Secondary</button>
+                            <button className="py-1.5 px-3 text-[10px] font-medium rounded border bg-white text-slate-600 border-neutral-200">Investment</button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Employment & Income */}
+                <div className="p-4 border border-neutral-200 rounded-lg bg-white">
+                    <div className="mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900">Employment &amp; Income</h3>
+                        <p className="text-[10px] text-slate-500">Current employment and income details</p>
+                    </div>
+                    <div className="grid grid-cols-4 gap-3">
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Employer</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="TESTCO" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Job Title</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="QA Engineer" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Years</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="10" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Annual Income<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white font-semibold" value="$180,000" readOnly />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Existing Liens */}
+                <div className="p-4 border border-neutral-200 rounded-lg bg-white">
+                    <div className="mb-3">
+                        <h3 className="text-sm font-semibold text-slate-900">Existing Liens</h3>
+                        <p className="text-[10px] text-slate-500">Information about existing liens on the property</p>
+                    </div>
+                    <div className="grid grid-cols-4 gap-3">
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Lender Name</label>
+                            <input className="w-full h-8 px-2 text-[9px] border border-neutral-200 rounded bg-white" value="AMERICAN PACIFIC MORTGAGE" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Origination Date<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="02/08/2021" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Original Balance<span className="text-red-500">*</span></label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white" value="$165,000" readOnly />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-medium text-slate-600 block mb-1">Current Balance</label>
+                            <input className="w-full h-8 px-2 text-xs border border-neutral-200 rounded bg-white text-slate-400" placeholder="$0.00" readOnly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Slides configuration
 const SLIDES: SlideContent[] = [
     {
         id: "link-ready",
         title: "One Click. All Data Ready.",
-        subtitle: "LINK AI prepares everything",
+        subtitle: "Complete loan application prefilled in LINK",
         content: (
             <div className="relative w-full h-full flex items-center justify-center">
-                {/* Placeholder for LINK AI screen */}
-                <div className="w-[700px] rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 shadow-2xl">
-                    {/* Browser chrome */}
-                    <div className="h-10 bg-slate-800/80 border-b border-white/5 flex items-center px-4 gap-2">
-                        <div className="flex gap-1.5">
-                            <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                        </div>
-                        <div className="flex-1 flex justify-center">
-                            <div className="px-4 py-1 rounded-md bg-slate-700/50 text-xs text-white/50">
-                                link.goodleap.com
-                            </div>
-                        </div>
-                    </div>
-                    {/* App content placeholder */}
-                    <div className="p-8 space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center">
-                                <Zap className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                                <h3 className="text-white font-semibold text-lg">HELOC Application</h3>
-                                <p className="text-white/50 text-sm">John Smith • 2116 Shrewsbury Dr</p>
-                            </div>
-                        </div>
-                        
-                        {/* Data ready indicators */}
-                        <div className="grid grid-cols-2 gap-3">
-                            {["Property Data", "Credit Info", "Income Verified", "Assets Confirmed"].map((item, i) => (
-                                <div key={item} className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                                    <CheckCircle2 className="w-4 h-4 text-green-400" />
-                                    <span className="text-white/80 text-sm">{item}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Send to Figure button */}
-                        <motion.button
-                            className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold text-lg flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/25"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <span>Send to Figure</span>
-                            <ExternalLink className="w-5 h-5" />
-                        </motion.button>
-                    </div>
-                </div>
+                <LinkLoanApplicationForm />
             </div>
         ),
     },
