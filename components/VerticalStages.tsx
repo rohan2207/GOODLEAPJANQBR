@@ -185,7 +185,7 @@ function StageSection({
     const focusedPanelOpacity = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach" 
-            ? [0.45, 0.52, 0.90, 0.97]  // Sales Coach: Later (after menu), HOLD LONGER
+            ? [0.50, 0.58, 0.88, 0.95]  // Sales Coach: Later start, ends sooner to avoid white space
             : [0.25, 0.32, 0.90, 0.97], // Rapport Builder: Hold longer too
         [0, 1, 1, 0]
     );
@@ -194,7 +194,7 @@ function StageSection({
     const panelScale = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.45, 0.52, 0.78, 0.88]  // Sales Coach: HOLD LONGER before shrinking
+            ? [0.50, 0.58, 0.78, 0.88]  // Sales Coach: Later start
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1, 1, 0.58]
     );
@@ -205,9 +205,9 @@ function StageSection({
     const panelContentScroll = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.52, 0.82]  // Sales Coach: Scroll LONGER
+            ? [0.58, 0.78]  // Sales Coach: Shorter scroll range to avoid white space
             : [0.32, 0.78], // Rapport Builder: Scroll longer
-        [0, -1200]
+        [0, -800] // Reduced scroll amount
     );
     
     const focusedPanelBlur = useTransform(scrollYProgress, [0.25, 0.32], [10, 0]);
@@ -227,14 +227,14 @@ function StageSection({
     const objectionRotateY = useTransform(scrollYProgress, [0.28, 0.36], [0, 90]);
     const objectionX = useTransform(scrollYProgress, [0.12, 0.22], [50, 200]); // Move MORE right
     
-    // Phase 2: Menu panel flips in (0.30 - 0.52) - EXTENDED
-    const menuPanelOpacity = useTransform(scrollYProgress, [0.30, 0.35, 0.48, 0.55], [0, 1, 1, 0]);
+    // Phase 2: Menu panel flips in (0.30 - 0.55) - Stays until response panel appears
+    const menuPanelOpacity = useTransform(scrollYProgress, [0.30, 0.35, 0.50, 0.58], [0, 1, 1, 0]);
     const menuPanelRotateY = useTransform(scrollYProgress, [0.30, 0.38], [-90, 0]);
-    const menuPanelRotateYOut = useTransform(scrollYProgress, [0.48, 0.56], [0, 90]);
+    const menuPanelRotateYOut = useTransform(scrollYProgress, [0.50, 0.58], [0, 90]);
     const menuPanelX = useTransform(scrollYProgress, [0.30, 0.38], [0, 150]); // Move menu right
     
-    // Phase 3: Response panel flips in (0.52+) - starts later
-    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.52, 0.60], [-90, 0]);
+    // Phase 3: Response panel flips in (0.50+) - matches focusedPanelOpacity timing
+    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.50, 0.58], [-90, 0]);
 
     const StageComponent = stage.component;
     const isAlternate = index % 2 === 1;
