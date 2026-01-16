@@ -131,8 +131,8 @@ function StageSection({
             ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Move left EARLIER when menu appears, hold longer
             : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
-            ? [0, -350, -450, -650] // Sales Coach: Move MORE left
-            : [0, -250, -250, -620]
+            ? [0, -420, -520, -720] // Sales Coach: Move MORE left (increased spacing)
+            : [0, -320, -320, -700] // Rapport: Move MORE left (increased spacing)
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
     const textFloatScale = useTransform(
@@ -176,7 +176,7 @@ function StageSection({
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1, 1, 0.58]
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [0, 0, 480]); // Moves right LATER
+    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [80, 80, 560]); // Moved more right + offset
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
     
     // Panel content scrolls LONGER as user scrolls page - reveals all content
@@ -196,7 +196,7 @@ function StageSection({
     const viewportContextScale = useTransform(scrollYProgress, [0.78, 0.88], [0.95, 1]);
     const viewportBlur = useTransform(scrollYProgress, [0.78, 0.86], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
-    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [0, 120]); // Shift viewport LATER
+    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [80, 200]); // Moved more right to sync with panel
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
     // Phase 1: Objection bubbles appear (0.12 - 0.32) - dramatic "dread moment" - EXTENDED
@@ -295,7 +295,7 @@ function StageSection({
 
                             <h3 className={`font-bold text-white ${
                                 (stage.id === "rapport" || stage.id === "sales-coach") 
-                                    ? "text-5xl md:text-6xl lg:text-7xl" 
+                                    ? "text-6xl md:text-7xl lg:text-8xl" 
                                     : "text-4xl md:text-5xl lg:text-6xl"
                             }`}>
                                 {stage.title}
@@ -303,7 +303,7 @@ function StageSection({
                             <p 
                                 className={`font-medium ${
                                     (stage.id === "rapport" || stage.id === "sales-coach")
-                                        ? "text-2xl md:text-3xl"
+                                        ? "text-3xl md:text-4xl"
                                         : "text-xl md:text-2xl"
                                 }`}
                                 style={{ color: stage.accentColor }}
@@ -312,7 +312,7 @@ function StageSection({
                             </p>
                             <p className={`text-white/50 leading-relaxed ${
                                 (stage.id === "rapport" || stage.id === "sales-coach")
-                                    ? "text-xl max-w-xl"
+                                    ? "text-2xl max-w-2xl"
                                     : "text-lg max-w-lg"
                             }`}>
                                 {stage.description}
@@ -339,20 +339,20 @@ function StageSection({
                                     
                                     {/* Button */}
                                     <div 
-                                        className="relative flex items-center gap-3 p-4 bg-white border-2 rounded-xl shadow-2xl max-w-[280px]"
+                                        className="relative flex items-center gap-4 p-5 bg-white border-2 rounded-2xl shadow-2xl max-w-[380px]"
                                         style={{ borderColor: stage.accentColor }}
                                     >
                                         <div 
-                                            className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                                            className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0"
                                             style={{ backgroundColor: `${stage.accentColor}20`, color: stage.accentColor }}
                                         >
-                                            <Phone className="w-5 h-5" />
+                                            <Phone className="w-7 h-7" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-stone-800">{stage.buttonLabel}</p>
-                                            <p className="text-sm text-stone-500">{stage.buttonSubtext}</p>
+                                            <p className="font-semibold text-lg text-stone-800">{stage.buttonLabel}</p>
+                                            <p className="text-base text-stone-500">{stage.buttonSubtext}</p>
                                         </div>
-                                        <ChevronRight className="w-5 h-5 text-stone-400" />
+                                        <ChevronRight className="w-6 h-6 text-stone-400" />
                                     </div>
                                 </motion.div>
                             )}
