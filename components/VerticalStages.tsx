@@ -111,7 +111,7 @@ function StageSection({
     const textOpacity = useTransform(
         scrollYProgress, 
         stage.hasInterface 
-            ? [0, 0.08, 0.85, 0.92] // STAYS VISIBLE - floats to corner
+            ? [0, 0.08, 0.90, 0.97] // STAYS VISIBLE longer - floats to corner
             : [0, 0.12, 0.8, 0.9],
         [0, 1, 1, 0]
     );
@@ -121,8 +121,8 @@ function StageSection({
     const textFloatX = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.15, 0.25, 0.30, 0.78] // Sales Coach: Move left EARLIER when menu appears
-            : [0.18, 0.32, 0.68, 0.78],
+            ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Move left EARLIER when menu appears, hold longer
+            : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
             ? [0, -350, -450, -650] // Sales Coach: Move MORE left
             : [0, -250, -250, -620]
@@ -131,8 +131,8 @@ function StageSection({
     const textFloatScale = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.15, 0.25, 0.30, 0.78] // Sales Coach: Shrink EARLIER
-            : [0.18, 0.32, 0.68, 0.78],
+            ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Shrink EARLIER, hold longer
+            : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
             ? [1, 0.55, 0.5, 0.4] // Sales Coach: Shrink more
             : [1, 0.6, 0.6, 0.45]
@@ -156,8 +156,8 @@ function StageSection({
     const focusedPanelOpacity = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach" 
-            ? [0.45, 0.52, 0.85, 0.92]  // Sales Coach: Later (after menu)
-            : [0.25, 0.32, 0.85, 0.92], // Rapport Builder: Earlier
+            ? [0.45, 0.52, 0.90, 0.97]  // Sales Coach: Later (after menu), HOLD LONGER
+            : [0.25, 0.32, 0.90, 0.97], // Rapport Builder: Hold longer too
         [0, 1, 1, 0]
     );
     
@@ -165,47 +165,47 @@ function StageSection({
     const panelScale = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.45, 0.52, 0.68, 0.78]  // Sales Coach: Adjusted timing
-            : [0.25, 0.32, 0.68, 0.78], // Rapport Builder: Original
+            ? [0.45, 0.52, 0.78, 0.88]  // Sales Coach: HOLD LONGER before shrinking
+            : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1, 1, 0.58]
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.68, 0.78], [0, 0, 480]); // Moves right more to fit viewport
-    const panelY = useTransform(scrollYProgress, [0.68, 0.78], [0, 15]); // Slight down later
+    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [0, 0, 480]); // Moves right LATER
+    const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
     
     // Panel content scrolls LONGER as user scrolls page - reveals all content
     const panelContentScroll = useTransform(
         scrollYProgress, 
         stage.id === "sales-coach"
-            ? [0.52, 0.75]  // Sales Coach: Adjusted
-            : [0.32, 0.70], // Rapport Builder
+            ? [0.52, 0.82]  // Sales Coach: Scroll LONGER
+            : [0.32, 0.78], // Rapport Builder: Scroll longer
         [0, -1200]
     );
     
     const focusedPanelBlur = useTransform(scrollYProgress, [0.25, 0.32], [10, 0]);
     const focusedPanelBlurFilter = useTransform(focusedPanelBlur, (v) => `blur(${v}px)`);
 
-    // Phase 3: App Context fades in LATER (after panel scrolls more)
-    const viewportContextOpacity = useTransform(scrollYProgress, [0.68, 0.78, 0.88, 0.95], [0, 1, 1, 0]);
-    const viewportContextScale = useTransform(scrollYProgress, [0.68, 0.78], [0.95, 1]);
-    const viewportBlur = useTransform(scrollYProgress, [0.68, 0.76], [8, 0]);
+    // Phase 3: App Context fades in LATER (quarter page more scroll)
+    const viewportContextOpacity = useTransform(scrollYProgress, [0.78, 0.88, 0.93, 0.98], [0, 1, 1, 0]);
+    const viewportContextScale = useTransform(scrollYProgress, [0.78, 0.88], [0.95, 1]);
+    const viewportBlur = useTransform(scrollYProgress, [0.78, 0.86], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
-    const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 120]); // Shift viewport more right
+    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [0, 120]); // Shift viewport LATER
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
-    // Phase 1: Objection bubbles appear (0.12 - 0.28) - dramatic "dread moment"
-    const objectionOpacity = useTransform(scrollYProgress, [0.12, 0.16, 0.24, 0.30], [0, 1, 1, 0]);
-    const objectionScale = useTransform(scrollYProgress, [0.12, 0.16, 0.24, 0.30], [0.8, 1, 1, 0.9]);
-    const objectionRotateY = useTransform(scrollYProgress, [0.24, 0.32], [0, 90]);
-    const objectionX = useTransform(scrollYProgress, [0.12, 0.20], [50, 200]); // Move MORE right
+    // Phase 1: Objection bubbles appear (0.12 - 0.32) - dramatic "dread moment" - EXTENDED
+    const objectionOpacity = useTransform(scrollYProgress, [0.12, 0.16, 0.28, 0.35], [0, 1, 1, 0]);
+    const objectionScale = useTransform(scrollYProgress, [0.12, 0.16, 0.28, 0.35], [0.8, 1, 1, 0.9]);
+    const objectionRotateY = useTransform(scrollYProgress, [0.28, 0.36], [0, 90]);
+    const objectionX = useTransform(scrollYProgress, [0.12, 0.22], [50, 200]); // Move MORE right
     
-    // Phase 2: Menu panel flips in (0.25 - 0.45)
-    const menuPanelOpacity = useTransform(scrollYProgress, [0.25, 0.30, 0.42, 0.48], [0, 1, 1, 0]);
-    const menuPanelRotateY = useTransform(scrollYProgress, [0.25, 0.32], [-90, 0]);
-    const menuPanelRotateYOut = useTransform(scrollYProgress, [0.42, 0.50], [0, 90]);
-    const menuPanelX = useTransform(scrollYProgress, [0.25, 0.32], [0, 150]); // Move menu right
+    // Phase 2: Menu panel flips in (0.30 - 0.52) - EXTENDED
+    const menuPanelOpacity = useTransform(scrollYProgress, [0.30, 0.35, 0.48, 0.55], [0, 1, 1, 0]);
+    const menuPanelRotateY = useTransform(scrollYProgress, [0.30, 0.38], [-90, 0]);
+    const menuPanelRotateYOut = useTransform(scrollYProgress, [0.48, 0.56], [0, 90]);
+    const menuPanelX = useTransform(scrollYProgress, [0.30, 0.38], [0, 150]); // Move menu right
     
-    // Phase 3: Response panel flips in (0.45+)
-    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.45, 0.52], [-90, 0]);
+    // Phase 3: Response panel flips in (0.52+) - starts later
+    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.52, 0.60], [-90, 0]);
 
     const StageComponent = stage.component;
     const isAlternate = index % 2 === 1;
