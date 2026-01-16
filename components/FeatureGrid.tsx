@@ -442,11 +442,19 @@ function SearchCard() {
 }
 
 // ============================================================================
+// ============================================================================
+// ⚠️⚠️⚠️ TODO: THIS ENTIRE SECTION TO BE REMOVED ⚠️⚠️⚠️
+// ============================================================================
 // MAIN FEATURE GRID COMPONENT
 // ============================================================================
 export default function FeatureGrid() {
     return (
-        <section className="w-full max-w-6xl mx-auto py-24 px-4 md:px-0 bg-background">
+        <section className="w-full max-w-6xl mx-auto py-24 px-4 md:px-0 bg-background relative">
+            {/* ⚠️ TO BE REMOVED - Big visual reminder */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-2 rounded-full font-bold text-sm uppercase tracking-wider">
+                ⚠️ SECTION TO BE REMOVED ⚠️
+            </div>
+            
             {/* Header */}
             <div className="text-center mb-16">
                 <motion.div
@@ -462,7 +470,7 @@ export default function FeatureGrid() {
                     Velocity of Shipping
                 </h2>
                 <p className="text-white/40 max-w-2xl mx-auto text-lg font-body font-light">
-                    Beyond the major AI agents, we've shipped dozens of quality-of-life improvements.
+                    Beyond the major AI tools, we've shipped dozens of quality-of-life improvements.
                 </p>
             </div>
 

@@ -25,7 +25,7 @@ export default function AgentTeaser() {
                     transition={{ delay: 0.1, duration: 0.6, ease: MOTION_EASE }}
                 >
                     <Sparkles className="w-4 h-4 text-orange-400" />
-                    <span className="text-xs text-white/60 font-body font-medium uppercase tracking-[0.15em]">Introducing AI Agents</span>
+                    <span className="text-xs text-white/60 font-body font-medium uppercase tracking-[0.15em]">Introducing AI-Powered Assistants</span>
                 </motion.div>
 
                 {/* Headline */}

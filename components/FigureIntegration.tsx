@@ -790,7 +790,7 @@ export default function FigureIntegration() {
                         transition={{ delay: 0.1 }}
                         className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight"
                     >
-                        Direct to Figure.{" "}
+                        Direct to FIGURE (HELOC).{" "}
                         <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                             Zero Re-entry.
                         </span>

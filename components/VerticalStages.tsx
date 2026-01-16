@@ -90,7 +90,7 @@ const STAGES = [
         id: "agents-teaser",
         number: "05",
         label: "ALL IN ONE",
-        title: "Specialized Agents",
+        title: "AI-Powered Tools",
         subtitle: "At Your Fingertips",
         description: "Every tool you need, always one click away. Not a chatbot, but a complete lending assistant built into your workflow.",
         component: SidebarShowcaseStage,

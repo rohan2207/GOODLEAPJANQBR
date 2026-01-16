@@ -435,6 +435,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 </div>
             )}
 
+            {/* ⚠️ TODO: REMOVE CONFETTI - Come back to this later ⚠️ */}
             {/* CONFETTI */}
             {isCelebrationActive && (
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
