@@ -134,16 +134,34 @@ function StageSection({
     const vizY = useTransform(scrollYProgress, [0.06, 0.15], [30, 0]);
 
     // ===== FOR STAGES WITH INTERFACE (3-phase transition) =====
-    // Phase 2B: Focused Panel appears large, then MORPHS into position
-    const focusedPanelOpacity = useTransform(scrollYProgress, [0.25, 0.32, 0.85, 0.92], [0, 1, 1, 0]);
+    // For Rapport Builder: Panel appears at 0.25
+    const focusedPanelOpacity = useTransform(
+        scrollYProgress, 
+        stage.id === "sales-coach" 
+            ? [0.45, 0.52, 0.85, 0.92]  // Sales Coach: Later (after menu)
+            : [0.25, 0.32, 0.85, 0.92], // Rapport Builder: Earlier
+        [0, 1, 1, 0]
+    );
     
     // Panel morphs: starts centered/large, stays longer, then shrinks and moves right
-    const panelScale = useTransform(scrollYProgress, [0.25, 0.32, 0.68, 0.78], [0.85, 1, 1, 0.58]);
-    const panelX = useTransform(scrollYProgress, [0.32, 0.68, 0.78], [0, 0, 420]); // Moves right more to fit viewport
+    const panelScale = useTransform(
+        scrollYProgress, 
+        stage.id === "sales-coach"
+            ? [0.45, 0.52, 0.68, 0.78]  // Sales Coach: Adjusted timing
+            : [0.25, 0.32, 0.68, 0.78], // Rapport Builder: Original
+        [0.85, 1, 1, 0.58]
+    );
+    const panelX = useTransform(scrollYProgress, [0.52, 0.68, 0.78], [0, 0, 420]); // Moves right more to fit viewport
     const panelY = useTransform(scrollYProgress, [0.68, 0.78], [0, 15]); // Slight down later
     
     // Panel content scrolls LONGER as user scrolls page - reveals all content
-    const panelContentScroll = useTransform(scrollYProgress, [0.32, 0.70], [0, -1200]); // More scroll range
+    const panelContentScroll = useTransform(
+        scrollYProgress, 
+        stage.id === "sales-coach"
+            ? [0.52, 0.75]  // Sales Coach: Adjusted
+            : [0.32, 0.70], // Rapport Builder
+        [0, -1200]
+    );
     
     const focusedPanelBlur = useTransform(scrollYProgress, [0.25, 0.32], [10, 0]);
     const focusedPanelBlurFilter = useTransform(focusedPanelBlur, (v) => `blur(${v}px)`);
@@ -156,13 +174,18 @@ function StageSection({
     const viewportX = useTransform(scrollYProgress, [0.68, 0.78], [0, 60]); // Shift viewport right
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
-    // Phase 1: Objection bubble appears
-    const objectionOpacity = useTransform(scrollYProgress, [0.12, 0.20, 0.28, 0.35], [0, 1, 1, 0]);
-    const objectionScale = useTransform(scrollYProgress, [0.12, 0.20, 0.28, 0.35], [0.8, 1, 1, 0.9]);
-    const objectionRotateY = useTransform(scrollYProgress, [0.28, 0.38], [0, 90]);
+    // Phase 1: Objection bubble appears (0.10 - 0.25)
+    const objectionOpacity = useTransform(scrollYProgress, [0.10, 0.15, 0.22, 0.28], [0, 1, 1, 0]);
+    const objectionScale = useTransform(scrollYProgress, [0.10, 0.15, 0.22, 0.28], [0.8, 1, 1, 0.9]);
+    const objectionRotateY = useTransform(scrollYProgress, [0.22, 0.30], [0, 90]);
     
-    // Phase 2: Panel flips in from the other side
-    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.25, 0.35], [-90, 0]);
+    // Phase 2: Menu panel flips in (0.25 - 0.45)
+    const menuPanelOpacity = useTransform(scrollYProgress, [0.25, 0.30, 0.42, 0.48], [0, 1, 1, 0]);
+    const menuPanelRotateY = useTransform(scrollYProgress, [0.25, 0.32], [-90, 0]);
+    const menuPanelRotateYOut = useTransform(scrollYProgress, [0.42, 0.50], [0, 90]);
+    
+    // Phase 3: Response panel flips in (0.45+)
+    const salesCoachPanelRotateY = useTransform(scrollYProgress, [0.45, 0.52], [-90, 0]);
 
     const StageComponent = stage.component;
     const isAlternate = index % 2 === 1;
@@ -347,7 +370,7 @@ function StageSection({
                         </>
                     )}
                     
-                    {/* SALES COACH: Objection → Flip → Panel → Viewport */}
+                    {/* SALES COACH: Objection → Menu → Response → Viewport */}
                     {stage.hasInterface && stage.id === "sales-coach" && (
                         <>
                             {/* Phase 1: Objection Bubble - appears first */}
@@ -369,7 +392,25 @@ function StageSection({
                                 </motion.div>
                             </motion.div>
 
-                            {/* Phase 2: Sales Coach Panel - flips in */}
+                            {/* Phase 2: Sales Coach Menu - shows options */}
+                            <motion.div 
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                                style={{ 
+                                    opacity: menuPanelOpacity,
+                                    perspective: 1000,
+                                }}
+                            >
+                                <motion.div
+                                    style={{
+                                        rotateY: menuPanelRotateY,
+                                        transformStyle: "preserve-3d",
+                                    }}
+                                >
+                                    <SalesCoachMenuPanel accentColor={stage.accentColor} />
+                                </motion.div>
+                            </motion.div>
+
+                            {/* Phase 3: Sales Coach Response Panel - flips in with answer */}
                             <motion.div 
                                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
                                 style={{ 
@@ -392,7 +433,7 @@ function StageSection({
                                 </motion.div>
                             </motion.div>
 
-                            {/* Phase 3: App Context - fades in around the panel */}
+                            {/* Phase 4: App Context - fades in around the panel */}
                             <motion.div 
                                 className="absolute inset-0 flex items-center justify-center"
                                 style={{ 
@@ -1293,6 +1334,127 @@ function RapportBuilderPresentation({ accentColor, contentScrollY }: { accentCol
     );
 }
 
+// SalesCoachMenuPanel - shows the options menu (Handle Objections + Calculate Benefits)
+function SalesCoachMenuPanel({ accentColor }: { accentColor: string }) {
+    return (
+        <div className="relative w-[420px]">
+            {/* Outer glow */}
+            <motion.div 
+                className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
+                style={{ backgroundColor: `${accentColor}20` }}
+                animate={{ opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Panel */}
+            <div 
+                className="rounded-xl bg-white overflow-hidden"
+                style={{ boxShadow: `0 0 60px ${accentColor}15, 0 25px 50px rgba(0,0,0,0.3)` }}
+            >
+                {/* Header */}
+                <div className="px-5 py-4 bg-white border-b border-black/5">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-bold text-[#1d1d1f]">Sales Coach</h1>
+                            <p className="text-xs text-[#86868b]">Objection Handling & Benefit Calculation</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* AI Banner */}
+                <div className="px-4 py-2 bg-amber-50 border-b border-amber-100">
+                    <p className="text-xs text-amber-700"><span className="font-semibold">AI Sales Coach</span> - Uses your loan scenario data</p>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 bg-[#f5f5f7] space-y-4">
+                    {/* Center icon */}
+                    <div className="text-center py-4">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center mx-auto mb-3">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-base font-semibold text-[#1d1d1f]">How can I help you today?</h2>
+                        <p className="text-xs text-[#86868b] mt-1">Select a topic for AI-powered guidance</p>
+                    </div>
+
+                    {/* Handle Objections */}
+                    <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-5 h-5 rounded-md bg-rose-100 flex items-center justify-center">
+                                <svg className="w-3 h-3 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xs font-semibold text-[#1d1d1f]">Handle Objections</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5 hover:border-rose-200 transition-colors">
+                                <p className="text-xs font-medium text-[#1d1d1f]">What do you see?</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-rose-300 bg-rose-50/50">
+                                <p className="text-xs font-medium text-rose-700">Rate too high objection</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Closing costs concern</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Wants to wait</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Calculate Benefits */}
+                    <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-5 h-5 rounded-md bg-teal-100 flex items-center justify-center">
+                                <svg className="w-3 h-3 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect width="16" height="20" x="4" y="2" rx="2" />
+                                    <line x1="8" x2="16" y1="6" y2="6" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xs font-semibold text-[#1d1d1f]">Calculate Benefits</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Calculate blended rate</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Monthly cash flow</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Credit score impact</p>
+                            </div>
+                            <div className="p-2.5 bg-white rounded-lg border border-black/5">
+                                <p className="text-xs font-medium text-[#1d1d1f]">Interest savings</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Loaded Scenario */}
+                    <div className="p-3 bg-white rounded-lg border border-black/5">
+                        <div className="flex items-center gap-2 mb-1">
+                            <svg className="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            <p className="text-[10px] font-semibold text-[#86868b] uppercase">Loaded Scenario</p>
+                        </div>
+                        <p className="text-xs text-[#1d1d1f]">7 debts selected for payoff <span className="text-amber-600 font-medium">($1,196/mo)</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ObjectionBubble component - shows the borrower's objection as a speech bubble
 function ObjectionBubble({ accentColor }: { accentColor: string }) {
     return (
@@ -1494,10 +1656,13 @@ function SalesCoachPresentation({ accentColor, contentScrollY }: { accentColor: 
                                         </div>
                                         <div className="space-y-2">
                                             <p className="text-sm text-[#1d1d1f]">Total Debt (including mortgages): <span className="font-semibold text-emerald-600">$483,314</span></p>
-                                            <p className="text-sm text-[#1d1d1f]">Total Estimated Interest: <span className="font-semibold text-emerald-600">$23,494/year</span></p>
+                                            <p className="text-sm text-[#1d1d1f]">Current Weighted Interest: <span className="font-semibold text-rose-600">$64,973/year</span></p>
                                             <div className="pt-2 border-t border-orange-200 mt-3">
                                                 <p className="text-lg font-bold text-orange-700">
-                                                    Blended Rate = <span className="text-2xl text-orange-600 bg-white px-3 py-1 rounded-lg shadow-sm">4.86%</span>
+                                                    Current Blended Rate = <span className="text-2xl text-rose-600 bg-rose-50 px-3 py-1 rounded-lg shadow-sm">13.45%</span>
+                                                </p>
+                                                <p className="text-sm text-emerald-600 mt-2">
+                                                    → Consolidate at <span className="font-bold">7.25%</span> to save <span className="font-bold">$30,000+/year</span>
                                                 </p>
                                             </div>
                                         </div>
