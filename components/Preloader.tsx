@@ -438,11 +438,17 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             {/* ⚠️ TODO: REMOVE CONFETTI - Come back to this later ⚠️ */}
             {/* CONFETTI */}
             {isCelebrationActive && (
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                    {confettiPieces.map((i) => (
-                        <ConfettiPiece key={i} index={i} active={isCelebrationActive} />
-                    ))}
-                </div>
+                <>
+                    {/* ⚠️ REMOVE CONFETTI - Visual reminder */}
+                    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[9999] bg-red-500 text-white px-6 py-2 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg">
+                        ⚠️ REMOVE CONFETTI ⚠️
+                    </div>
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        {confettiPieces.map((i) => (
+                            <ConfettiPiece key={i} index={i} active={isCelebrationActive} />
+                        ))}
+                    </div>
+                </>
             )}
 
             {/* SPARKLES */}
