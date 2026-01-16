@@ -1,0 +1,173 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="#f8fafc"/>
+  
+  <!-- Success Card -->
+  <rect x="80" y="60" width="700" height="360" rx="24" fill="url(#success-grad)" filter="url(#shadow)"/>
+  
+  <!-- Success Icon -->
+  <circle cx="170" cy="160" r="60" fill="rgba(255,255,255,0.2)"/>
+  <path d="M145 160 L162 177 L195 144" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Success Text -->
+  <text x="260" y="145" fill="white" font-family="system-ui" font-size="32" font-weight="700">Sync Complete</text>
+  <text x="260" y="180" fill="rgba(255,255,255,0.8)" font-family="system-ui" font-size="16">All borrower data has been transferred to Figure</text>
+  
+  <!-- Stats -->
+  <g transform="translate(130, 240)">
+    <rect width="250" height="140" rx="16" fill="rgba(255,255,255,0.15)"/>
+    <text x="125" y="60" fill="white" font-family="system-ui" font-size="56" font-weight="700" text-anchor="middle">42</text>
+    <text x="125" y="95" fill="rgba(255,255,255,0.7)" font-family="system-ui" font-size="16" text-anchor="middle">Fields Synced</text>
+    
+    <rect x="280" width="250" height="140" rx="16" fill="rgba(255,255,255,0.15)"/>
+    <text x="405" y="60" fill="white" font-family="system-ui" font-size="56" font-weight="700" text-anchor="middle">0</text>
+    <text x="405" y="95" fill="rgba(255,255,255,0.7)" font-family="system-ui" font-size="16" text-anchor="middle">Errors</text>
+  </g>
+  
+  <!-- Timeline -->
+  <rect x="80" y="460" width="700" height="280" rx="24" fill="white" filter="url(#shadow)"/>
+  <text x="130" y="510" fill="#64748b" font-family="system-ui" font-size="14" font-weight="600">SYNC TIMELINE</text>
+  
+  <g transform="translate(130, 550)">
+    <circle r="8" fill="#22c55e"/>
+    <text x="24" y="-4" fill="#94a3b8" font-family="system-ui" font-size="12" font-family="monospace">10:42:01</text>
+    <text x="120" y="-4" fill="#1e293b" font-family="system-ui" font-size="14">Sync initiated</text>
+    
+    <line x1="0" y1="16" x2="0" y2="44" stroke="#e2e8f0" stroke-width="2"/>
+    
+    <circle cy="60" r="8" fill="#22c55e"/>
+    <text x="24" y="56" fill="#94a3b8" font-family="system-ui" font-size="12" font-family="monospace">10:42:02</text>
+    <text x="120" y="56" fill="#1e293b" font-family="system-ui" font-size="14">Authentication verified</text>
+    
+    <line x1="0" y1="76" x2="0" y2="104" stroke="#e2e8f0" stroke-width="2"/>
+    
+    <circle cy="120" r="8" fill="#22c55e"/>
+    <text x="24" y="116" fill="#94a3b8" font-family="system-ui" font-size="12" font-family="monospace">10:42:03</text>
+    <text x="120" y="116" fill="#1e293b" font-family="system-ui" font-size="14">Data validation passed</text>
+    
+    <line x1="0" y1="136" x2="0" y2="164" stroke="#e2e8f0" stroke-width="2"/>
+    
+    <circle cy="180" r="8" fill="#22c55e"/>
+    <text x="24" y="176" fill="#94a3b8" font-family="system-ui" font-size="12" font-family="monospace">10:42:04</text>
+    <text x="120" y="176" fill="#1e293b" font-family="system-ui" font-size="14" font-weight="600">Transfer complete ✓</text>
+  </g>
+  
+  <!-- Synced Fields Grid -->
+  <rect x="820" y="60" width="1020" height="680" rx="24" fill="white" filter="url(#shadow)"/>
+  <text x="870" y="115" fill="#64748b" font-family="system-ui" font-size="14" font-weight="600">SYNCED FIELDS BY CATEGORY</text>
+  <rect x="1680" y="95" width="120" height="32" rx="16" fill="#dcfce7"/>
+  <text x="1740" y="118" fill="#166534" font-family="system-ui" font-size="12" font-weight="600" text-anchor="middle">All Verified</text>
+  
+  <!-- Category Cards -->
+  <g transform="translate(870, 150)">
+    <!-- Personal -->
+    <rect width="450" height="160" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="35" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="600">Personal</text>
+    <text x="400" y="35" fill="#22c55e" font-family="system-ui" font-size="13" font-weight="500" text-anchor="end">5/5</text>
+    <g transform="translate(20, 55)">
+      <rect width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="10" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="24" y="20" fill="#64748b" font-family="system-ui" font-size="11">Name</text>
+      
+      <rect x="80" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="90" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="104" y="20" fill="#64748b" font-family="system-ui" font-size="11">SSN</text>
+      
+      <rect x="150" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="160" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="174" y="20" fill="#64748b" font-family="system-ui" font-size="11">DOB</text>
+      
+      <rect x="220" width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="230" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="244" y="20" fill="#64748b" font-family="system-ui" font-size="11">Phone</text>
+      
+      <rect x="300" width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="310" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="324" y="20" fill="#64748b" font-family="system-ui" font-size="11">Email</text>
+    </g>
+    
+    <!-- Property -->
+    <rect x="480" width="450" height="160" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="500" y="35" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="600">Property</text>
+    <text x="880" y="35" fill="#22c55e" font-family="system-ui" font-size="13" font-weight="500" text-anchor="end">4/4</text>
+    <g transform="translate(500, 55)">
+      <rect width="80" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="10" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="24" y="20" fill="#64748b" font-family="system-ui" font-size="11">Address</text>
+      
+      <rect x="90" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="100" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="114" y="20" fill="#64748b" font-family="system-ui" font-size="11">APN</text>
+      
+      <rect x="160" width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="170" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="184" y="20" fill="#64748b" font-family="system-ui" font-size="11">Value</text>
+      
+      <rect x="240" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="250" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="264" y="20" fill="#64748b" font-family="system-ui" font-size="11">Liens</text>
+    </g>
+    
+    <!-- Financial -->
+    <rect y="180" width="450" height="160" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="215" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="600">Financial</text>
+    <text x="400" y="215" fill="#22c55e" font-family="system-ui" font-size="13" font-weight="500" text-anchor="end">4/4</text>
+    <g transform="translate(20, 235)">
+      <rect width="75" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="10" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="24" y="20" fill="#64748b" font-family="system-ui" font-size="11">Income</text>
+      
+      <rect x="85" width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="95" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="109" y="20" fill="#64748b" font-family="system-ui" font-size="11">Assets</text>
+      
+      <rect x="165" width="65" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="175" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="189" y="20" fill="#64748b" font-family="system-ui" font-size="11">Debts</text>
+      
+      <rect x="240" width="70" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="250" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="264" y="20" fill="#64748b" font-family="system-ui" font-size="11">Credit</text>
+    </g>
+    
+    <!-- Loan -->
+    <rect x="480" y="180" width="450" height="160" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="500" y="215" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="600">Loan Details</text>
+    <text x="880" y="215" fill="#22c55e" font-family="system-ui" font-size="13" font-weight="500" text-anchor="end">4/4</text>
+    <g transform="translate(500, 235)">
+      <rect width="80" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="10" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="24" y="20" fill="#64748b" font-family="system-ui" font-size="11">Amount</text>
+      
+      <rect x="90" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="100" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="114" y="20" fill="#64748b" font-family="system-ui" font-size="11">Rate</text>
+      
+      <rect x="160" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="170" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="184" y="20" fill="#64748b" font-family="system-ui" font-size="11">Term</text>
+      
+      <rect x="230" width="60" height="30" rx="6" fill="white" stroke="#e2e8f0"/>
+      <text x="240" y="20" fill="#22c55e" font-family="system-ui" font-size="11">✓</text>
+      <text x="254" y="20" fill="#64748b" font-family="system-ui" font-size="11">Type</text>
+    </g>
+  </g>
+  
+  <!-- CTA -->
+  <rect x="870" y="660" width="920" height="60" rx="16" fill="url(#blue-grad)"/>
+  <text x="1330" y="700" fill="white" font-family="system-ui" font-size="18" font-weight="600" text-anchor="middle">Open in Figure →</text>
+  
+  <defs>
+    <filter id="shadow" x="-10" y="-10" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="20" flood-color="#000" flood-opacity="0.06"/>
+    </filter>
+    <linearGradient id="success-grad" x1="80" y1="60" x2="780" y2="420">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="blue-grad" x1="870" y1="660" x2="1790" y2="720">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+</svg>

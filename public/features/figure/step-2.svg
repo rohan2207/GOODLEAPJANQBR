@@ -1,0 +1,127 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark Background -->
+  <rect width="1920" height="1080" fill="#0a0a0a"/>
+  
+  <!-- Glow Effects -->
+  <circle cx="560" cy="450" r="200" fill="url(#orange-glow)" opacity="0.15"/>
+  <circle cx="1360" cy="450" r="200" fill="url(#blue-glow)" opacity="0.15"/>
+  
+  <!-- LinkAI Box -->
+  <g transform="translate(400, 350)">
+    <rect width="200" height="200" rx="32" fill="url(#linkai-grad)" filter="url(#box-shadow)"/>
+    <text x="100" y="125" fill="white" font-family="system-ui" font-size="72" font-weight="700" text-anchor="middle">L</text>
+    <text x="100" y="240" fill="white" font-family="system-ui" font-size="20" font-weight="600" text-anchor="middle">LinkAI</text>
+    <text x="100" y="270" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="14" text-anchor="middle">Source</text>
+  </g>
+  
+  <!-- Figure Box -->
+  <g transform="translate(1320, 350)">
+    <rect width="200" height="200" rx="32" fill="url(#figure-grad)" filter="url(#box-shadow-blue)"/>
+    <text x="100" y="125" fill="white" font-family="system-ui" font-size="72" font-weight="700" text-anchor="middle">F</text>
+    <text x="100" y="240" fill="white" font-family="system-ui" font-size="20" font-weight="600" text-anchor="middle">Figure</text>
+    <text x="100" y="270" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="14" text-anchor="middle">Destination</text>
+  </g>
+  
+  <!-- Connection Line -->
+  <line x1="620" y1="450" x2="1300" y2="450" stroke="url(#connection-grad)" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Animated Dots -->
+  <circle r="12" fill="#8b5cf6" filter="url(#dot-glow)">
+    <animateMotion dur="2s" repeatCount="indefinite" path="M620,450 L1300,450"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle r="12" fill="#8b5cf6" filter="url(#dot-glow)">
+    <animateMotion dur="2s" repeatCount="indefinite" path="M620,450 L1300,450" begin="0.6s"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+  </circle>
+  <circle r="12" fill="#8b5cf6" filter="url(#dot-glow)">
+    <animateMotion dur="2s" repeatCount="indefinite" path="M620,450 L1300,450" begin="1.2s"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="1.2s"/>
+  </circle>
+  
+  <!-- Data Fields Being Transferred -->
+  <g transform="translate(760, 520)">
+    <rect width="400" height="180" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="200" y="35" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="12" font-weight="600" text-anchor="middle">SYNCING DATA</text>
+    
+    <g transform="translate(20, 60)">
+      <rect width="80" height="28" rx="14" fill="rgba(139,92,246,0.2)"/>
+      <text x="40" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">Name</text>
+      
+      <rect x="90" width="80" height="28" rx="14" fill="rgba(139,92,246,0.2)"/>
+      <text x="130" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">SSN</text>
+      
+      <rect x="180" width="80" height="28" rx="14" fill="rgba(139,92,246,0.2)"/>
+      <text x="220" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">Address</text>
+      
+      <rect x="270" width="80" height="28" rx="14" fill="rgba(139,92,246,0.2)"/>
+      <text x="310" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">Income</text>
+    </g>
+    
+    <g transform="translate(20, 100)">
+      <rect width="80" height="28" rx="14" fill="rgba(139,92,246,0.15)"/>
+      <text x="40" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">DOB</text>
+      
+      <rect x="90" width="80" height="28" rx="14" fill="rgba(139,92,246,0.15)"/>
+      <text x="130" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">Phone</text>
+      
+      <rect x="180" width="100" height="28" rx="14" fill="rgba(139,92,246,0.15)"/>
+      <text x="230" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">Property Val</text>
+      
+      <rect x="290" width="70" height="28" rx="14" fill="rgba(139,92,246,0.15)"/>
+      <text x="325" y="19" fill="#a78bfa" font-family="system-ui" font-size="11" text-anchor="middle">+34</text>
+    </g>
+  </g>
+  
+  <!-- Progress Indicator -->
+  <g transform="translate(760, 780)">
+    <rect width="400" height="60" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    <circle cx="40" cy="30" r="12" stroke="#8b5cf6" stroke-width="2" fill="none">
+      <animateTransform attributeName="transform" type="rotate" from="0 40 30" to="360 40 30" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="40" cy="30" r="8" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="8 4" opacity="0.5"/>
+    <text x="70" y="36" fill="rgba(255,255,255,0.7)" font-family="system-ui" font-size="16">Syncing 42 fields...</text>
+    <text x="360" y="36" fill="rgba(255,255,255,0.4)" font-family="system-ui" font-size="14" text-anchor="end">78%</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="960" y="200" fill="white" font-family="system-ui" font-size="36" font-weight="600" text-anchor="middle">Synchronizing Data</text>
+  <text x="960" y="245" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="16" text-anchor="middle">Securely transferring borrower information to Figure</text>
+  
+  <defs>
+    <radialGradient id="orange-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blue-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="linkai-grad" x1="400" y1="350" x2="600" y2="550">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="figure-grad" x1="1320" y1="350" x2="1520" y2="550">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="connection-grad" x1="620" y1="450" x2="1300" y2="450">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="box-shadow" x="-20" y="-20" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#f97316" flood-opacity="0.4"/>
+    </filter>
+    <filter id="box-shadow-blue" x="-20" y="-20" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#2563eb" flood-opacity="0.4"/>
+    </filter>
+    <filter id="dot-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

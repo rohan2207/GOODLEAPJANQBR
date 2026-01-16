@@ -1,0 +1,66 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark Background -->
+  <rect width="1920" height="1080" fill="#0a0a0a"/>
+  
+  <!-- Radial Glow -->
+  <circle cx="960" cy="480" r="400" fill="url(#glow-grad)" opacity="0.3"/>
+  
+  <!-- Center Content -->
+  <!-- Animated Ring -->
+  <circle cx="960" cy="400" r="100" stroke="url(#ring-grad)" stroke-width="4" fill="none" opacity="0.3"/>
+  <circle cx="960" cy="400" r="80" stroke="#f97316" stroke-width="3" fill="none" stroke-dasharray="40 20"/>
+  <circle cx="960" cy="400" r="60" fill="#0a0a0a"/>
+  
+  <!-- Brain Icon -->
+  <path d="M945 385 Q960 370 975 385 Q990 400 975 415 Q960 430 945 415 Q930 400 945 385" fill="#f97316"/>
+  <circle cx="952" cy="395" r="4" fill="white"/>
+  <circle cx="968" cy="395" r="4" fill="white"/>
+  <circle cx="960" cy="408" r="3" fill="white"/>
+  
+  <!-- Title -->
+  <text x="960" y="540" fill="white" font-family="system-ui" font-size="32" font-weight="600" text-anchor="middle">Preparing Brief</text>
+  <text x="960" y="580" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="18" text-anchor="middle">for James Rodriguez</text>
+  
+  <!-- Progress Steps -->
+  <g transform="translate(760, 640)">
+    <!-- Step 1 - Done -->
+    <circle cx="20" cy="20" r="12" fill="rgba(34,197,94,0.2)"/>
+    <path d="M14 20 L18 24 L26 16" stroke="#22c55e" stroke-width="2" fill="none"/>
+    <text x="44" y="26" fill="rgba(255,255,255,0.6)" font-family="system-ui" font-size="16">Pulling credit history</text>
+    
+    <!-- Step 2 - Done -->
+    <circle cx="20" cy="70" r="12" fill="rgba(34,197,94,0.2)"/>
+    <path d="M14 70 L18 74 L26 66" stroke="#22c55e" stroke-width="2" fill="none"/>
+    <text x="44" y="76" fill="rgba(255,255,255,0.6)" font-family="system-ui" font-size="16">Analyzing GoodLeap history</text>
+    
+    <!-- Step 3 - In Progress -->
+    <circle cx="20" cy="120" r="12" stroke="#f97316" stroke-width="2" fill="none"/>
+    <text x="44" y="126" fill="#f97316" font-family="system-ui" font-size="16" font-weight="500">Generating talk track...</text>
+    
+    <!-- Step 4 - Pending -->
+    <circle cx="20" cy="170" r="12" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
+    <text x="44" y="176" fill="rgba(255,255,255,0.3)" font-family="system-ui" font-size="16">Fetching local context</text>
+  </g>
+  
+  <!-- Bottom Progress Bar -->
+  <rect x="560" y="900" width="800" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+  <rect x="560" y="900" width="520" height="8" rx="4" fill="url(#progress-grad)"/>
+  
+  <text x="960" y="940" fill="rgba(255,255,255,0.4)" font-family="system-ui" font-size="14" text-anchor="middle">65% complete</text>
+  
+  <!-- Gradients -->
+  <defs>
+    <radialGradient id="glow-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring-grad" x1="860" y1="300" x2="1060" y2="500">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="progress-grad" x1="560" y1="900" x2="1360" y2="900">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+</svg>

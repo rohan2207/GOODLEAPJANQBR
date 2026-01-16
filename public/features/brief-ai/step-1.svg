@@ -1,0 +1,80 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="#f8fafc"/>
+  
+  <!-- Sidebar -->
+  <rect width="280" height="1080" fill="#1e293b"/>
+  
+  <!-- Logo -->
+  <rect x="24" y="24" width="48" height="48" rx="12" fill="url(#logo-grad)"/>
+  <text x="84" y="56" fill="white" font-family="system-ui" font-size="20" font-weight="600">LinkAI</text>
+  
+  <!-- Nav Items -->
+  <rect x="16" y="100" width="248" height="44" rx="8" fill="rgba(255,255,255,0.1)"/>
+  <text x="56" y="128" fill="white" font-family="system-ui" font-size="14">Dashboard</text>
+  
+  <rect x="16" y="152" width="248" height="44" rx="8" fill="rgba(249,115,22,0.2)"/>
+  <text x="56" y="180" fill="#f97316" font-family="system-ui" font-size="14" font-weight="600">Call Queue</text>
+  
+  <text x="56" y="228" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="14">Borrowers</text>
+  <text x="56" y="268" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="14">Reports</text>
+  
+  <!-- Main Content Area -->
+  <text x="320" y="60" fill="#1e293b" font-family="system-ui" font-size="28" font-weight="700">Call Queue</text>
+  <text x="320" y="90" fill="#64748b" font-family="system-ui" font-size="14">Today's scheduled calls</text>
+  
+  <!-- Search Bar -->
+  <rect x="320" y="120" width="400" height="48" rx="8" fill="white" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="360" y="150" fill="#94a3b8" font-family="system-ui" font-size="14">Search borrowers...</text>
+  
+  <!-- Call Card 1 - Highlighted -->
+  <rect x="320" y="200" width="1560" height="120" rx="16" fill="white" stroke="#fed7aa" stroke-width="2"/>
+  <rect x="320" y="200" width="1560" height="120" rx="16" fill="url(#orange-bg)" opacity="0.1"/>
+  
+  <!-- Avatar -->
+  <circle cx="400" cy="260" r="40" fill="url(#avatar-grad)"/>
+  <text x="400" y="268" fill="white" font-family="system-ui" font-size="18" font-weight="600" text-anchor="middle">JR</text>
+  
+  <!-- Info -->
+  <text x="460" y="245" fill="#1e293b" font-family="system-ui" font-size="18" font-weight="600">James Rodriguez</text>
+  <text x="460" y="270" fill="#64748b" font-family="system-ui" font-size="14">Refinance Inquiry • McKinney, TX</text>
+  <text x="460" y="295" fill="#94a3b8" font-family="system-ui" font-size="12">Scheduled: 9:00 AM</text>
+  
+  <!-- Prepare Brief Button -->
+  <rect x="1640" y="235" width="200" height="50" rx="12" fill="url(#button-grad)"/>
+  <text x="1740" y="268" fill="white" font-family="system-ui" font-size="16" font-weight="600" text-anchor="middle">✨ Prepare Brief</text>
+  
+  <!-- Call Card 2 -->
+  <rect x="320" y="340" width="1560" height="100" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <circle cx="400" cy="390" r="32" fill="#cbd5e1"/>
+  <text x="400" y="398" fill="white" font-family="system-ui" font-size="14" font-weight="600" text-anchor="middle">EC</text>
+  <text x="460" y="380" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="500">Emily Chen</text>
+  <text x="460" y="405" fill="#64748b" font-family="system-ui" font-size="14">Home Equity • Plano, TX</text>
+  
+  <!-- Call Card 3 -->
+  <rect x="320" y="460" width="1560" height="100" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <circle cx="400" cy="510" r="32" fill="#cbd5e1"/>
+  <text x="400" y="518" fill="white" font-family="system-ui" font-size="14" font-weight="600" text-anchor="middle">MP</text>
+  <text x="460" y="500" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="500">Michael Park</text>
+  <text x="460" y="525" fill="#64748b" font-family="system-ui" font-size="14">Cash-out Refi • Frisco, TX</text>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="logo-grad" x1="24" y1="24" x2="72" y2="72">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="avatar-grad" x1="360" y1="220" x2="440" y2="300">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="button-grad" x1="1640" y1="235" x2="1840" y2="285">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="orange-bg" x1="320" y1="200" x2="320" y2="320">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fdba74"/>
+    </linearGradient>
+  </defs>
+</svg>

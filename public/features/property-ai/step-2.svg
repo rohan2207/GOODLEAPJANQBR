@@ -1,0 +1,89 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark Background -->
+  <rect width="1920" height="1080" fill="#0a0a0a"/>
+  
+  <!-- Grid Pattern -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  
+  <!-- Map-like area glow -->
+  <circle cx="960" cy="480" r="300" fill="url(#map-glow)" opacity="0.2"/>
+  
+  <!-- Radar Animation Container -->
+  <g transform="translate(960, 450)">
+    <!-- Outer rings -->
+    <circle r="200" stroke="rgba(245,158,11,0.15)" stroke-width="1" fill="none"/>
+    <circle r="150" stroke="rgba(245,158,11,0.2)" stroke-width="1" fill="none"/>
+    <circle r="100" stroke="rgba(245,158,11,0.25)" stroke-width="1" fill="none"/>
+    <circle r="50" stroke="rgba(245,158,11,0.3)" stroke-width="1" fill="none"/>
+    
+    <!-- Sweep line -->
+    <line x1="0" y1="0" x2="200" y2="0" stroke="url(#sweep-grad)" stroke-width="2" transform="rotate(45)"/>
+    
+    <!-- Property markers (comparables) -->
+    <circle cx="60" cy="-80" r="10" fill="#f59e0b" opacity="0.9">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-90" cy="40" r="10" fill="#f59e0b" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="70" r="10" fill="#f59e0b" opacity="0.7">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="-50" cy="-120" r="8" fill="#f59e0b" opacity="0.6">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Center marker (subject property) -->
+    <circle r="16" fill="#f59e0b"/>
+    <circle r="8" fill="white"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="960" y="750" fill="white" font-family="system-ui" font-size="28" font-weight="600" text-anchor="middle">Scanning Area</text>
+  <text x="960" y="790" fill="rgba(255,255,255,0.5)" font-family="system-ui" font-size="16" text-anchor="middle">Finding comparable sales within 0.5 miles</text>
+  
+  <!-- Progress Indicator -->
+  <rect x="660" y="860" width="600" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+  <rect x="660" y="860" width="400" height="8" rx="4" fill="url(#progress-grad)">
+    <animate attributeName="width" values="200;500;200" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Status -->
+  <g transform="translate(830, 920)">
+    <circle r="8" stroke="#f59e0b" stroke-width="2" fill="none">
+      <animate attributeName="r" values="6;10;6" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <text x="24" y="6" fill="rgba(255,255,255,0.6)" font-family="system-ui" font-size="14">Analyzing 847 data points...</text>
+  </g>
+  
+  <!-- Floating Data Labels -->
+  <g transform="translate(1500, 300)">
+    <rect width="280" height="50" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="20" y="32" fill="rgba(255,255,255,0.6)" font-family="system-ui" font-size="13">🏠 3 comps found</text>
+  </g>
+  
+  <g transform="translate(140, 400)">
+    <rect width="260" height="50" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="20" y="32" fill="rgba(255,255,255,0.6)" font-family="system-ui" font-size="13">📊 MLS data loading</text>
+  </g>
+  
+  <defs>
+    <radialGradient id="map-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sweep-grad" x1="0" y1="0" x2="200" y2="0">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="progress-grad" x1="660" y1="860" x2="1260" y2="860">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+</svg>

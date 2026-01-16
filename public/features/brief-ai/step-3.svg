@@ -1,0 +1,93 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="#f8fafc"/>
+  
+  <!-- Main Brief Card -->
+  <rect x="80" y="60" width="1100" height="960" rx="24" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Brief Header -->
+  <rect x="80" y="60" width="1100" height="100" rx="24" fill="url(#header-grad)"/>
+  <rect x="80" y="136" width="1100" height="24" fill="url(#header-grad)"/>
+  
+  <rect x="110" y="85" width="56" height="56" rx="14" fill="rgba(255,255,255,0.2)"/>
+  <text x="138" y="122" fill="white" font-family="system-ui" font-size="28">✨</text>
+  
+  <text x="186" y="110" fill="white" font-family="system-ui" font-size="22" font-weight="700">Call Prep Brief</text>
+  <text x="186" y="138" fill="rgba(255,255,255,0.8)" font-family="system-ui" font-size="14">AI-Generated • Just now</text>
+  
+  <!-- Customer Summary -->
+  <rect x="110" y="200" width="1040" height="140" rx="16" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+  <text x="140" y="235" fill="#c2410c" font-family="system-ui" font-size="12" font-weight="600">CUSTOMER SUMMARY</text>
+  <text x="140" y="270" fill="#1e293b" font-family="system-ui" font-size="16" font-weight="500">Near-prime borrower in McKinney, TX looking to consolidate debt and leverage home equity.</text>
+  <text x="140" y="300" fill="#64748b" font-family="system-ui" font-size="14">Has 2 existing GoodLeap solar loans (2021, 2023) • Always on-time payments • 687 credit score</text>
+  
+  <!-- Stats Row -->
+  <g transform="translate(110, 370)">
+    <rect width="320" height="120" rx="16" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="160" y="50" fill="#1e40af" font-family="system-ui" font-size="36" font-weight="700" text-anchor="middle">$785,000</text>
+    <text x="160" y="80" fill="#3b82f6" font-family="system-ui" font-size="14" text-anchor="middle">Property Value</text>
+    
+    <rect x="350" width="320" height="120" rx="16" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+    <text x="510" y="50" fill="#b45309" font-family="system-ui" font-size="36" font-weight="700" text-anchor="middle">$428,000</text>
+    <text x="510" y="80" fill="#f59e0b" font-family="system-ui" font-size="14" text-anchor="middle">Total Liens</text>
+    
+    <rect x="700" width="340" height="120" rx="16" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="870" y="50" fill="#166534" font-family="system-ui" font-size="36" font-weight="700" text-anchor="middle">$357,000</text>
+    <text x="870" y="80" fill="#22c55e" font-family="system-ui" font-size="14" text-anchor="middle">Available Equity</text>
+  </g>
+  
+  <!-- Key Discussion Points -->
+  <rect x="110" y="520" width="1040" height="220" rx="16" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="140" y="560" fill="#7c3aed" font-family="system-ui" font-size="12" font-weight="600">KEY DISCUSSION POINTS</text>
+  
+  <circle cx="155" cy="600" r="6" fill="#8b5cf6"/>
+  <text x="175" y="606" fill="#1e293b" font-family="system-ui" font-size="15">Debt consolidation options - high-interest credit cards totaling $21,000</text>
+  
+  <circle cx="155" cy="640" r="6" fill="#8b5cf6"/>
+  <text x="175" y="646" fill="#1e293b" font-family="system-ui" font-size="15">Cash-out refinance for planned kitchen renovation (~$45K budget mentioned)</text>
+  
+  <circle cx="155" cy="680" r="6" fill="#8b5cf6"/>
+  <text x="175" y="686" fill="#1e293b" font-family="system-ui" font-size="15">GoodLeap loyalty benefits - existing customer discount eligibility</text>
+  
+  <circle cx="155" cy="720" r="6" fill="#8b5cf6"/>
+  <text x="175" y="726" fill="#1e293b" font-family="system-ui" font-size="15">Recent property tax increase - potential escrow adjustment discussion</text>
+  
+  <!-- Right Column - Talk Track -->
+  <rect x="1220" y="60" width="620" height="480" rx="24" fill="white" filter="url(#shadow)"/>
+  <text x="1250" y="110" fill="#1e293b" font-family="system-ui" font-size="18" font-weight="600">💬 Suggested Opening</text>
+  
+  <rect x="1250" y="140" width="560" height="380" rx="12" fill="#f8fafc"/>
+  <text x="1270" y="175" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">"Good morning James, thank you for taking</text>
+  <text x="1270" y="200" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">the time to speak with me today.</text>
+  <text x="1270" y="240" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">I see you've been a GoodLeap customer</text>
+  <text x="1270" y="265" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">since 2021 - we really appreciate your</text>
+  <text x="1270" y="290" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">loyalty and excellent payment history.</text>
+  <text x="1270" y="330" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">I understand you're interested in</text>
+  <text x="1270" y="355" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">exploring some options for your</text>
+  <text x="1270" y="380" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">McKinney property - let's see how</text>
+  <text x="1270" y="405" fill="#64748b" font-family="system-ui" font-size="14" font-style="italic">we can help you today..."</text>
+  
+  <!-- Local Context -->
+  <rect x="1220" y="560" width="620" height="200" rx="24" fill="white" filter="url(#shadow)"/>
+  <text x="1250" y="610" fill="#1e293b" font-family="system-ui" font-size="18" font-weight="600">📍 Local Context</text>
+  
+  <text x="1250" y="660" fill="#1e293b" font-family="system-ui" font-size="24">☀️ 72°F</text>
+  <text x="1350" y="660" fill="#64748b" font-family="system-ui" font-size="16">Sunny in McKinney, TX</text>
+  
+  <text x="1250" y="710" fill="#64748b" font-family="system-ui" font-size="14">📰 Local: New Costco opening in Craig Ranch area</text>
+  <text x="1250" y="740" fill="#64748b" font-family="system-ui" font-size="14">🏠 Market: McKinney homes up 8% YoY</text>
+  
+  <!-- Compliance Badge -->
+  <rect x="1220" y="780" width="620" height="80" rx="24" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="1280" y="830" fill="#166534" font-family="system-ui" font-size="16" font-weight="600">✓ All required disclosures ready</text>
+  
+  <defs>
+    <filter id="shadow" x="-10" y="-10" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="20" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="header-grad" x1="80" y1="60" x2="1180" y2="160">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+</svg>
