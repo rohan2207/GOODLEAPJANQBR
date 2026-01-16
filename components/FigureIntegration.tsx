@@ -535,6 +535,12 @@ export default function FigureIntegration() {
     
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { amount: 0.4 }); // 40% visible to trigger
+    const slideRef = useRef(activeSlide);
+    
+    // Keep ref in sync with state
+    useEffect(() => {
+        slideRef.current = activeSlide;
+    }, [activeSlide]);
 
     const SLIDE_DURATION = 6000; // 6 seconds per slide
 
@@ -554,13 +560,8 @@ export default function FigureIntegration() {
             setProgress((prev) => {
                 const newProgress = prev + (100 / (SLIDE_DURATION / 50));
                 if (newProgress >= 100) {
-                    // Schedule slide change for next tick to avoid state conflicts
-                    setTimeout(() => {
-                        setActiveSlide((s) => {
-                            const nextSlide = (s + 1) % SLIDES.length;
-                            return nextSlide;
-                        });
-                    }, 0);
+                    const nextSlide = (slideRef.current + 1) % SLIDES.length;
+                    setActiveSlide(nextSlide);
                     return 0;
                 }
                 return newProgress;
@@ -568,7 +569,7 @@ export default function FigureIntegration() {
         }, 50);
 
         return () => clearInterval(progressInterval);
-    }, [isPlaying]); // Remove activeSlide from dependencies
+    }, [isPlaying]);
 
     const goToSlide = useCallback((index: number) => {
         setActiveSlide(index);
