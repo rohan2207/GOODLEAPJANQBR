@@ -546,22 +546,29 @@ export default function FigureIntegration() {
         }
     }, [isInView, hasStarted]);
 
-    // Auto-advance slides
+    // Auto-advance slides with proper sequencing
     useEffect(() => {
         if (!isPlaying) return;
 
         const progressInterval = setInterval(() => {
             setProgress((prev) => {
-                if (prev >= 100) {
-                    setActiveSlide((s) => (s + 1) % SLIDES.length);
+                const newProgress = prev + (100 / (SLIDE_DURATION / 50));
+                if (newProgress >= 100) {
+                    // Schedule slide change for next tick to avoid state conflicts
+                    setTimeout(() => {
+                        setActiveSlide((s) => {
+                            const nextSlide = (s + 1) % SLIDES.length;
+                            return nextSlide;
+                        });
+                    }, 0);
                     return 0;
                 }
-                return prev + (100 / (SLIDE_DURATION / 50));
+                return newProgress;
             });
         }, 50);
 
         return () => clearInterval(progressInterval);
-    }, [isPlaying, activeSlide]);
+    }, [isPlaying]); // Remove activeSlide from dependencies
 
     const goToSlide = useCallback((index: number) => {
         setActiveSlide(index);
