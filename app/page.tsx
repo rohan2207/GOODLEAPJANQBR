@@ -6,6 +6,9 @@ import FigureIntegration from '@/components/FigureIntegration'
 import BeforeAfterShowstopper from '@/components/BeforeAfterShowstopper'
 import AgentSummary from '@/components/AgentSummary'
 import FeatureGrid from '@/components/FeatureGrid'
+import ProductRoadmap from '@/components/ProductRoadmap'
+import IntegrationsShowcase from '@/components/IntegrationsShowcase'
+import BusinessImpact from '@/components/BusinessImpact'
 import Finale from '@/components/Finale'
 import Preloader, { HeroSection } from '@/components/Preloader'
 import { useState } from 'react'
@@ -40,6 +43,10 @@ export default function Home() {
         oldStartMode="half"
         pipDelaySeconds={5}
       />
+      {/* Bottom sections: Roadmap, Integrations, Impact */}
+      <ProductRoadmap />
+      <IntegrationsShowcase />
+      <BusinessImpact />
       <Finale />
     </main>
   )
