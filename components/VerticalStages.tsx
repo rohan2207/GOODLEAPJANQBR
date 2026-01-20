@@ -137,7 +137,7 @@ function StageSection({
             ? [0, -420, -520, -720] // Sales Coach: Move MORE left (increased spacing)
             : stage.id === "valuation"
                 ? [0, -350, -350, -680] // Valuation: Similar movement
-                : [0, -320, -320, -700] // Rapport: Move MORE left (increased spacing)
+                : [0, -220, -220, -480] // Rapport: Reduced to keep content visible on smaller screens
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
     const textFloatScale = useTransform(
@@ -199,7 +199,7 @@ function StageSection({
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1, 1, 0.58]
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [60, 60, 420]); // Adjusted to sync with viewport
+    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [100, 100, 350]); // Adjusted to keep content visible on smaller screens
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
 
     // Panel content scrolls LONGER as user scrolls page - reveals all content
@@ -219,7 +219,7 @@ function StageSection({
     const viewportContextScale = useTransform(scrollYProgress, [0.78, 0.88], [0.95, 1]);
     const viewportBlur = useTransform(scrollYProgress, [0.78, 0.86], [8, 0]);
     const viewportBlurFilter = useTransform(viewportBlur, (v) => `blur(${v}px)`);
-    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [60, 150]); // Synced with panel positioning
+    const viewportX = useTransform(scrollYProgress, [0.78, 0.88], [100, 180]); // Synced with panel positioning, adjusted for smaller screens
 
     // ===== SALES COACH SPECIFIC TRANSFORMS =====
     // Phase 1: Objection bubbles appear (0.12 - 0.32) - dramatic "dread moment" - EXTENDED
