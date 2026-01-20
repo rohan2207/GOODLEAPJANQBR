@@ -48,51 +48,6 @@ function HurricaneParticle({ index, total, active }: { index: number; total: num
 }
 
 // ============================================
-// CONFETTI PIECE
-// ============================================
-function ConfettiPiece({ index, active }: { index: number; active: boolean }) {
-    const colors = ["#f97316", "#3b82f6", "#fbbf24", "#60a5fa", "#ffffff", "#f59e0b", "#93c5fd"];
-    const color = colors[index % colors.length];
-
-    const startX = (Math.random() - 0.5) * 600;
-    const startY = -100 - Math.random() * 200;
-    const endY = 400 + Math.random() * 200;
-    const swayAmount = 30 + Math.random() * 50;
-    const rotateAmount = 360 + Math.random() * 720;
-    const delay = Math.random() * 1.5;
-    const duration = 2 + Math.random() * 1.5;
-    const size = 6 + Math.random() * 10;
-
-    const shapes = ["rectangle", "square", "circle"];
-    const shape = shapes[Math.floor(Math.random() * shapes.length)];
-
-    const getShapeStyle = () => {
-        switch (shape) {
-            case "rectangle": return { width: size * 0.4, height: size, borderRadius: 2 };
-            case "square": return { width: size * 0.7, height: size * 0.7, borderRadius: 2 };
-            case "circle": return { width: size * 0.6, height: size * 0.6, borderRadius: "50%" };
-            default: return { width: size * 0.5, height: size, borderRadius: 2 };
-        }
-    };
-
-    return (
-        <motion.div
-            className="absolute"
-            style={{ ...getShapeStyle(), backgroundColor: color, left: "50%", top: "50%" }}
-            initial={{ x: startX, y: startY, opacity: 0, rotate: 0, scale: 0 }}
-            animate={active ? {
-                x: [startX, startX + swayAmount, startX - swayAmount, startX + swayAmount * 0.5],
-                y: [startY, startY + endY * 0.3, startY + endY * 0.6, startY + endY],
-                opacity: [0, 1, 1, 0],
-                rotate: [0, rotateAmount * 0.3, rotateAmount * 0.7, rotateAmount],
-                scale: [0, 1, 1, 0.5],
-            } : {}}
-            transition={{ duration, delay, ease: "easeInOut" }}
-        />
-    );
-}
-
-// ============================================
 // SPARKLE
 // ============================================
 function Sparkle({ index, active }: { index: number; active: boolean }) {
@@ -280,7 +235,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     const [phase, setPhase] = useState<"idle" | "loading" | "hurricane" | "bridge" | "celebration" | "moveUp" | "showHeadline" | "complete">("idle");
 
     const hurricaneParticles = useMemo(() => Array.from({ length: 40 }, (_, i) => i), []);
-    const confettiPieces = useMemo(() => Array.from({ length: 60 }, (_, i) => i), []);
     const sparkles = useMemo(() => Array.from({ length: 15 }, (_, i) => i), []);
 
     // Start the experience
@@ -350,7 +304,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
     useEffect(() => {
         if (phase === "showHeadline") {
-            const t = setTimeout(() => setPhase("complete"), 1500);
+            const t = setTimeout(() => setPhase("complete"), 3500); // Extended by 2 seconds
             return () => clearTimeout(t);
         }
     }, [phase]);
@@ -433,22 +387,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                         <HurricaneParticle key={i} index={i} total={hurricaneParticles.length} active={isHurricaneActive} />
                     ))}
                 </div>
-            )}
-
-            {/* ⚠️ TODO: REMOVE CONFETTI - Come back to this later ⚠️ */}
-            {/* CONFETTI */}
-            {isCelebrationActive && (
-                <>
-                    {/* ⚠️ REMOVE CONFETTI - Visual reminder */}
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[9999] bg-red-500 text-white px-6 py-2 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg">
-                        ⚠️ REMOVE CONFETTI ⚠️
-                    </div>
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        {confettiPieces.map((i) => (
-                            <ConfettiPiece key={i} index={i} active={isCelebrationActive} />
-                        ))}
-                    </div>
-                </>
             )}
 
             {/* SPARKLES */}
