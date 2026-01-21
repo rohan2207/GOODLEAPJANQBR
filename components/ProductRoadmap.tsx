@@ -6,8 +6,8 @@ import { Check, Star } from "lucide-react";
 const quarters = [
     { id: "pre", label: "Pre", current: false },
     { id: "q3-25", label: "Q3'25", current: false },
-    { id: "q4-25", label: "Q4'25", current: true },
-    { id: "q1-26", label: "Q1'26", current: false },
+    { id: "q4-25", label: "Q4'25", current: false },
+    { id: "q1-26", label: "Q1'26", current: true },
     { id: "q2-26", label: "Q2'26", current: false },
 ];
 
