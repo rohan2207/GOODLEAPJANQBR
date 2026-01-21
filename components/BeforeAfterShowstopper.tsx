@@ -475,7 +475,7 @@ export default function BeforeAfterShowstopper({
                                             <video
                                                 ref={newVideoRef}
                                                 src={newSrc}
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-full object-contain bg-black"
                                                 preload="auto"
                                                 muted
                                                 playsInline
@@ -581,7 +581,7 @@ export default function BeforeAfterShowstopper({
                                         <video
                                             ref={oldVideoRef}
                                             src={oldSrc}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-contain bg-black"
                                             preload="auto"
                                             muted
                                             playsInline
