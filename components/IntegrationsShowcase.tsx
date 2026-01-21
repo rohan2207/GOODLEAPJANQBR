@@ -213,16 +213,36 @@ export default function IntegrationsShowcase() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: idx * 0.1 }}
                         >
-                            <div className="relative bg-zinc-900/80 backdrop-blur-sm border border-white/10 rounded-2xl p-5 h-full transition-all hover:border-white/20">
+                            {/* Glow effect for NEW items */}
+                            {integration.isNew && (
+                                <div className="absolute -inset-[2px] bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 rounded-2xl opacity-70 blur-sm animate-pulse" />
+                            )}
+                            <div className={`relative bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-5 h-full transition-all ${
+                                integration.isNew 
+                                    ? "border-2 border-emerald-500/50 hover:border-emerald-400/70 shadow-lg shadow-emerald-500/20" 
+                                    : "border border-white/10 hover:border-white/20"
+                            }`}>
+                                {/* NEW ribbon banner */}
+                                {integration.isNew && (
+                                    <div className="absolute -top-3 -right-3 z-10">
+                                        <div className="relative">
+                                            <div className="absolute inset-0 bg-emerald-500 rounded-full blur-md opacity-50" />
+                                            <div className="relative bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                                                <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                                                Q1 2026
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="flex items-start justify-between mb-4">
-                                    <div className={`bg-gradient-to-br ${integration.gradient} p-3 rounded-xl`}>
+                                    <div className={`bg-gradient-to-br ${integration.gradient} p-3 rounded-xl ${integration.isNew ? "ring-2 ring-emerald-500/30" : ""}`}>
                                         <div className="text-white">
                                             {integration.icon}
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
                                         {integration.isNew && (
-                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                                                 NEW
                                             </span>
                                         )}
@@ -239,8 +259,8 @@ export default function IntegrationsShowcase() {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <h3 className="text-xl font-bold text-white">{integration.name}</h3>
-                                    <div className="text-sm font-semibold text-purple-400 uppercase tracking-wider">
+                                    <h3 className={`text-xl font-bold ${integration.isNew ? "text-white" : "text-white"}`}>{integration.name}</h3>
+                                    <div className={`text-sm font-semibold uppercase tracking-wider ${integration.isNew ? "text-emerald-400" : "text-purple-400"}`}>
                                         {integration.category}
                                     </div>
                                     <p className="text-zinc-400 leading-relaxed text-sm">
