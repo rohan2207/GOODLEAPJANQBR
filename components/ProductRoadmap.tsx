@@ -26,9 +26,9 @@ const features = [
     { quarter: "q1-26", name: "Pricing Engine", checked: true },
     { quarter: "q1-26", name: "AI LO Coach", checked: true },
     { quarter: "q1-26", name: "Deal Structuring", checked: true },
-    // Q2'26
-    { quarter: "q2-26", name: "AI Scenarios", checked: true },
-    { quarter: "q2-26", name: "Full Pricing Suite", checked: true },
+    // Q2'26 - Future items (not checked)
+    { quarter: "q2-26", name: "AI Scenarios", checked: false },
+    { quarter: "q2-26", name: "Full Pricing Suite", checked: false },
 ];
 
 export default function ProductRoadmap() {
@@ -110,11 +110,14 @@ export default function ProductRoadmap() {
                                                 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium
                                                 ${feature.checked 
                                                     ? "bg-zinc-800/80 border border-zinc-700 text-white" 
-                                                    : "bg-zinc-900/50 border border-zinc-800 text-zinc-500"
+                                                    : "bg-zinc-900/30 border border-zinc-800/50 text-zinc-500"
                                                 }
                                             `}>
                                                 {feature.checked && (
                                                     <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                                )}
+                                                {!feature.checked && (
+                                                    <div className="w-4 h-4 rounded-full border border-zinc-600 flex-shrink-0" />
                                                 )}
                                                 <span className="truncate">{feature.name}</span>
                                             </div>

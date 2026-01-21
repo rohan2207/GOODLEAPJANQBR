@@ -19,10 +19,60 @@ type Integration = {
     icon: React.ReactNode;
     gradient: string;
     status: "live" | "soon";
+    isNew?: boolean;
 };
 
 const integrations: Integration[] = [
-    // Live integrations
+    // Existing Live integrations
+    {
+        name: "Encompass",
+        category: "LOS",
+        description: "Seamless bidirectional sync with your existing loan origination system",
+        icon: <FileText className="w-5 h-5" />,
+        gradient: "from-blue-500 to-blue-600",
+        status: "live",
+    },
+    {
+        name: "Salesforce",
+        category: "CRM",
+        description: "Unified customer data and pipeline management",
+        icon: <Zap className="w-5 h-5" />,
+        gradient: "from-blue-400 to-cyan-500",
+        status: "live",
+    },
+    {
+        name: "First American",
+        category: "Title & Data",
+        description: "Real-time property data and title services",
+        icon: <Home className="w-5 h-5" />,
+        gradient: "from-orange-500 to-red-500",
+        status: "live",
+    },
+    {
+        name: "Google Maps",
+        category: "Location Data",
+        description: "Property visualization and neighborhood insights",
+        icon: <TrendingUp className="w-5 h-5" />,
+        gradient: "from-green-500 to-emerald-600",
+        status: "live",
+    },
+    {
+        name: "OpenAI",
+        category: "AI Intelligence",
+        description: "Smart document processing and intelligent automation",
+        icon: <Calculator className="w-5 h-5" />,
+        gradient: "from-pink-500 to-purple-500",
+        status: "live",
+    },
+    {
+        name: "Pricing Exceptions",
+        category: "Pricing Engine",
+        description: "Automated exception handling and approval workflows",
+        icon: <BarChart3 className="w-5 h-5" />,
+        gradient: "from-amber-500 to-orange-500",
+        status: "live",
+    },
+    // New Live integrations
     {
         name: "Optimal Blue",
         category: "Pricing Engine",
@@ -30,6 +80,7 @@ const integrations: Integration[] = [
         icon: <TrendingUp className="w-5 h-5" />,
         gradient: "from-amber-500 to-yellow-600",
         status: "live",
+        isNew: true,
     },
     {
         name: "Credit Bureaus",
@@ -38,6 +89,7 @@ const integrations: Integration[] = [
         icon: <BarChart3 className="w-5 h-5" />,
         gradient: "from-indigo-500 to-purple-600",
         status: "live",
+        isNew: true,
     },
     // In Development
     {
@@ -168,16 +220,23 @@ export default function IntegrationsShowcase() {
                                             {integration.icon}
                                         </div>
                                     </div>
-                                    {integration.status === "soon" && (
-                                        <span className="text-xs font-bold px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
-                                            SOON
-                                        </span>
-                                    )}
-                                    {integration.status === "live" && (
-                                        <span className="text-xs font-bold px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
-                                            LIVE
-                                        </span>
-                                    )}
+                                    <div className="flex gap-2">
+                                        {integration.isNew && (
+                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                                NEW
+                                            </span>
+                                        )}
+                                        {integration.status === "soon" && (
+                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                                                SOON
+                                            </span>
+                                        )}
+                                        {integration.status === "live" && (
+                                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                                                LIVE
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <h3 className="text-xl font-bold text-white">{integration.name}</h3>
