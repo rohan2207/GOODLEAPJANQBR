@@ -244,7 +244,7 @@ export default function BeforeAfterShowstopper({
             // Set timer for PiP transition
             pipTimerRef.current = setTimeout(() => {
                 if (oldVideo) {
-                    oldVideo.playbackRate = 5;
+                    oldVideo.playbackRate = 10; // 10x speed for old video
                 }
                 setPlayState("playingPip");
             }, pipDelaySeconds * 1000);
@@ -414,6 +414,64 @@ export default function BeforeAfterShowstopper({
                                             )}
                                         </AnimatePresence>
 
+                                        {/* GoodLeap Benefit Message - appears in PiP mode */}
+                                        <AnimatePresence>
+                                            {isOldPip && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 30 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -20 }}
+                                                    transition={{ delay: 0.5, duration: 0.6 }}
+                                                    className="absolute top-1/2 right-8 -translate-y-1/2 z-20 max-w-md"
+                                                >
+                                                    <div className="bg-gradient-to-br from-black/80 via-black/70 to-emerald-950/50 backdrop-blur-xl p-8 rounded-3xl border border-emerald-500/20 shadow-2xl">
+                                                        <div className="flex items-center gap-3 mb-4">
+                                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">First 30 Seconds</p>
+                                                                <p className="text-white font-bold text-lg">Loan Benefits Ready</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-3">
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                </div>
+                                                                <p className="text-white/80 text-sm">GoodLeap Consumer Finance loan options instantly calculated</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                </div>
+                                                                <p className="text-white/80 text-sm">Personalized rates & payment scenarios</p>
+                                                            </div>
+                                                            <div className="flex items-start gap-3">
+                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                </div>
+                                                                <p className="text-white/80 text-sm">Ready to present to customer immediately</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-5 pt-4 border-t border-white/10">
+                                                            <p className="text-emerald-400/80 text-xs text-center">
+                                                                While the old process is still loading at 10x speed...
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+
                                         {hasNewVideo ? (
                                             <video
                                                 ref={newVideoRef}
@@ -488,7 +546,7 @@ export default function BeforeAfterShowstopper({
                                             <span className="font-semibold text-white">The Old Way</span>
                                         </div>
 
-                                        {/* 5x Speed Badge */}
+                                        {/* 10x Speed Badge */}
                                         <AnimatePresence>
                                             {isOldPip && (
                                                 <motion.div
@@ -497,7 +555,7 @@ export default function BeforeAfterShowstopper({
                                                     exit={{ opacity: 0, scale: 0.8 }}
                                                     className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-bold flex items-center gap-1"
                                                 >
-                                                    ⚡ 5x SPEED
+                                                    ⚡ 10x SPEED
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
