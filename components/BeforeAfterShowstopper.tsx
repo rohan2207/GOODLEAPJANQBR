@@ -422,7 +422,7 @@ export default function BeforeAfterShowstopper({
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0, y: 20 }}
                                                     transition={{ delay: 0.5, duration: 0.6 }}
-                                                    className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 max-w-2xl w-full px-4"
+                                                    className="absolute bottom-24 left-6 z-20 max-w-xl"
                                                 >
                                                     <div className="bg-gradient-to-r from-black/90 via-emerald-950/40 to-black/90 backdrop-blur-xl py-4 px-6 rounded-2xl border border-emerald-500/20 shadow-2xl">
                                                         <div className="flex items-center justify-between gap-6 flex-wrap">
@@ -552,7 +552,7 @@ export default function BeforeAfterShowstopper({
                                                     initial={{ opacity: 0, scale: 0.8 }}
                                                     animate={{ opacity: 1, scale: 1 }}
                                                     exit={{ opacity: 0, scale: 0.8 }}
-                                                    className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-lg bg-orange-500 text-white text-sm font-bold flex items-center gap-1"
+                                                    className="absolute top-3 right-3 z-20 px-4 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg font-bold flex items-center gap-2 shadow-lg"
                                                 >
                                                     ⚡ 10x SPEED
                                                 </motion.div>
