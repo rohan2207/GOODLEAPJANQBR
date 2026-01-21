@@ -414,57 +414,56 @@ export default function BeforeAfterShowstopper({
                                             )}
                                         </AnimatePresence>
 
-                                        {/* GoodLeap Benefit Message - appears in PiP mode */}
+                                        {/* GoodLeap Benefit Message - appears in PiP mode at bottom */}
                                         <AnimatePresence>
                                             {isOldPip && (
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 30 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -20 }}
+                                                    exit={{ opacity: 0, y: 20 }}
                                                     transition={{ delay: 0.5, duration: 0.6 }}
-                                                    className="absolute top-1/2 right-8 -translate-y-1/2 z-20 max-w-md"
+                                                    className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 max-w-2xl w-full px-4"
                                                 >
-                                                    <div className="bg-gradient-to-br from-black/80 via-black/70 to-emerald-950/50 backdrop-blur-xl p-8 rounded-3xl border border-emerald-500/20 shadow-2xl">
-                                                        <div className="flex items-center gap-3 mb-4">
-                                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
-                                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                                </svg>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">First 30 Seconds</p>
-                                                                <p className="text-white font-bold text-lg">Loan Benefits Ready</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="space-y-3">
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    <div className="bg-gradient-to-r from-black/90 via-emerald-950/40 to-black/90 backdrop-blur-xl py-4 px-6 rounded-2xl border border-emerald-500/20 shadow-2xl">
+                                                        <div className="flex items-center justify-between gap-6 flex-wrap">
+                                                            {/* Left: Title */}
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                                                                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                                                     </svg>
                                                                 </div>
-                                                                <p className="text-white/80 text-sm">GoodLeap Consumer Finance loan options instantly calculated</p>
+                                                                <div>
+                                                                    <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">First 30 Seconds</p>
+                                                                    <p className="text-white font-bold">Loan Benefits Ready</p>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            
+                                                            {/* Center: Benefits (horizontal) */}
+                                                            <div className="flex items-center gap-6 flex-wrap">
+                                                                <div className="flex items-center gap-2">
+                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                                     </svg>
+                                                                    <p className="text-white/80 text-sm">GoodLeap options calculated</p>
                                                                 </div>
-                                                                <p className="text-white/80 text-sm">Personalized rates & payment scenarios</p>
-                                                            </div>
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                                    <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                <div className="flex items-center gap-2">
+                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                                     </svg>
+                                                                    <p className="text-white/80 text-sm">Personalized rates ready</p>
                                                                 </div>
-                                                                <p className="text-white/80 text-sm">Ready to present to customer immediately</p>
+                                                                <div className="flex items-center gap-2">
+                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    <p className="text-white/80 text-sm">Ready to present</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="mt-5 pt-4 border-t border-white/10">
-                                                            <p className="text-emerald-400/80 text-xs text-center">
-                                                                While the old process is still loading at 10x speed...
+
+                                                            {/* Right: Old process note */}
+                                                            <p className="text-red-400/70 text-xs">
+                                                                Old process still loading at 10x...
                                                             </p>
                                                         </div>
                                                     </div>
@@ -538,7 +537,7 @@ export default function BeforeAfterShowstopper({
                                     {/* OLD Video - Left half in split, PiP overlay when in PiP mode */}
                                     <div className={`${
                                         isOldPip 
-                                            ? 'absolute top-6 left-6 z-40 w-80 aspect-video rounded-2xl overflow-hidden ring-4 ring-red-500/50 shadow-2xl shadow-red-500/20' 
+                                            ? 'absolute top-6 left-6 z-40 w-64 aspect-video rounded-2xl overflow-hidden ring-2 ring-red-500/30 shadow-xl opacity-60 hover:opacity-100 transition-opacity' 
                                             : 'absolute inset-0 right-1/2 z-10'
                                     } transition-all duration-700 ease-out`}>
                                         {/* OLD Label */}

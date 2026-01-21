@@ -92,60 +92,54 @@ export default function Finale() {
                                 </video>
                                 */}
                                 
-                                {/* Chaos visualization (placeholder until video) */}
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
-                                    {/* Scattered windows representing multiple systems */}
-                                    <div className="relative w-full h-full">
-                                        {[
-                                            { x: 10, y: 15, w: 35, h: 25, label: "LOS System", delay: 0 },
-                                            { x: 55, y: 10, w: 40, h: 30, label: "CRM", delay: 0.2 },
-                                            { x: 5, y: 50, w: 45, h: 35, label: "Pricing Engine", delay: 0.4 },
-                                            { x: 50, y: 45, w: 45, h: 40, label: "Document Portal", delay: 0.6 },
-                                            { x: 25, y: 70, w: 50, h: 25, label: "Compliance Check", delay: 0.8 },
-                                        ].map((window, idx) => (
-                                            <motion.div
-                                                key={idx}
-                                                className="absolute rounded-lg bg-white/5 border border-red-500/20 p-3 backdrop-blur-sm"
-                                                style={{
-                                                    left: `${window.x}%`,
-                                                    top: `${window.y}%`,
-                                                    width: `${window.w}%`,
-                                                    height: `${window.h}%`,
-                                                    opacity: useTransform(
-                                                        chaosIntensity,
-                                                        [window.delay, window.delay + 0.3],
-                                                        [0, 0.8]
-                                                    )
-                                                }}
-                                            >
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="flex gap-1">
-                                                        <div className="w-2 h-2 rounded-full bg-red-500/60" />
-                                                        <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
-                                                        <div className="w-2 h-2 rounded-full bg-gray-500/60" />
-                                                    </div>
-                                                    <span className="text-[10px] text-white/40">{window.label}</span>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    {[85, 70, 92].map((width, i) => (
-                                                        <div key={i} className="h-1.5 bg-white/10 rounded" style={{ width: `${width}%` }} />
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        ))}
-
-                                        {/* Connecting chaos lines */}
-                                        <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                                            <motion.path
-                                                d="M 30% 30% L 70% 25% L 25% 65% L 72% 65% L 50% 82%"
-                                                stroke="rgba(239,68,68,0.3)"
-                                                strokeWidth="1"
-                                                strokeDasharray="4 4"
-                                                fill="none"
-                                                style={{ pathLength: chaosIntensity }}
+                                {/* Chaos collage of old UI screenshots */}
+                                <div className="absolute inset-0 overflow-hidden">
+                                    {/* Scattered screenshots - chaotic overlapping collage */}
+                                    {[
+                                        { src: "/Screenshots/Picture1.png-2.png", x: -5, y: 5, rotate: -8, scale: 0.45, z: 1, delay: 0 },
+                                        { src: "/Screenshots/Picture1.png-3.png", x: 25, y: -10, rotate: 5, scale: 0.5, z: 2, delay: 0.1 },
+                                        { src: "/Screenshots/Picture1.png-4.png", x: 55, y: 8, rotate: -3, scale: 0.4, z: 3, delay: 0.2 },
+                                        { src: "/Screenshots/Picture1.png-5.png", x: 10, y: 30, rotate: 7, scale: 0.55, z: 4, delay: 0.15 },
+                                        { src: "/Screenshots/Picture1.png-6.png", x: 40, y: 25, rotate: -12, scale: 0.48, z: 5, delay: 0.25 },
+                                        { src: "/Screenshots/Picture1.png-7.png", x: 70, y: 20, rotate: 4, scale: 0.42, z: 6, delay: 0.3 },
+                                        { src: "/Screenshots/Picture1.png-8.png", x: -8, y: 55, rotate: -6, scale: 0.5, z: 7, delay: 0.2 },
+                                        { src: "/Screenshots/Picture1.png-9.png", x: 30, y: 50, rotate: 10, scale: 0.46, z: 8, delay: 0.35 },
+                                        { src: "/Screenshots/Picture1.png-10.png", x: 60, y: 45, rotate: -9, scale: 0.52, z: 9, delay: 0.4 },
+                                        { src: "/Screenshots/Picture1.png-11.png", x: 15, y: 70, rotate: 3, scale: 0.44, z: 10, delay: 0.3 },
+                                        { src: "/Screenshots/Picture1.png-12.png", x: 45, y: 68, rotate: -5, scale: 0.48, z: 11, delay: 0.45 },
+                                        { src: "/Screenshots/Picture1.png-13.png", x: 75, y: 60, rotate: 8, scale: 0.4, z: 12, delay: 0.5 },
+                                        { src: "/Screenshots/Picture1.png-14.png", x: 5, y: 85, rotate: -4, scale: 0.38, z: 13, delay: 0.4 },
+                                        { src: "/Screenshots/Picture1.png-15.png", x: 35, y: 82, rotate: 6, scale: 0.42, z: 14, delay: 0.55 },
+                                        { src: "/Screenshots/Picture1.png-16.png", x: 65, y: 78, rotate: -7, scale: 0.45, z: 15, delay: 0.6 },
+                                        { src: "/Screenshots/Picture1.png-17.png", x: 50, y: 35, rotate: 2, scale: 0.5, z: 16, delay: 0.35 },
+                                    ].map((img, idx) => (
+                                        <motion.div
+                                            key={idx}
+                                            className="absolute rounded-lg overflow-hidden shadow-2xl border border-red-500/20"
+                                            style={{
+                                                left: `${img.x}%`,
+                                                top: `${img.y}%`,
+                                                zIndex: img.z,
+                                                rotate: img.rotate,
+                                                scale: img.scale,
+                                                opacity: useTransform(
+                                                    chaosIntensity,
+                                                    [img.delay, img.delay + 0.3],
+                                                    [0, 0.85]
+                                                )
+                                            }}
+                                        >
+                                            <img 
+                                                src={img.src} 
+                                                alt={`Old UI ${idx + 1}`}
+                                                className="w-[400px] h-auto object-cover"
+                                                style={{ filter: "saturate(0.7) contrast(1.1)" }}
                                             />
-                                        </svg>
-                                    </div>
+                                        </motion.div>
+                                    ))}
+                                    
+                                    {/* Red overlay tint for chaos feel */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-transparent to-red-950/30 pointer-events-none" />
                                 </div>
 
                                 {/* Chaos stats */}
