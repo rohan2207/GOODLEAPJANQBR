@@ -537,7 +537,7 @@ export default function BeforeAfterShowstopper({
                                     {/* OLD Video - Left half in split, PiP overlay when in PiP mode */}
                                     <div className={`${
                                         isOldPip 
-                                            ? 'absolute top-6 left-6 z-40 w-64 aspect-video rounded-2xl overflow-hidden ring-2 ring-red-500/30 shadow-xl opacity-60 hover:opacity-100 transition-opacity' 
+                                            ? 'absolute top-6 left-6 z-40 w-96 aspect-video rounded-2xl overflow-hidden ring-2 ring-red-500/30 shadow-xl opacity-50 hover:opacity-90 transition-opacity' 
                                             : 'absolute inset-0 right-1/2 z-10'
                                     } transition-all duration-700 ease-out`}>
                                         {/* OLD Label */}
