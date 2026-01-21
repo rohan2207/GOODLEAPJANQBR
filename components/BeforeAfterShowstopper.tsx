@@ -642,41 +642,109 @@ export default function BeforeAfterShowstopper({
                                     )}
                                 </AnimatePresence>
 
-                                {/* End State Overlay */}
+                                {/* End State Overlay - Epic Closer */}
                                 <AnimatePresence>
                                     {playState === "ended" && (
                                         <motion.div
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 backdrop-blur-md"
+                                            className="absolute inset-0 z-20 flex items-center justify-center overflow-hidden"
                                         >
-                                            <div className="text-center">
-                                                <motion.h3
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    className="text-4xl md:text-5xl font-bold text-white mb-4"
+                                            {/* Animated background */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-950 to-black">
+                                                <div className="absolute inset-0 opacity-30">
+                                                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/30 rounded-full blur-3xl animate-pulse" />
+                                                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+                                                </div>
+                                            </div>
+
+                                            <div className="relative z-10 text-center px-8 max-w-4xl">
+                                                {/* Logo/Brand */}
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.8 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    transition={{ delay: 0.1, duration: 0.5 }}
+                                                    className="mb-8"
                                                 >
-                                                    This is the new standard
+                                                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-blue-500 flex items-center justify-center">
+                                                            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                            </svg>
+                                                        </div>
+                                                        <span className="text-white font-semibold text-xl">LinkAI</span>
+                                                    </div>
+                                                </motion.div>
+
+                                                {/* Main headline */}
+                                                <motion.h3
+                                                    initial={{ opacity: 0, y: 30 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.2, duration: 0.6 }}
+                                                    className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+                                                >
+                                                    The Platform That{' '}
+                                                    <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
+                                                        Thinks Ahead
+                                                    </span>
                                                 </motion.h3>
+
+                                                {/* Subheadline */}
                                                 <motion.p
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.1 }}
-                                                    className="text-xl text-white/60 mb-8"
+                                                    transition={{ delay: 0.4 }}
+                                                    className="text-xl md:text-2xl text-white/60 mb-10 max-w-2xl mx-auto"
                                                 >
-                                                    Minutes → Seconds. Friction → Flow.
+                                                    Present GoodLeap loan benefits in seconds, not minutes.
+                                                    <br />
+                                                    <span className="text-white/80">Every conversation starts with confidence.</span>
                                                 </motion.p>
-                                                <motion.button
+
+                                                {/* Stats comparison */}
+                                                <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    onClick={handleReplay}
-                                                    className="flex items-center gap-2 mx-auto px-6 py-3 rounded-xl bg-white/20 hover:bg-white/30 transition-colors text-white font-medium"
+                                                    transition={{ delay: 0.5 }}
+                                                    className="flex items-center justify-center gap-8 mb-10"
                                                 >
-                                                    <RotateCcw className="w-5 h-5" />
-                                                    Watch Again
-                                                </motion.button>
+                                                    <div className="text-center">
+                                                        <div className="text-red-400/60 line-through text-2xl font-mono mb-1">5+ minutes</div>
+                                                        <div className="text-white/40 text-sm">Old Process</div>
+                                                    </div>
+                                                    <div className="text-4xl">→</div>
+                                                    <div className="text-center">
+                                                        <div className="text-emerald-400 text-4xl font-bold font-mono mb-1">30 sec</div>
+                                                        <div className="text-emerald-400/60 text-sm">With LinkAI</div>
+                                                    </div>
+                                                </motion.div>
+
+                                                {/* CTA */}
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.6 }}
+                                                    className="flex items-center justify-center gap-4"
+                                                >
+                                                    <button
+                                                        onClick={handleReplay}
+                                                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition-all text-white font-medium border border-white/10"
+                                                    >
+                                                        <RotateCcw className="w-5 h-5" />
+                                                        Watch Again
+                                                    </button>
+                                                </motion.div>
+
+                                                {/* Bottom tagline */}
+                                                <motion.p
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ delay: 0.8 }}
+                                                    className="mt-12 text-white/30 text-sm"
+                                                >
+                                                    Empowering loan officers with AI-driven insights
+                                                </motion.p>
                                             </div>
                                         </motion.div>
                                     )}
