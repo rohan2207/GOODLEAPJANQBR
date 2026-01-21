@@ -414,172 +414,175 @@ export default function BeforeAfterShowstopper({
                                             )}
                                         </AnimatePresence>
 
-                                        {/* Talking Point Callouts - appear at specific timestamps with longer durations */}
-                                        <AnimatePresence mode="wait">
-                                            {/* Interest Rate Callout - 17-20 seconds (3 sec duration) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 17 && newCurrentTime < 20 && (
+                                        {/* Talking Point Callouts - Combined panels with staggered animations */}
+                                        <AnimatePresence>
+                                            {/* PHASE 1: Rates & Product (17-24 seconds) - Two cards stacked */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 17 && newCurrentTime < 24 && (
                                                 <motion.div
-                                                    key="interest-rate"
-                                                    initial={{ opacity: 0, y: -20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    transition={{ duration: 0.5 }}
-                                                    className="absolute top-4 right-4 z-30 max-w-sm"
+                                                    key="rates-product"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    transition={{ duration: 0.4 }}
+                                                    className="absolute top-4 right-4 z-30 w-80 space-y-3"
                                                 >
-                                                    <div className="bg-gradient-to-br from-cyan-600 to-blue-700 backdrop-blur-md px-6 py-5 rounded-2xl shadow-2xl border border-cyan-400/30">
-                                                        <div className="flex items-start gap-4">
-                                                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    {/* Card 1: Interest Rates */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, x: 40, rotateY: -15 }}
+                                                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                                                        transition={{ duration: 0.6, ease: "easeOut" }}
+                                                        className="bg-gradient-to-br from-cyan-600/95 to-blue-700/95 backdrop-blur-md px-5 py-4 rounded-xl shadow-2xl border border-cyan-400/40"
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="flex-1">
-                                                                <p className="text-cyan-200 text-xs font-bold uppercase tracking-wider mb-1">💡 Talking Point</p>
-                                                                <p className="text-white font-bold text-xl mb-2">28 Rate Options Loaded</p>
-                                                                <p className="text-cyan-100/90 text-sm leading-relaxed">
-                                                                    "We've already pulled real-time rates from 4.125% to 5.250% — 
-                                                                    ready to show your client the best options instantly."
-                                                                </p>
+                                                            <div>
+                                                                <p className="text-cyan-200 text-[10px] font-bold uppercase tracking-wider">Interest Rates</p>
+                                                                <p className="text-white font-bold text-lg leading-tight">28 Options Available</p>
                                                             </div>
                                                         </div>
-                                                        {/* Progress bar */}
-                                                        <div className="mt-4 h-1 bg-white/20 rounded-full overflow-hidden">
-                                                            <motion.div 
-                                                                className="h-full bg-white/60 rounded-full"
-                                                                initial={{ width: "0%" }}
-                                                                animate={{ width: "100%" }}
-                                                                transition={{ duration: 3, ease: "linear" }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
-                                            )}
+                                                        <p className="text-cyan-100/80 text-xs leading-relaxed">
+                                                            "Real-time rates 4.125% - 5.250% ready instantly"
+                                                        </p>
+                                                    </motion.div>
 
-                                            {/* FNMA Product Callout - 20-24 seconds (4 sec duration) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 20 && newCurrentTime < 24 && (
-                                                <motion.div
-                                                    key="fnma"
-                                                    initial={{ opacity: 0, y: -20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    transition={{ duration: 0.5 }}
-                                                    className="absolute top-4 right-4 z-30 max-w-sm"
-                                                >
-                                                    <div className="bg-gradient-to-br from-amber-600 to-orange-700 backdrop-blur-md px-6 py-5 rounded-2xl shadow-2xl border border-amber-400/30">
-                                                        <div className="flex items-start gap-4">
-                                                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    {/* Card 2: FNMA Product - Staggered entry */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, x: 40, rotateY: -15 }}
+                                                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                                                        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                                                        className="bg-gradient-to-br from-amber-600/95 to-orange-700/95 backdrop-blur-md px-5 py-4 rounded-xl shadow-2xl border border-amber-400/40"
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="flex-1">
-                                                                <p className="text-amber-200 text-xs font-bold uppercase tracking-wider mb-1">💡 Talking Point</p>
-                                                                <p className="text-white font-bold text-xl mb-2">FNMA CONF 30YR FIXED</p>
-                                                                <p className="text-amber-100/90 text-sm leading-relaxed">
-                                                                    "We've identified the best loan product for this client. 
-                                                                    Select any rate to instantly see P&I and discount points."
-                                                                </p>
+                                                            <div>
+                                                                <p className="text-amber-200 text-[10px] font-bold uppercase tracking-wider">Loan Product</p>
+                                                                <p className="text-white font-bold text-lg leading-tight">FNMA CONF 30YR</p>
                                                             </div>
                                                         </div>
-                                                        {/* Progress bar */}
-                                                        <div className="mt-4 h-1 bg-white/20 rounded-full overflow-hidden">
+                                                        <p className="text-amber-100/80 text-xs leading-relaxed">
+                                                            "Best product identified — select any rate for P&I"
+                                                        </p>
+                                                    </motion.div>
+
+                                                    {/* Progress indicator */}
+                                                    <motion.div 
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        transition={{ delay: 0.6 }}
+                                                        className="flex items-center gap-2 px-2"
+                                                    >
+                                                        <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
                                                             <motion.div 
-                                                                className="h-full bg-white/60 rounded-full"
+                                                                className="h-full bg-gradient-to-r from-cyan-400 to-amber-400 rounded-full"
                                                                 initial={{ width: "0%" }}
                                                                 animate={{ width: "100%" }}
-                                                                transition={{ duration: 4, ease: "linear" }}
+                                                                transition={{ duration: 7, ease: "linear" }}
                                                             />
                                                         </div>
-                                                    </div>
+                                                        <span className="text-white/50 text-xs font-mono">1/2</span>
+                                                    </motion.div>
                                                 </motion.div>
                                             )}
 
-                                            {/* Proposed Mortgage Callout - 24-26 seconds (2 sec duration) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 24 && newCurrentTime < 26 && (
+                                            {/* PHASE 2: Mortgage & Value (24-30 seconds) - Two cards stacked */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 24 && newCurrentTime < 30 && (
                                                 <motion.div
-                                                    key="proposed"
-                                                    initial={{ opacity: 0, y: -20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    transition={{ duration: 0.5 }}
-                                                    className="absolute top-4 right-4 z-30 max-w-sm"
+                                                    key="mortgage-value"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.95 }}
+                                                    transition={{ duration: 0.4 }}
+                                                    className="absolute top-4 right-4 z-30 w-80 space-y-3"
                                                 >
-                                                    <div className="bg-gradient-to-br from-emerald-600 to-green-700 backdrop-blur-md px-6 py-5 rounded-2xl shadow-2xl border border-emerald-400/30">
-                                                        <div className="flex items-start gap-4">
-                                                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    {/* Card 1: Proposed Mortgage */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, x: 40, rotateY: -15 }}
+                                                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                                                        transition={{ duration: 0.6, ease: "easeOut" }}
+                                                        className="bg-gradient-to-br from-emerald-600/95 to-green-700/95 backdrop-blur-md px-5 py-4 rounded-xl shadow-2xl border border-emerald-400/40"
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="flex-1">
-                                                                <p className="text-emerald-200 text-xs font-bold uppercase tracking-wider mb-1">💡 Talking Point</p>
-                                                                <p className="text-white font-bold text-xl mb-2">Proposed: $66/mo Payment</p>
-                                                                <p className="text-emerald-100/90 text-sm leading-relaxed">
-                                                                    "Mortgage, taxes, and insurance — all calculated instantly. 
-                                                                    No manual spreadsheets needed."
-                                                                </p>
+                                                            <div>
+                                                                <p className="text-emerald-200 text-[10px] font-bold uppercase tracking-wider">Proposed Mortgage</p>
+                                                                <p className="text-white font-bold text-lg leading-tight">New Payment: $66/mo</p>
                                                             </div>
                                                         </div>
-                                                        {/* Progress bar */}
-                                                        <div className="mt-4 h-1 bg-white/20 rounded-full overflow-hidden">
-                                                            <motion.div 
-                                                                className="h-full bg-white/60 rounded-full"
-                                                                initial={{ width: "0%" }}
-                                                                animate={{ width: "100%" }}
-                                                                transition={{ duration: 2, ease: "linear" }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
-                                            )}
+                                                        <p className="text-emerald-100/80 text-xs leading-relaxed">
+                                                            "Mortgage + taxes + insurance — calculated instantly"
+                                                        </p>
+                                                    </motion.div>
 
-                                            {/* Value Propositions Callout - 26-30 seconds (4 sec duration) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 26 && newCurrentTime < 30 && (
-                                                <motion.div
-                                                    key="value-props"
-                                                    initial={{ opacity: 0, y: -20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    transition={{ duration: 0.5 }}
-                                                    className="absolute top-4 right-4 z-30 max-w-sm"
-                                                >
-                                                    <div className="bg-gradient-to-br from-purple-600 to-indigo-700 backdrop-blur-md px-6 py-5 rounded-2xl shadow-2xl border border-purple-400/30">
-                                                        <div className="flex items-start gap-4">
-                                                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    {/* Card 2: Value Propositions - Staggered entry with more detail */}
+                                                    <motion.div
+                                                        initial={{ opacity: 0, x: 40, rotateY: -15 }}
+                                                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                                                        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                                                        className="bg-gradient-to-br from-purple-600/95 to-indigo-700/95 backdrop-blur-md px-5 py-4 rounded-xl shadow-2xl border border-purple-400/40"
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-3">
+                                                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                 </svg>
                                                             </div>
-                                                            <div className="flex-1">
-                                                                <p className="text-purple-200 text-xs font-bold uppercase tracking-wider mb-1">💡 Talking Point</p>
-                                                                <p className="text-white font-bold text-xl mb-2">$174,485 Cash Back Potential</p>
-                                                                <p className="text-purple-100/90 text-sm leading-relaxed">
-                                                                    "Here's the pitch — $4,328/mo savings, $51,937/year. 
-                                                                    This is the value story you share with your client."
-                                                                </p>
+                                                            <div>
+                                                                <p className="text-purple-200 text-[10px] font-bold uppercase tracking-wider">Value Proposition</p>
+                                                                <p className="text-white font-bold text-lg leading-tight">$174,485 Cash Back</p>
                                                             </div>
                                                         </div>
-                                                        {/* Key stats */}
-                                                        <div className="mt-3 grid grid-cols-2 gap-2">
-                                                            <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
-                                                                <p className="text-white/70 text-xs">Monthly</p>
-                                                                <p className="text-white font-bold">$4,328</p>
-                                                            </div>
-                                                            <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
-                                                                <p className="text-white/70 text-xs">Annual</p>
-                                                                <p className="text-white font-bold">$51,937</p>
-                                                            </div>
-                                                        </div>
-                                                        {/* Progress bar */}
-                                                        <div className="mt-4 h-1 bg-white/20 rounded-full overflow-hidden">
+                                                        {/* Stats grid */}
+                                                        <div className="grid grid-cols-2 gap-2">
                                                             <motion.div 
-                                                                className="h-full bg-white/60 rounded-full"
+                                                                initial={{ opacity: 0, y: 10 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{ delay: 0.5 }}
+                                                                className="bg-white/10 rounded-lg px-3 py-2 text-center"
+                                                            >
+                                                                <p className="text-white/60 text-[10px]">Monthly Savings</p>
+                                                                <p className="text-white font-bold text-sm">$4,328</p>
+                                                            </motion.div>
+                                                            <motion.div 
+                                                                initial={{ opacity: 0, y: 10 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{ delay: 0.6 }}
+                                                                className="bg-white/10 rounded-lg px-3 py-2 text-center"
+                                                            >
+                                                                <p className="text-white/60 text-[10px]">Annual Savings</p>
+                                                                <p className="text-white font-bold text-sm">$51,937</p>
+                                                            </motion.div>
+                                                        </div>
+                                                    </motion.div>
+
+                                                    {/* Progress indicator */}
+                                                    <motion.div 
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        transition={{ delay: 0.6 }}
+                                                        className="flex items-center gap-2 px-2"
+                                                    >
+                                                        <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                                                            <motion.div 
+                                                                className="h-full bg-gradient-to-r from-emerald-400 to-purple-400 rounded-full"
                                                                 initial={{ width: "0%" }}
                                                                 animate={{ width: "100%" }}
-                                                                transition={{ duration: 4, ease: "linear" }}
+                                                                transition={{ duration: 6, ease: "linear" }}
                                                             />
                                                         </div>
-                                                    </div>
+                                                        <span className="text-white/50 text-xs font-mono">2/2</span>
+                                                    </motion.div>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
