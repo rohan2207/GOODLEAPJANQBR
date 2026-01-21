@@ -5,7 +5,6 @@ import VerticalStages from '@/components/VerticalStages'
 import FigureIntegration from '@/components/FigureIntegration'
 import BeforeAfterShowstopper from '@/components/BeforeAfterShowstopper'
 import AgentSummary from '@/components/AgentSummary'
-import FeatureGrid from '@/components/FeatureGrid'
 import ProductRoadmap from '@/components/ProductRoadmap'
 import IntegrationsShowcase from '@/components/IntegrationsShowcase'
 import BusinessImpact from '@/components/BusinessImpact'
@@ -35,8 +34,7 @@ export default function Home() {
       <VerticalStages />
       <FigureIntegration />
       {/* <AgentSummary /> Removed to consolidate with VerticalStages finale */}
-      <FeatureGrid />
-      {/* "One more thing..." showstopper - comes after the bento feature grid */}
+      {/* "One more thing..." showstopper */}
       <BeforeAfterShowstopper 
         oldSrc="https://s70uuy1ofcxlqlip.public.blob.vercel-storage.com/Pricing%20and%20Locking%20Process%20-%20Conforming%20to%20FHA%20%2B%20LA%20Increase%20%2B%20PE%20%281%29.mp4"
         newSrc="https://s70uuy1ofcxlqlip.public.blob.vercel-storage.com/Link.mov"
