@@ -414,149 +414,151 @@ export default function BeforeAfterShowstopper({
                                             )}
                                         </AnimatePresence>
 
-                                        {/* Spotlight Callouts - Positioned near actual UI elements */}
+                                        {/* Spotlight Callouts - Two at a time, positioned near actual UI elements */}
                                         <AnimatePresence>
-                                            {/* Interest Rate Callout - 17-20s - Position: RIGHT SIDE where dropdown is */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 17 && newCurrentTime < 20 && (
-                                                <motion.div
-                                                    key="interest-rate"
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.9 }}
-                                                    transition={{ duration: 0.4 }}
-                                                    className="absolute right-[5%] top-[45%] z-30"
-                                                >
-                                                    {/* Pulsing highlight circle */}
-                                                    <motion.div 
-                                                        className="absolute -inset-8 rounded-full border-2 border-cyan-400"
-                                                        animate={{ scale: [1, 1.2, 1], opacity: [0.8, 0.3, 0.8] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                                    />
-                                                    <motion.div 
-                                                        className="absolute -inset-4 rounded-full border-2 border-cyan-400"
-                                                        animate={{ scale: [1, 1.15, 1], opacity: [1, 0.5, 1] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
-                                                    />
-                                                    {/* Callout card */}
-                                                    <div className="relative bg-gradient-to-br from-cyan-600 to-blue-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-cyan-400/50 w-56">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <svg className="w-5 h-5 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                                                            </svg>
-                                                            <span className="text-white font-bold">Interest Rates</span>
+                                            {/* PHASE 1: 17-22s - Interest Rates + FNMA together */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 17 && newCurrentTime < 22 && (
+                                                <>
+                                                    {/* Interest Rate Callout - RIGHT SIDE where dropdown is */}
+                                                    <motion.div
+                                                        key="interest-rate"
+                                                        initial={{ opacity: 0, scale: 0.8, x: 20 }}
+                                                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9 }}
+                                                        transition={{ duration: 0.5 }}
+                                                        className="absolute right-[5%] top-[45%] z-30"
+                                                    >
+                                                        {/* Pulsing highlight circle */}
+                                                        <motion.div 
+                                                            className="absolute -inset-8 rounded-full border-2 border-cyan-400"
+                                                            animate={{ scale: [1, 1.2, 1], opacity: [0.8, 0.3, 0.8] }}
+                                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                                        />
+                                                        <motion.div 
+                                                            className="absolute -inset-4 rounded-full border-2 border-cyan-400"
+                                                            animate={{ scale: [1, 1.15, 1], opacity: [1, 0.5, 1] }}
+                                                            transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
+                                                        />
+                                                        {/* Callout card */}
+                                                        <div className="relative bg-gradient-to-br from-cyan-600 to-blue-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-cyan-400/50 w-56">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <svg className="w-5 h-5 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                                                                </svg>
+                                                                <span className="text-white font-bold">Interest Rates</span>
+                                                            </div>
+                                                            <p className="text-cyan-100 text-sm font-semibold">28 Options: 4.125% - 5.250%</p>
+                                                            <p className="text-cyan-200/70 text-xs mt-1">Real-time from Optimal Blue</p>
                                                         </div>
-                                                        <p className="text-cyan-100 text-sm font-semibold">28 Options: 4.125% - 5.250%</p>
-                                                        <p className="text-cyan-200/70 text-xs mt-1">Real-time from Optimal Blue</p>
-                                                    </div>
-                                                </motion.div>
+                                                    </motion.div>
+
+                                                    {/* FNMA Callout - BOTTOM LEFT where product name is */}
+                                                    <motion.div
+                                                        key="fnma"
+                                                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9 }}
+                                                        transition={{ duration: 0.5, delay: 0.2 }}
+                                                        className="absolute left-[8%] bottom-[18%] z-30"
+                                                    >
+                                                        {/* Pulsing highlight */}
+                                                        <motion.div 
+                                                            className="absolute -inset-6 rounded-xl border-2 border-amber-400"
+                                                            animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
+                                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                                        />
+                                                        {/* Callout card */}
+                                                        <div className="relative bg-gradient-to-br from-amber-600 to-orange-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-amber-400/50 w-64">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <svg className="w-5 h-5 text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                </svg>
+                                                                <span className="text-white font-bold">Loan Product</span>
+                                                            </div>
+                                                            <p className="text-amber-100 text-sm font-semibold">FNMA CONF 30YR FIXED</p>
+                                                            <p className="text-amber-200/70 text-xs mt-1">Best match • Click any rate for details</p>
+                                                        </div>
+                                                        {/* Arrow pointing up */}
+                                                        <div className="absolute -top-2 left-8 w-3 h-3 bg-amber-600 rotate-45" />
+                                                    </motion.div>
+                                                </>
                                             )}
 
-                                            {/* FNMA Callout - 20-24s - Position: BOTTOM LEFT where product name is */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 20 && newCurrentTime < 24 && (
-                                                <motion.div
-                                                    key="fnma"
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.9 }}
-                                                    transition={{ duration: 0.4 }}
-                                                    className="absolute left-[8%] bottom-[18%] z-30"
-                                                >
-                                                    {/* Pulsing highlight */}
-                                                    <motion.div 
-                                                        className="absolute -inset-6 rounded-xl border-2 border-amber-400"
-                                                        animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                                    />
-                                                    {/* Callout card */}
-                                                    <div className="relative bg-gradient-to-br from-amber-600 to-orange-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-amber-400/50 w-64">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <svg className="w-5 h-5 text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                            </svg>
-                                                            <span className="text-white font-bold">Loan Product</span>
+                                            {/* PHASE 2: 23-30s - Proposed Mortgage + Value Props together */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 23 && newCurrentTime < 30 && (
+                                                <>
+                                                    {/* Proposed Mortgage Callout - CENTER TOP where the panel is */}
+                                                    <motion.div
+                                                        key="proposed"
+                                                        initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9 }}
+                                                        transition={{ duration: 0.5 }}
+                                                        className="absolute left-[38%] top-[18%] z-30"
+                                                    >
+                                                        {/* Pulsing highlight */}
+                                                        <motion.div 
+                                                            className="absolute -inset-6 rounded-xl border-2 border-emerald-400"
+                                                            animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
+                                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                                        />
+                                                        {/* Callout card */}
+                                                        <div className="relative bg-gradient-to-br from-emerald-600 to-green-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-emerald-400/50 w-56">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <svg className="w-5 h-5 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                                </svg>
+                                                                <span className="text-white font-bold">Proposed Mortgage</span>
+                                                            </div>
+                                                            <p className="text-emerald-100 text-sm font-semibold">New Payment: $66/mo</p>
+                                                            <p className="text-emerald-200/70 text-xs mt-1">Taxes + Insurance included</p>
                                                         </div>
-                                                        <p className="text-amber-100 text-sm font-semibold">FNMA CONF 30YR FIXED</p>
-                                                        <p className="text-amber-200/70 text-xs mt-1">Best match • Click any rate for details</p>
-                                                    </div>
-                                                    {/* Arrow pointing up to the element */}
-                                                    <div className="absolute -top-2 left-8 w-3 h-3 bg-amber-600 rotate-45" />
-                                                </motion.div>
-                                            )}
+                                                        {/* Arrow pointing down */}
+                                                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-600 rotate-45" />
+                                                    </motion.div>
 
-                                            {/* Proposed Mortgage Callout - 24-27s - Position: CENTER TOP where the panel is */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 24 && newCurrentTime < 27 && (
-                                                <motion.div
-                                                    key="proposed"
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.9 }}
-                                                    transition={{ duration: 0.4 }}
-                                                    className="absolute left-[38%] top-[18%] z-30"
-                                                >
-                                                    {/* Pulsing highlight */}
-                                                    <motion.div 
-                                                        className="absolute -inset-6 rounded-xl border-2 border-emerald-400"
-                                                        animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                                    />
-                                                    {/* Callout card */}
-                                                    <div className="relative bg-gradient-to-br from-emerald-600 to-green-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-emerald-400/50 w-56">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <svg className="w-5 h-5 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                                            </svg>
-                                                            <span className="text-white font-bold">Proposed Mortgage</span>
-                                                        </div>
-                                                        <p className="text-emerald-100 text-sm font-semibold">New Payment: $66/mo</p>
-                                                        <p className="text-emerald-200/70 text-xs mt-1">Taxes + Insurance included</p>
-                                                    </div>
-                                                    {/* Arrow pointing down */}
-                                                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-emerald-600 rotate-45" />
-                                                </motion.div>
-                                            )}
-
-                                            {/* Value Props Callout - 27-30s - Position: RIGHT SIDE where Value Propositions panel is */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 27 && newCurrentTime < 30 && (
-                                                <motion.div
-                                                    key="value-props"
-                                                    initial={{ opacity: 0, scale: 0.8 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.9 }}
-                                                    transition={{ duration: 0.4 }}
-                                                    className="absolute right-[5%] top-[18%] z-30"
-                                                >
-                                                    {/* Pulsing highlight */}
-                                                    <motion.div 
-                                                        className="absolute -inset-6 rounded-xl border-2 border-purple-400"
-                                                        animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                                    />
-                                                    {/* Callout card */}
-                                                    <div className="relative bg-gradient-to-br from-purple-600 to-indigo-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-purple-400/50 w-60">
-                                                        <div className="flex items-center gap-2 mb-2">
-                                                            <svg className="w-5 h-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            <span className="text-white font-bold">Value Propositions</span>
-                                                        </div>
-                                                        <div className="space-y-1">
-                                                            <div className="flex justify-between text-sm">
-                                                                <span className="text-purple-200/70">Monthly Savings</span>
-                                                                <span className="text-white font-bold">$4,328</span>
+                                                    {/* Value Props Callout - RIGHT SIDE where Value Propositions panel is */}
+                                                    <motion.div
+                                                        key="value-props"
+                                                        initial={{ opacity: 0, scale: 0.8, x: 20 }}
+                                                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9 }}
+                                                        transition={{ duration: 0.5, delay: 0.2 }}
+                                                        className="absolute right-[5%] top-[18%] z-30"
+                                                    >
+                                                        {/* Pulsing highlight */}
+                                                        <motion.div 
+                                                            className="absolute -inset-6 rounded-xl border-2 border-purple-400"
+                                                            animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
+                                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                                        />
+                                                        {/* Callout card */}
+                                                        <div className="relative bg-gradient-to-br from-purple-600 to-indigo-700 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-purple-400/50 w-60">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <svg className="w-5 h-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                                <span className="text-white font-bold">Value Propositions</span>
                                                             </div>
-                                                            <div className="flex justify-between text-sm">
-                                                                <span className="text-purple-200/70">Annual Savings</span>
-                                                                <span className="text-white font-bold">$51,937</span>
-                                                            </div>
-                                                            <div className="flex justify-between text-sm pt-1 border-t border-white/20">
-                                                                <span className="text-purple-200/70">Est. Cash Back</span>
-                                                                <span className="text-emerald-300 font-bold">$174,485</span>
+                                                            <div className="space-y-1">
+                                                                <div className="flex justify-between text-sm">
+                                                                    <span className="text-purple-200/70">Monthly Savings</span>
+                                                                    <span className="text-white font-bold">$4,328</span>
+                                                                </div>
+                                                                <div className="flex justify-between text-sm">
+                                                                    <span className="text-purple-200/70">Annual Savings</span>
+                                                                    <span className="text-white font-bold">$51,937</span>
+                                                                </div>
+                                                                <div className="flex justify-between text-sm pt-1 border-t border-white/20">
+                                                                    <span className="text-purple-200/70">Est. Cash Back</span>
+                                                                    <span className="text-emerald-300 font-bold">$174,485</span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    {/* Arrow pointing left */}
-                                                    <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-600 rotate-45" />
-                                                </motion.div>
+                                                        {/* Arrow pointing left */}
+                                                        <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-600 rotate-45" />
+                                                    </motion.div>
+                                                </>
                                             )}
                                         </AnimatePresence>
 
