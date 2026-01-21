@@ -650,9 +650,47 @@ export default function BeforeAfterShowstopper({
                                             exit={{ opacity: 0 }}
                                             className="absolute inset-0 z-20 flex items-center justify-center overflow-hidden"
                                         >
-                                            {/* Animated background */}
+                                            {/* Chaos collage background - scattered old UI screenshots */}
                                             <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-950 to-black">
-                                                <div className="absolute inset-0 opacity-30">
+                                                {/* Scattered screenshots in background */}
+                                                <div className="absolute inset-0 opacity-20">
+                                                    {[
+                                                        { src: "/Screenshots/Picture1.png-2.png", x: -5, y: 0, rotate: -12, scale: 0.3 },
+                                                        { src: "/Screenshots/Picture1.png-3.png", x: 75, y: -5, rotate: 8, scale: 0.28 },
+                                                        { src: "/Screenshots/Picture1.png-4.png", x: 20, y: 70, rotate: -5, scale: 0.32 },
+                                                        { src: "/Screenshots/Picture1.png-5.png", x: 85, y: 65, rotate: 10, scale: 0.25 },
+                                                        { src: "/Screenshots/Picture1.png-6.png", x: -10, y: 40, rotate: 6, scale: 0.3 },
+                                                        { src: "/Screenshots/Picture1.png-7.png", x: 60, y: 80, rotate: -8, scale: 0.28 },
+                                                        { src: "/Screenshots/Picture1.png-8.png", x: 40, y: -8, rotate: 4, scale: 0.26 },
+                                                        { src: "/Screenshots/Picture1.png-9.png", x: 90, y: 35, rotate: -10, scale: 0.3 },
+                                                        { src: "/Screenshots/Picture1.png-10.png", x: 5, y: 75, rotate: 7, scale: 0.27 },
+                                                        { src: "/Screenshots/Picture1.png-11.png", x: 70, y: 20, rotate: -6, scale: 0.29 },
+                                                        { src: "/Screenshots/Picture1.png-12.png", x: 30, y: 45, rotate: 9, scale: 0.24 },
+                                                        { src: "/Screenshots/Picture1.png-13.png", x: 55, y: 55, rotate: -4, scale: 0.31 },
+                                                    ].map((img, idx) => (
+                                                        <motion.img
+                                                            key={idx}
+                                                            src={img.src}
+                                                            alt=""
+                                                            initial={{ opacity: 0, scale: 0.5 }}
+                                                            animate={{ opacity: 1, scale: img.scale }}
+                                                            transition={{ delay: idx * 0.05, duration: 0.5 }}
+                                                            className="absolute w-[500px] rounded-lg shadow-2xl"
+                                                            style={{
+                                                                left: `${img.x}%`,
+                                                                top: `${img.y}%`,
+                                                                transform: `rotate(${img.rotate}deg)`,
+                                                                filter: 'saturate(0.5) brightness(0.7)',
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                {/* Red chaos overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-br from-red-950/40 via-transparent to-red-900/30" />
+                                                {/* Dark overlay for text readability */}
+                                                <div className="absolute inset-0 bg-black/60" />
+                                                {/* Glow effects */}
+                                                <div className="absolute inset-0 opacity-40">
                                                     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/30 rounded-full blur-3xl animate-pulse" />
                                                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
                                                 </div>
