@@ -208,18 +208,18 @@ export function HeroSection() {
             <div className="z-10 text-center px-4 w-full">
                 <h1 className="mb-8">
                     <div className="pb-3">
-                        <span className="block text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-[0.15em] text-white uppercase">
+                        <span className="block text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-[0.15em] text-white uppercase">
                             The Platform
                         </span>
                     </div>
                     <div className="pb-2">
-                        <span className="block text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500 uppercase">
+                        <span className="block text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500 uppercase">
                             That Thinks Ahead
                         </span>
                     </div>
                 </h1>
 
-                <p className="max-w-lg mx-auto text-white/40 text-base md:text-lg font-body font-light tracking-wide leading-relaxed">
+                <p className="max-w-xl mx-auto text-white/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed">
                     Experience the future of mortgage. Where AI agents anticipate needs before you even ask.
                 </p>
 
@@ -534,7 +534,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                                     initial={{ y: "-120%", filter: "blur(10px)" }}
                                     animate={{ y: 0, filter: "blur(0px)" }}
                                     transition={{ delay: 0.1, duration: 0.8, ease: MOTION_EASE }}
-                                    className="block text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-[0.15em] text-white uppercase"
+                                    className="block text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-[0.15em] text-white uppercase"
                                 >
                                     The Platform
                                 </motion.span>
@@ -544,7 +544,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                                     initial={{ y: "-120%", filter: "blur(10px)" }}
                                     animate={{ y: 0, filter: "blur(0px)" }}
                                     transition={{ delay: 0.25, duration: 0.8, ease: MOTION_EASE }}
-                                    className="block text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500 uppercase"
+                                    className="block text-5xl md:text-6xl lg:text-7xl font-display font-medium tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500 uppercase"
                                 >
                                     That Thinks Ahead
                                 </motion.span>
@@ -555,7 +555,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                             initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                             transition={{ delay: 0.5, duration: 0.7, ease: MOTION_EASE }}
-                            className="max-w-lg mx-auto text-white/40 text-base md:text-lg font-body font-light tracking-wide leading-relaxed"
+                            className="max-w-xl mx-auto text-white/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed"
                         >
                             Experience the future of mortgage. Where AI agents anticipate needs before you even ask.
                         </motion.p>
