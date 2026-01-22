@@ -133,7 +133,9 @@ function StageSection({
             : stage.id === "valuation"
                 ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
-        [0, -280, -320, -450] // Same for all - less movement to stay on screen
+        stage.id === "sales-coach"
+            ? [0, -380, -420, -550] // Sales Coach: more left to avoid overlap
+            : [0, -280, -320, -450]
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 100]); // Move down less
     const textFloatScale = useTransform(
@@ -143,7 +145,9 @@ function StageSection({
             : stage.id === "valuation"
                 ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
-        [1, 0.55, 0.5, 0.4] // Same shrink for all - smaller to fit better
+        stage.id === "sales-coach"
+            ? [1, 0.5, 0.45, 0.35] // Sales Coach: shrink more
+            : [1, 0.55, 0.5, 0.4]
     );
 
     // Phase 2: Visualization - fades out as panel comes in
@@ -191,7 +195,13 @@ function StageSection({
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
         [0.85, 1.0, 1.0, 0.6] // 10% smaller scale
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [150, 150, 350]); // Balanced panel position
+    const panelX = useTransform(
+        scrollYProgress, 
+        [0.52, 0.78, 0.88], 
+        stage.id === "sales-coach" 
+            ? [220, 220, 400] // Sales Coach: more to the right
+            : [150, 150, 350]
+    );
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
 
     // Panel content scrolls LONGER as user scrolls page - reveals all content
