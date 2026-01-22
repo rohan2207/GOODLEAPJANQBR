@@ -395,15 +395,30 @@ export default function BeforeAfterShowstopper({
                                             <span className="font-semibold text-white">The New Way</span>
                                         </div>
 
-                                        {/* NEW Timestamp - Positioned left side, with "New Way" label */}
+                                        {/* Timers - Positioned left side */}
                                         <AnimatePresence>
                                             {isPlaying && hasNewVideo && (
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0 }}
-                                                    className="absolute bottom-[28%] left-[3%] z-20"
+                                                    className="absolute bottom-[20%] left-[3%] z-20 flex flex-col gap-3"
                                                 >
+                                                    {/* Old Way Timer - Shows when in PiP mode */}
+                                                    {isOldPip && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: -10 }}
+                                                            animate={{ opacity: 1, y: 0 }}
+                                                            className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-xl border border-red-500/30"
+                                                        >
+                                                            <p className="text-red-400 text-xs font-bold uppercase tracking-wider text-center mb-1">Old Way • 10x Speed</p>
+                                                            <p className="text-white/80 text-3xl md:text-4xl font-mono font-bold tracking-wider text-center">
+                                                                {formatTime(oldCurrentTime)}
+                                                            </p>
+                                                        </motion.div>
+                                                    )}
+                                                    
+                                                    {/* New Way Timer */}
                                                     <div className="bg-black/60 backdrop-blur-md px-8 py-4 rounded-2xl border border-emerald-500/30">
                                                         <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider text-center mb-1">New Way</p>
                                                         <p className="text-white text-5xl md:text-6xl font-mono font-bold tracking-wider">
@@ -453,14 +468,14 @@ export default function BeforeAfterShowstopper({
                                                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-cyan-400" />
                                                     </motion.div>
 
-                                                    {/* FNMA Callout - Top left */}
+                                                    {/* FNMA Callout - Next to Pricing button (left side, middle) */}
                                                     <motion.div
                                                         key="fnma"
                                                         initial={{ opacity: 0, scale: 0.8, x: -30 }}
                                                         animate={{ opacity: 1, scale: 1, x: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, x: -20 }}
                                                         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                                                        className="absolute left-[3%] top-[8%] z-40"
+                                                        className="absolute left-[18%] bottom-[8%] z-40"
                                                     >
                                                         {/* Glowing backdrop */}
                                                         <div className="absolute -inset-3 bg-amber-500/20 rounded-2xl blur-xl" />
@@ -483,8 +498,8 @@ export default function BeforeAfterShowstopper({
                                                             <p className="text-amber-300 text-base font-semibold mb-1">FNMA CONF 30YR FIXED</p>
                                                             <p className="text-white/50 text-sm">Best match • Click any rate for details</p>
                                                         </div>
-                                                        {/* Arrow pointing down-right to UI */}
-                                                        <div className="absolute -bottom-6 right-1/3 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-amber-400" />
+                                                        {/* Arrow pointing up to Pricing button */}
+                                                        <div className="absolute -top-6 left-1/4 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[16px] border-b-amber-400" />
                                                     </motion.div>
                                                 </>
                                             )}
