@@ -294,7 +294,7 @@ function StageSection({
                     >
                         {/* Text Content - floats down for interface stages */}
                         <motion.div
-                            className={`space-y-6 ${(stage.id === "rapport" || stage.id === "sales-coach") ? "-ml-4" : ""
+                            className={`space-y-6 ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation") ? "-ml-4" : ""
                                 }`}
                             style={{ y: stage.hasInterface ? textFloatY : 0 }}
                         >
@@ -314,14 +314,14 @@ function StageSection({
                                 </span>
                             </div>
 
-                            <h3 className={`font-bold text-white ${(stage.id === "rapport" || stage.id === "sales-coach")
+                            <h3 className={`font-bold text-white ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
                                 ? "text-6xl md:text-7xl lg:text-8xl"
                                 : "text-4xl md:text-5xl lg:text-6xl"
                                 }`}>
                                 {stage.title}
                             </h3>
                             <p
-                                className={`font-medium ${(stage.id === "rapport" || stage.id === "sales-coach")
+                                className={`font-medium ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
                                     ? "text-3xl md:text-4xl"
                                     : "text-xl md:text-2xl"
                                     }`}
@@ -329,7 +329,7 @@ function StageSection({
                             >
                                 {stage.subtitle}
                             </p>
-                            <p className={`text-white/50 leading-relaxed ${(stage.id === "rapport" || stage.id === "sales-coach")
+                            <p className={`text-white/50 leading-relaxed ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
                                 ? "text-2xl max-w-2xl"
                                 : "text-lg max-w-lg"
                                 }`}>
