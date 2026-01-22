@@ -129,29 +129,29 @@ function StageSection({
     const textFloatX = useTransform(
         scrollYProgress,
         stage.id === "sales-coach"
-            ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Move left EARLIER when menu appears, hold longer
+            ? [0.15, 0.25, 0.30, 0.88]
             : stage.id === "valuation"
-                ? [0.15, 0.30, 0.78, 0.88] // Valuation: Move left as cards converge
+                ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
-            ? [0, -420, -520, -720] // Sales Coach: Move MORE left (increased spacing)
+            ? [0, -520, -620, -850] // Move MORE left for better separation
             : stage.id === "valuation"
-                ? [0, -350, -350, -680] // Valuation: Similar movement
-                : [0, -220, -220, -480] // Rapport: Reduced to keep content visible on smaller screens
+                ? [0, -450, -450, -800]
+                : [0, -350, -350, -650] // Rapport: More left for separation
     );
-    const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 150]); // Move down
+    const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 120]); // Move down less
     const textFloatScale = useTransform(
         scrollYProgress,
         stage.id === "sales-coach"
-            ? [0.15, 0.25, 0.30, 0.88] // Sales Coach: Shrink EARLIER, hold longer
+            ? [0.15, 0.25, 0.30, 0.88]
             : stage.id === "valuation"
-                ? [0.15, 0.30, 0.78, 0.88] // Valuation: Shrink as cards converge
+                ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
-            ? [1, 0.55, 0.5, 0.4] // Sales Coach: Shrink more
+            ? [1, 0.65, 0.6, 0.5] // Shrink less to keep text readable
             : stage.id === "valuation"
-                ? [1, 0.6, 0.55, 0.42] // Valuation: Similar shrink
-                : [1, 0.6, 0.6, 0.45]
+                ? [1, 0.7, 0.65, 0.52]
+                : [1, 0.7, 0.7, 0.55] // Shrink less
     );
 
     // Phase 2: Visualization - fades out as panel comes in
@@ -176,8 +176,8 @@ function StageSection({
 
     // Phase 2: Valuation panel appears (0.40 - 0.78)
     const valuationPanelOpacity = useTransform(scrollYProgress, [0.40, 0.48, 0.90, 0.97], [0, 1, 1, 0]);
-    const valuationPanelScale = useTransform(scrollYProgress, [0.40, 0.48, 0.78, 0.88], [0.85, 1, 1, 0.58]);
-    const valuationPanelX = useTransform(scrollYProgress, [0.48, 0.78, 0.88], [60, 60, 420]);
+    const valuationPanelScale = useTransform(scrollYProgress, [0.40, 0.48, 0.78, 0.88], [0.95, 1.15, 1.15, 0.7]);
+    const valuationPanelX = useTransform(scrollYProgress, [0.48, 0.78, 0.88], [150, 150, 500]);
     const valuationPanelBlur = useTransform(scrollYProgress, [0.40, 0.48], [10, 0]);
     const valuationPanelBlurFilter = useTransform(valuationPanelBlur, (v) => `blur(${v}px)`);
 
@@ -197,9 +197,9 @@ function StageSection({
         stage.id === "sales-coach"
             ? [0.50, 0.58, 0.78, 0.88]  // Sales Coach: Later start
             : [0.25, 0.32, 0.78, 0.88], // Rapport Builder: Hold longer too
-        [0.85, 1, 1, 0.58]
+        [0.95, 1.15, 1.15, 0.7] // Larger panel scale
     );
-    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [100, 100, 350]); // Adjusted to keep content visible on smaller screens
+    const panelX = useTransform(scrollYProgress, [0.52, 0.78, 0.88], [200, 200, 450]); // Move panel more to the right
     const panelY = useTransform(scrollYProgress, [0.78, 0.88], [0, 15]); // Slight down LATER
 
     // Panel content scrolls LONGER as user scrolls page - reveals all content
@@ -318,16 +318,16 @@ function StageSection({
                                 </span>
                             </div>
 
-                            <h3 className="font-bold text-white text-6xl md:text-7xl lg:text-8xl">
+                            <h3 className="font-bold text-white text-7xl md:text-8xl lg:text-9xl">
                                 {stage.title}
                             </h3>
                             <p
-                                className="font-medium text-3xl md:text-4xl lg:text-5xl"
+                                className="font-medium text-4xl md:text-5xl lg:text-6xl"
                                 style={{ color: stage.accentColor }}
                             >
                                 {stage.subtitle}
                             </p>
-                            <p className="text-white/50 leading-relaxed text-xl md:text-2xl lg:text-3xl max-w-3xl">
+                            <p className="text-white/60 leading-relaxed text-2xl md:text-3xl lg:text-4xl max-w-4xl">
                                 {stage.description}
                             </p>
 
