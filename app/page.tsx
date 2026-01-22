@@ -5,6 +5,7 @@ import VerticalStages from '@/components/VerticalStages'
 import FigureIntegration from '@/components/FigureIntegration'
 import BeforeAfterShowstopper from '@/components/BeforeAfterShowstopper'
 import AgentSummary from '@/components/AgentSummary'
+import LaunchAnnouncement from '@/components/LaunchAnnouncement'
 import ProductRoadmap from '@/components/ProductRoadmap'
 import IntegrationsShowcase from '@/components/IntegrationsShowcase'
 import BusinessImpact from '@/components/BusinessImpact'
@@ -41,6 +42,8 @@ export default function Home() {
         oldStartMode="half"
         pipDelaySeconds={5}
       />
+      {/* Launch announcement */}
+      <LaunchAnnouncement />
       {/* Bottom sections: Roadmap, Integrations, Impact */}
       <ProductRoadmap />
       <IntegrationsShowcase />
