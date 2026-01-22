@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Rocket } from "lucide-react";
 
 const MOTION_EASE = [0.16, 1, 0.3, 1];
 
@@ -21,20 +20,6 @@ export default function LaunchAnnouncement() {
             }} />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-
-                {/* Coming Soon Badge */}
-                <motion.div
-                    className="flex justify-center mb-8"
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, ease: MOTION_EASE }}
-                >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20">
-                        <Rocket className="w-4 h-4 text-orange-400" />
-                        <span className="text-xs text-orange-400 font-semibold uppercase tracking-[0.2em]">Coming Soon</span>
-                    </div>
-                </motion.div>
 
                 {/* Main Headline */}
                 <motion.div
