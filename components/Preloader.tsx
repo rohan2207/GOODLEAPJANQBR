@@ -90,7 +90,7 @@ import Image from "next/image";
 export function LinkAILogo({ className }: { className?: string }) {
     return (
         <Image
-            src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+            src="https://cdn.bfldr.com/Q445447Z/at/7kbwvht7vhnq4vh89wv2mb5/LinkAI_BG_FullGradonBlk.jpg?auto=webp&format=jpg"
             alt="LinkAI by GoodLeap"
             width={400}
             height={120}
