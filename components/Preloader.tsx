@@ -90,10 +90,10 @@ import Image from "next/image";
 export function LinkAILogo({ className }: { className?: string }) {
     return (
         <Image
-            src="https://cdn.bfldr.com/Q445447Z/at/5ng8rfnnk9633jjwbgpb4j6q/LinkAI_BG_PurpGradonWht.png?auto=webp&format=png"
-            alt="LinkAI"
+            src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+            alt="LinkAI by GoodLeap"
             width={400}
-            height={100}
+            height={120}
             className={className}
             style={{ objectFit: "contain" }}
             priority
@@ -170,11 +170,11 @@ export function HeroSection() {
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#f97316]/15 rounded-full blur-[120px]" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#3b82f6]/15 rounded-full blur-[120px]" />
 
-            {/* Logo + GoodLeap at top - matches preloader final state */}
+            {/* Logo at top - matches preloader final state */}
             <div className="absolute top-[6%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
-                <LinkAILogo className="w-[154px] md:w-[209px]" />
+                <LinkAILogo className="w-[180px] md:w-[240px]" />
 
-                {/* Version 2.0 - matches preloader */}
+                {/* Version 2.0 */}
                 <div className="relative mt-2">
                     <div 
                         className="absolute inset-0 -inset-x-2 rounded-full blur-lg opacity-50"
@@ -182,24 +182,6 @@ export function HeroSection() {
                     />
                     <span className="relative text-lg md:text-xl font-display font-light tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-blue-400">
                         2.0
-                    </span>
-                </div>
-
-                {/* GoodLeap branding - Updated to match Preloader's "Prominent" look (approx 200px * 0.55 scale = 110px) */}
-                <div className="mt-3 flex flex-col items-center gap-[7px]">
-                    <span className="text-[6.5px] uppercase tracking-[0.4em] text-white/50 font-display font-medium">
-                        by
-                    </span>
-                    <Image
-                        src="https://cdn.bfldr.com/Q445447Z/at/r8mz3sj9btg5khst4twv5q8/goodleap-gradient-cR.svg?auto=webp&format=png"
-                        alt="GoodLeap"
-                        width={110}
-                        height={28}
-                        className="opacity-100"
-                        style={{ objectFit: "contain" }}
-                    />
-                    <span className="text-[9px] text-white/50 font-body font-light tracking-wide mt-0.5">
-                        One Platform. One Experience.
                     </span>
                 </div>
             </div>
@@ -489,31 +471,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                             </span>
                         </motion.div>
 
-                        {/* GoodLeap branding - Bigger and more prominent */}
-                        <motion.div
-                            className="mt-6 flex flex-col items-center gap-3"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{
-                                opacity: 1,
-                                y: 0
-                            }}
-                            transition={{ delay: 0.5, duration: 0.6, ease: MOTION_EASE }}
-                        >
-                            <span className="text-xs uppercase tracking-[0.4em] text-white/50 font-display font-medium">
-                                by
-                            </span>
-                            <Image
-                                src="https://cdn.bfldr.com/Q445447Z/at/r8mz3sj9btg5khst4twv5q8/goodleap-gradient-cR.svg?auto=webp&format=png"
-                                alt="GoodLeap"
-                                width={200}
-                                height={50}
-                                className="opacity-100"
-                                style={{ objectFit: "contain" }}
-                            />
-                            <span className="text-base text-white/50 font-body font-light tracking-wide mt-1">
-                                One Platform. One Experience.
-                            </span>
-                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
