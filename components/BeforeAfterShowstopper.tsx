@@ -852,7 +852,7 @@ export default function BeforeAfterShowstopper({
                                                     className="flex items-center justify-center gap-8 mb-10"
                                                 >
                                                     <div className="text-center">
-                                                        <div className="text-red-400/60 line-through text-2xl font-mono mb-1">5+ minutes</div>
+                                                        <div className="text-red-400/60 line-through text-2xl font-mono mb-1">15+ minutes</div>
                                                         <div className="text-white/40 text-sm">Old Process</div>
                                                     </div>
                                                     <div className="text-4xl">→</div>
