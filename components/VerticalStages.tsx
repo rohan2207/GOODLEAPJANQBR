@@ -134,7 +134,7 @@ function StageSection({
                 ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
-            ? [0, -380, -420, -550] // Sales Coach: more left to avoid overlap
+            ? [0, -450, -520, -700] // Sales Coach: much more left to avoid viewport overlap
             : [0, -280, -320, -450]
     );
     const textFloatY = useTransform(scrollYProgress, [0.18, 0.32], [0, 100]); // Move down less
@@ -146,7 +146,7 @@ function StageSection({
                 ? [0.15, 0.30, 0.78, 0.88]
                 : [0.18, 0.32, 0.78, 0.88],
         stage.id === "sales-coach"
-            ? [1, 0.5, 0.45, 0.35] // Sales Coach: shrink more
+            ? [1, 0.45, 0.4, 0.3] // Sales Coach: shrink even more
             : [1, 0.55, 0.5, 0.4]
     );
 
