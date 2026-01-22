@@ -95,18 +95,18 @@ export default function AgentTeaser() {
                                 >
                                     {/* Dashboard Header */}
                                     <div className="mb-10">
-                                        <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 mb-6">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
-                                            <span className="text-sm text-orange-400 font-medium uppercase tracking-wider">AI Agent</span>
+                                        <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8">
+                                            <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse" />
+                                            <span className="text-base text-orange-400 font-medium uppercase tracking-wider">AI Agent</span>
                                         </div>
-                                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium text-white/90 mb-5 leading-tight">
+                                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium text-white/90 mb-6 leading-tight">
                                             AI that helps loan officers{" "}
                                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
                                                 move faster
                                             </span>{" "}
                                             and close better
                                         </h2>
-                                        <p className="text-lg md:text-xl text-white/40 max-w-xl font-body font-light leading-relaxed">
+                                        <p className="text-xl md:text-2xl text-white/60 max-w-2xl font-body font-light leading-relaxed">
                                             Automates the busywork behind the scenes so your team stays focused on customers
                                         </p>
                                     </div>
