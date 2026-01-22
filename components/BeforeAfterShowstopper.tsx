@@ -557,15 +557,15 @@ export default function BeforeAfterShowstopper({
                                                             <div className="space-y-1.5">
                                                                 <div className="flex justify-between text-sm">
                                                                     <span className="text-white/50">Monthly Savings</span>
-                                                                    <span className="text-white font-bold">$4,328</span>
+                                                                    <span className="text-white font-bold">$2,975</span>
                                                                 </div>
                                                                 <div className="flex justify-between text-sm">
                                                                     <span className="text-white/50">Annual Savings</span>
-                                                                    <span className="text-white font-bold">$51,937</span>
+                                                                    <span className="text-white font-bold">$35,697</span>
                                                                 </div>
                                                                 <div className="flex justify-between text-sm pt-1 border-t border-white/10">
                                                                     <span className="text-white/50">Est. Cash Back</span>
-                                                                    <span className="text-emerald-400 font-bold">$174,485</span>
+                                                                    <span className="text-emerald-400 font-bold">$90,485</span>
                                                                 </div>
                                                             </div>
                                                         </div>
