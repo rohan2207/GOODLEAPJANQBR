@@ -90,9 +90,9 @@ const STAGES = [
         id: "agents-teaser",
         number: "05",
         label: "ALL IN ONE",
-        title: "AI-Powered Tools",
+        title: "AI-Powered Assistants",
         subtitle: "At Your Fingertips",
-        description: "Every tool you need, always one click away. Not a chatbot, but a complete lending assistant built into your workflow.",
+        description: "A complete assistant built into the loan officer's workflow.",
         component: SidebarShowcaseStage,
         accentColor: "#8B5CF6",
         glowColor: "#8B5CF6", // Purple - matches journey line end
