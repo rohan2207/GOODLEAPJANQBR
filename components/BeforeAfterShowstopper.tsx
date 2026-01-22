@@ -416,17 +416,17 @@ export default function BeforeAfterShowstopper({
 
                                         {/* Spotlight Callouts - Floating annotations that stand out from UI */}
                                         <AnimatePresence>
-                                            {/* PHASE 1: 15-27s - Interest Rates + FNMA together */}
+                                            {/* PHASE 1: 15-27s - Interest Rates (lower middle) + FNMA (top left) */}
                                             {isPlaying && hasNewVideo && newCurrentTime >= 15 && newCurrentTime < 27 && (
                                                 <>
-                                                    {/* Interest Rate Callout - Floating spotlight style */}
+                                                    {/* Interest Rate Callout - Lower middle of screen */}
                                                     <motion.div
                                                         key="interest-rate"
-                                                        initial={{ opacity: 0, scale: 0.8, y: -30 }}
+                                                        initial={{ opacity: 0, scale: 0.8, y: 30 }}
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                                                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
                                                         transition={{ duration: 0.6, ease: "easeOut" }}
-                                                        className="absolute right-[3%] top-[8%] z-40"
+                                                        className="absolute left-1/2 -translate-x-1/2 bottom-[15%] z-40"
                                                     >
                                                         {/* Glowing backdrop */}
                                                         <div className="absolute -inset-3 bg-cyan-500/20 rounded-2xl blur-xl" />
@@ -436,13 +436,9 @@ export default function BeforeAfterShowstopper({
                                                             animate={{ opacity: [0.6, 1, 0.6] }}
                                                             transition={{ duration: 2, repeat: Infinity }}
                                                         />
-                                                        {/* Callout card - larger, more prominent */}
+                                                        {/* Callout card */}
                                                         <div className="relative bg-black/90 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-2xl border-2 border-cyan-400 w-72">
-                                                            {/* Spotlight indicator */}
-                                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-cyan-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                                                                ✦ Talking Point
-                                                            </div>
-                                                            <div className="flex items-center gap-3 mb-2 mt-2">
+                                                            <div className="flex items-center gap-3 mb-2">
                                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
                                                                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
@@ -453,11 +449,11 @@ export default function BeforeAfterShowstopper({
                                                             <p className="text-cyan-300 text-base font-semibold mb-1">28 Options: 4.125% - 5.250%</p>
                                                             <p className="text-white/50 text-sm">Real-time from Optimal Blue</p>
                                                         </div>
-                                                        {/* Arrow pointing down-left to UI */}
-                                                        <div className="absolute -bottom-6 left-1/3 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-cyan-400" />
+                                                        {/* Arrow pointing up to UI */}
+                                                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[16px] border-b-cyan-400" />
                                                     </motion.div>
 
-                                                    {/* FNMA Callout - Floating spotlight style */}
+                                                    {/* FNMA Callout - Top left */}
                                                     <motion.div
                                                         key="fnma"
                                                         initial={{ opacity: 0, scale: 0.8, x: -30 }}
@@ -476,11 +472,7 @@ export default function BeforeAfterShowstopper({
                                                         />
                                                         {/* Callout card */}
                                                         <div className="relative bg-black/90 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-2xl border-2 border-amber-400 w-72">
-                                                            {/* Spotlight indicator */}
-                                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-amber-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                                                                ✦ Talking Point
-                                                            </div>
-                                                            <div className="flex items-center gap-3 mb-2 mt-2">
+                                                            <div className="flex items-center gap-3 mb-2">
                                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
                                                                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -497,10 +489,10 @@ export default function BeforeAfterShowstopper({
                                                 </>
                                             )}
 
-                                            {/* PHASE 2: 27-40s - Proposed Mortgage + Value Props together */}
+                                            {/* PHASE 2: 27-40s - Proposed Mortgage (top left) + Value Props (top right) */}
                                             {isPlaying && hasNewVideo && newCurrentTime >= 27 && newCurrentTime < 40 && (
                                                 <>
-                                                    {/* Proposed Mortgage Callout - Floating spotlight style */}
+                                                    {/* Proposed Mortgage Callout - Top left */}
                                                     <motion.div
                                                         key="proposed"
                                                         initial={{ opacity: 0, scale: 0.8, x: -30 }}
@@ -519,11 +511,7 @@ export default function BeforeAfterShowstopper({
                                                         />
                                                         {/* Callout card */}
                                                         <div className="relative bg-black/90 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-2xl border-2 border-emerald-400 w-72">
-                                                            {/* Spotlight indicator */}
-                                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                                                                ✦ Talking Point
-                                                            </div>
-                                                            <div className="flex items-center gap-3 mb-2 mt-2">
+                                                            <div className="flex items-center gap-3 mb-2">
                                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
                                                                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -539,6 +527,7 @@ export default function BeforeAfterShowstopper({
                                                     </motion.div>
 
                                                     {/* Value Props Callout - Floating spotlight style */}
+                                                    {/* Value Props Callout - Top right */}
                                                     <motion.div
                                                         key="value-props"
                                                         initial={{ opacity: 0, scale: 0.8, x: 30 }}
@@ -557,11 +546,7 @@ export default function BeforeAfterShowstopper({
                                                         />
                                                         {/* Callout card */}
                                                         <div className="relative bg-black/90 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-2xl border-2 border-purple-400 w-72">
-                                                            {/* Spotlight indicator */}
-                                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-purple-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
-                                                                ✦ Talking Point
-                                                            </div>
-                                                            <div className="flex items-center gap-3 mb-2 mt-2">
+                                                            <div className="flex items-center gap-3 mb-2">
                                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
                                                                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -588,63 +573,6 @@ export default function BeforeAfterShowstopper({
                                                         <div className="absolute -bottom-6 left-1/3 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-purple-400" />
                                                     </motion.div>
                                                 </>
-                                            )}
-                                        </AnimatePresence>
-
-                                        {/* GoodLeap Benefit Message - appears in PiP mode at bottom */}
-                                        <AnimatePresence>
-                                            {isOldPip && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 30 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: 20 }}
-                                                    transition={{ delay: 0.5, duration: 0.6 }}
-                                                    className="absolute bottom-24 left-6 z-20 max-w-xl"
-                                                >
-                                                    <div className="bg-gradient-to-r from-black/90 via-emerald-950/40 to-black/90 backdrop-blur-xl py-4 px-6 rounded-2xl border border-emerald-500/20 shadow-2xl">
-                                                        <div className="flex items-center justify-between gap-6 flex-wrap">
-                                                            {/* Left: Title */}
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
-                                                                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                                    </svg>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">First 30 Seconds</p>
-                                                                    <p className="text-white font-bold">Loan Benefits Ready</p>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            {/* Center: Benefits (horizontal) */}
-                                                            <div className="flex items-center gap-6 flex-wrap">
-                                                                <div className="flex items-center gap-2">
-                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                    <p className="text-white/80 text-sm">GoodLeap options calculated</p>
-                                                                </div>
-                                                                <div className="flex items-center gap-2">
-                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                    <p className="text-white/80 text-sm">Personalized rates ready</p>
-                                                                </div>
-                                                                <div className="flex items-center gap-2">
-                                                                    <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                    <p className="text-white/80 text-sm">Ready to present</p>
-                                                                </div>
-                                                            </div>
-
-                                                            {/* Right: Old process note */}
-                                                            <p className="text-red-400/70 text-xs">
-                                                                Old process still loading at 10x...
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
                                             )}
                                         </AnimatePresence>
 
