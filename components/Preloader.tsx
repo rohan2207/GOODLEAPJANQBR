@@ -174,8 +174,19 @@ export function HeroSection() {
             <div className="absolute top-[6%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
                 <LinkAILogo className="w-[154px] md:w-[209px]" />
 
+                {/* Version 2.0 - matches preloader */}
+                <div className="relative mt-2">
+                    <div 
+                        className="absolute inset-0 -inset-x-2 rounded-full blur-lg opacity-50"
+                        style={{ background: "linear-gradient(90deg, rgba(249,115,22,0.4), rgba(59,130,246,0.4))" }}
+                    />
+                    <span className="relative text-lg md:text-xl font-display font-light tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-blue-400">
+                        2.0
+                    </span>
+                </div>
+
                 {/* GoodLeap branding - Updated to match Preloader's "Prominent" look (approx 200px * 0.55 scale = 110px) */}
-                <div className="mt-[18px] flex flex-col items-center gap-[7px]">
+                <div className="mt-3 flex flex-col items-center gap-[7px]">
                     <span className="text-[6.5px] uppercase tracking-[0.4em] text-white/50 font-display font-medium">
                         by
                     </span>
@@ -417,12 +428,12 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                         <div className="relative text-6xl md:text-8xl font-display font-medium tracking-tight uppercase">
                             <span className="text-white/10">LinkAI</span>
                             <motion.div
-                                className="absolute inset-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500"
-                                style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
-                            >
-                                LinkAI
+                        className="absolute inset-0 overflow-hidden text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-orange-400 to-blue-500"
+                        style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
+                    >
+                        LinkAI
                             </motion.div>
-                        </div>
+                    </div>
                         <motion.div
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: phase === "loading" ? 0.5 : 0, y: 0 }}
@@ -456,9 +467,31 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                     >
                         <LinkAILogo className="w-[280px] md:w-[380px]" />
 
+                        {/* Version 2.0 - Glowing reveal */}
+                        <motion.div
+                            className="relative mt-4"
+                            initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
+                            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                            transition={{ delay: 0.8, duration: 0.6, ease: MOTION_EASE }}
+                        >
+                            {/* Glow behind */}
+                            <motion.div
+                                className="absolute inset-0 -inset-x-4 rounded-full blur-xl"
+                                style={{ background: "linear-gradient(90deg, rgba(249,115,22,0.4), rgba(59,130,246,0.4))" }}
+                                animate={{
+                                    opacity: [0.4, 0.7, 0.4],
+                                    scale: [1, 1.1, 1],
+                                }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            <span className="relative text-3xl md:text-4xl font-display font-light tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-blue-400">
+                                2.0
+                            </span>
+                        </motion.div>
+
                         {/* GoodLeap branding - Bigger and more prominent */}
                         <motion.div
-                            className="mt-8 flex flex-col items-center gap-3"
+                            className="mt-6 flex flex-col items-center gap-3"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{
                                 opacity: 1,
@@ -488,11 +521,11 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             {/* HEADLINE - Comes down from above */}
             <AnimatePresence>
                 {showHeadline && (
-                    <motion.div
+                <motion.div
                         className="absolute z-10 text-center px-4 w-full"
                         style={{ top: "50%", transform: "translateY(-50%)" }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
                         <h1 className="mb-8">
@@ -537,7 +570,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                             <span className="text-[10px] uppercase tracking-[0.2em] font-body font-light text-white/30">Scroll to Explore</span>
                             <div className="w-[1px] h-12 bg-gradient-to-b from-orange-500/0 via-orange-500 to-orange-500/0" />
                         </motion.div>
-                    </motion.div>
+                </motion.div>
                 )}
             </AnimatePresence>
         </motion.div>
