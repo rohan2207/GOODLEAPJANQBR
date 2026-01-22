@@ -14,7 +14,7 @@ export default function AgentTeaser() {
             {/* Subtle glow behind the mockup */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1600px] h-[900px] bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-orange-500/10 blur-[200px] rounded-full" />
 
-            <div className="relative z-10 w-full max-w-[1700px] mx-auto px-4 md:px-8 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-[1900px] mx-auto px-4 md:px-8 flex flex-col items-center">
                 
                 {/* Badge */}
                 <motion.div 
@@ -32,7 +32,7 @@ export default function AgentTeaser() {
 
                 {/* Dashboard Mockup */}
                 <motion.div
-                    className="relative w-full max-w-[1550px] mx-auto"
+                    className="relative w-full max-w-[1750px] mx-auto"
                     initial={{ opacity: 0, y: 40, scale: 0.95 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-100px" }}
