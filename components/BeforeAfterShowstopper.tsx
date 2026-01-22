@@ -395,7 +395,7 @@ export default function BeforeAfterShowstopper({
                                             <span className="font-semibold text-white">The New Way</span>
                                         </div>
 
-                                        {/* NEW Timestamp - Positioned left side, above the white space */}
+                                        {/* NEW Timestamp - Positioned left side, with "New Way" label */}
                                         <AnimatePresence>
                                             {isPlaying && hasNewVideo && (
                                                 <motion.div
@@ -405,7 +405,7 @@ export default function BeforeAfterShowstopper({
                                                     className="absolute bottom-[28%] left-[3%] z-20"
                                                 >
                                                     <div className="bg-black/60 backdrop-blur-md px-8 py-4 rounded-2xl border border-emerald-500/30">
-                                                        <p className="text-emerald-400 text-sm font-medium text-center mb-1">Elapsed Time</p>
+                                                        <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider text-center mb-1">New Way</p>
                                                         <p className="text-white text-5xl md:text-6xl font-mono font-bold tracking-wider">
                                                             {formatTime(newCurrentTime)}
                                                         </p>
@@ -416,8 +416,8 @@ export default function BeforeAfterShowstopper({
 
                                         {/* Spotlight Callouts - Floating annotations that stand out from UI */}
                                         <AnimatePresence>
-                                            {/* PHASE 1: 15-27s - Interest Rates (lower middle) + FNMA (top left) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 15 && newCurrentTime < 27 && (
+                                            {/* PHASE 1: 15-23s - Interest Rates (lower middle) + FNMA (top left) */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 15 && newCurrentTime < 23 && (
                                                 <>
                                                     {/* Interest Rate Callout - Lower middle of screen */}
                                                     <motion.div
@@ -449,8 +449,8 @@ export default function BeforeAfterShowstopper({
                                                             <p className="text-cyan-300 text-base font-semibold mb-1">28 Options: 4.125% - 5.250%</p>
                                                             <p className="text-white/50 text-sm">Real-time from Optimal Blue</p>
                                                         </div>
-                                                        {/* Arrow pointing up to UI */}
-                                                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[16px] border-b-cyan-400" />
+                                                        {/* Arrow pointing down to UI */}
+                                                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-cyan-400" />
                                                     </motion.div>
 
                                                     {/* FNMA Callout - Top left */}
@@ -489,10 +489,11 @@ export default function BeforeAfterShowstopper({
                                                 </>
                                             )}
 
-                                            {/* PHASE 2: 27-40s - Proposed Mortgage (center-right) + Value Props (top right) */}
-                                            {isPlaying && hasNewVideo && newCurrentTime >= 27 && newCurrentTime < 40 && (
+                                            {/* PHASE 2: 33-45s - Proposed Mortgage (center-right) + Value Props (top right) */}
+                                            {isPlaying && hasNewVideo && newCurrentTime >= 33 && newCurrentTime < 45 && (
                                                 <>
-                                                    {/* Proposed Mortgage Callout - To the left of Value Props */}
+                                                    {/* Proposed Mortgage Callout - To the left of Value Props (ends at 43s) */}
+                                                    {newCurrentTime < 43 && (
                                                     <motion.div
                                                         key="proposed"
                                                         initial={{ opacity: 0, scale: 0.8, x: -30 }}
@@ -519,14 +520,14 @@ export default function BeforeAfterShowstopper({
                                                                 </div>
                                                                 <span className="text-white font-bold text-lg">Proposed Mortgage</span>
                                                             </div>
-                                                            <p className="text-emerald-300 text-base font-semibold mb-1">New Payment: $66/mo</p>
+                                                            <p className="text-emerald-300 text-base font-semibold mb-1">New Payment: $1,419</p>
                                                             <p className="text-white/50 text-sm">Taxes + Insurance included</p>
                                                         </div>
-                                                        {/* Arrow pointing down-right to UI */}
-                                                        <div className="absolute -bottom-6 right-1/3 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-emerald-400" />
+                                                        {/* Arrow pointing down to UI */}
+                                                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-emerald-400" />
                                                     </motion.div>
+                                                    )}
 
-                                                    {/* Value Props Callout - Floating spotlight style */}
                                                     {/* Value Props Callout - Top right */}
                                                     <motion.div
                                                         key="value-props"
