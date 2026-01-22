@@ -278,11 +278,11 @@ function StageSection({
                     />
                 </motion.div>
 
-                <div className="w-full max-w-[1800px] mx-auto px-6 md:px-16 relative z-10">
+                <div className="w-full max-w-[2000px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
 
                     {/* PHASE 1 & 2: Text + Visualization - CENTERED layout that floats */}
                     <motion.div
-                        className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
+                        className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
                             }`}
                         style={{
                             opacity: textOpacity,
@@ -298,41 +298,36 @@ function StageSection({
                                 }`}
                             style={{ y: stage.hasInterface ? textFloatY : 0 }}
                         >
-                            <div className="flex items-center gap-4">
-                                <span
-                                    className="w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold"
-                                    style={{
-                                        backgroundColor: `${stage.accentColor}20`,
-                                        color: stage.accentColor,
-                                        border: `1px solid ${stage.accentColor}40`
-                                    }}
+                            {/* Label badge - no number */}
+                            <div 
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+                                style={{
+                                    backgroundColor: `${stage.accentColor}15`,
+                                    border: `1px solid ${stage.accentColor}30`
+                                }}
+                            >
+                                <div 
+                                    className="w-2 h-2 rounded-full animate-pulse"
+                                    style={{ backgroundColor: stage.accentColor }}
+                                />
+                                <span 
+                                    className="text-sm font-medium tracking-[0.15em] uppercase"
+                                    style={{ color: stage.accentColor }}
                                 >
-                                    {stage.number}
-                                </span>
-                                <span className="text-sm tracking-[0.2em] text-white/40 uppercase">
                                     {stage.label}
                                 </span>
                             </div>
 
-                            <h3 className={`font-bold text-white ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                ? "text-7xl md:text-8xl lg:text-9xl"
-                                : "text-5xl md:text-6xl lg:text-7xl"
-                                }`}>
+                            <h3 className="font-bold text-white text-6xl md:text-7xl lg:text-8xl">
                                 {stage.title}
                             </h3>
                             <p
-                                className={`font-medium ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                    ? "text-4xl md:text-5xl"
-                                    : "text-2xl md:text-3xl"
-                                    }`}
+                                className="font-medium text-3xl md:text-4xl lg:text-5xl"
                                 style={{ color: stage.accentColor }}
                             >
                                 {stage.subtitle}
                             </p>
-                            <p className={`text-white/50 leading-relaxed ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                ? "text-2xl md:text-3xl max-w-3xl"
-                                : "text-xl md:text-2xl max-w-2xl"
-                                }`}>
+                            <p className="text-white/50 leading-relaxed text-xl md:text-2xl lg:text-3xl max-w-3xl">
                                 {stage.description}
                             </p>
 
