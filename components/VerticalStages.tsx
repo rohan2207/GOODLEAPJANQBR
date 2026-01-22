@@ -278,11 +278,11 @@ function StageSection({
                     />
                 </motion.div>
 
-                <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+                <div className="w-full max-w-[1800px] mx-auto px-6 md:px-16 relative z-10">
 
                     {/* PHASE 1 & 2: Text + Visualization - CENTERED layout that floats */}
                     <motion.div
-                        className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
+                        className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${isAlternate ? '' : 'lg:[direction:rtl] lg:*:[direction:ltr]'
                             }`}
                         style={{
                             opacity: textOpacity,
@@ -294,13 +294,13 @@ function StageSection({
                     >
                         {/* Text Content - floats down for interface stages */}
                         <motion.div
-                            className={`space-y-6 ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation") ? "-ml-4" : ""
+                            className={`space-y-8 ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation") ? "-ml-4" : ""
                                 }`}
                             style={{ y: stage.hasInterface ? textFloatY : 0 }}
                         >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-4">
                                 <span
-                                    className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold"
+                                    className="w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold"
                                     style={{
                                         backgroundColor: `${stage.accentColor}20`,
                                         color: stage.accentColor,
@@ -309,29 +309,29 @@ function StageSection({
                                 >
                                     {stage.number}
                                 </span>
-                                <span className="text-xs tracking-[0.2em] text-white/40 uppercase">
+                                <span className="text-sm tracking-[0.2em] text-white/40 uppercase">
                                     {stage.label}
                                 </span>
                             </div>
 
                             <h3 className={`font-bold text-white ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                ? "text-6xl md:text-7xl lg:text-8xl"
-                                : "text-4xl md:text-5xl lg:text-6xl"
+                                ? "text-7xl md:text-8xl lg:text-9xl"
+                                : "text-5xl md:text-6xl lg:text-7xl"
                                 }`}>
                                 {stage.title}
                             </h3>
                             <p
                                 className={`font-medium ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                    ? "text-3xl md:text-4xl"
-                                    : "text-xl md:text-2xl"
+                                    ? "text-4xl md:text-5xl"
+                                    : "text-2xl md:text-3xl"
                                     }`}
                                 style={{ color: stage.accentColor }}
                             >
                                 {stage.subtitle}
                             </p>
                             <p className={`text-white/50 leading-relaxed ${(stage.id === "rapport" || stage.id === "sales-coach" || stage.id === "valuation")
-                                ? "text-2xl max-w-2xl"
-                                : "text-lg max-w-lg"
+                                ? "text-2xl md:text-3xl max-w-3xl"
+                                : "text-xl md:text-2xl max-w-2xl"
                                 }`}>
                                 {stage.description}
                             </p>
@@ -339,14 +339,14 @@ function StageSection({
                             {/* Button - shown for stages with buttonLabel */}
                             {stage.buttonLabel && (
                                 <motion.div
-                                    className="relative pt-4"
+                                    className="relative pt-6"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
                                 >
                                     {/* Glow behind button */}
                                     <motion.div
-                                        className="absolute inset-0 rounded-xl blur-xl"
+                                        className="absolute inset-0 rounded-2xl blur-xl"
                                         style={{ backgroundColor: stage.accentColor }}
                                         animate={{
                                             opacity: [0.2, 0.4, 0.2],
@@ -357,20 +357,20 @@ function StageSection({
 
                                     {/* Button */}
                                     <div
-                                        className="relative flex items-center gap-4 p-5 bg-white border-2 rounded-2xl shadow-2xl max-w-[380px]"
+                                        className="relative flex items-center gap-5 p-6 bg-white border-2 rounded-2xl shadow-2xl max-w-[480px]"
                                         style={{ borderColor: stage.accentColor }}
                                     >
                                         <div
-                                            className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0"
+                                            className="w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0"
                                             style={{ backgroundColor: `${stage.accentColor}20`, color: stage.accentColor }}
                                         >
-                                            <Phone className="w-7 h-7" />
+                                            <Phone className="w-9 h-9" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-lg text-stone-800">{stage.buttonLabel}</p>
-                                            <p className="text-base text-stone-500">{stage.buttonSubtext}</p>
+                                            <p className="font-semibold text-xl text-stone-800">{stage.buttonLabel}</p>
+                                            <p className="text-lg text-stone-500">{stage.buttonSubtext}</p>
                                         </div>
-                                        <ChevronRight className="w-6 h-6 text-stone-400" />
+                                        <ChevronRight className="w-8 h-8 text-stone-400" />
                                     </div>
                                 </motion.div>
                             )}
@@ -388,8 +388,8 @@ function StageSection({
                         >
                             <div
                                 className={`relative rounded-2xl overflow-hidden ${(stage.id === "rapport" || stage.id === "sales-coach")
-                                    ? "aspect-[4/3] scale-110"
-                                    : "aspect-[4/3]"
+                                    ? "aspect-[4/3] scale-125"
+                                    : "aspect-[4/3] scale-110"
                                     }`}
                                 style={{
                                     background: `linear-gradient(135deg, ${stage.accentColor}10, ${stage.accentColor}02)`,
