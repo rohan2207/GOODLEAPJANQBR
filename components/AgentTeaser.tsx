@@ -12,9 +12,9 @@ export default function AgentTeaser() {
             <div className="absolute inset-0 bg-gradient-to-b from-[#08080b] via-[#0a0a10] to-black" />
             
             {/* Subtle glow behind the mockup */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1300px] h-[780px] bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-orange-500/10 blur-[180px] rounded-full" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1600px] h-[900px] bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-orange-500/10 blur-[200px] rounded-full" />
 
-            <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-6 flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-[1700px] mx-auto px-4 md:px-8 flex flex-col items-center">
                 
                 {/* Badge */}
                 <motion.div 
@@ -32,7 +32,7 @@ export default function AgentTeaser() {
 
                 {/* Dashboard Mockup */}
                 <motion.div
-                    className="relative w-full max-w-[1300px] mx-auto"
+                    className="relative w-full max-w-[1550px] mx-auto"
                     initial={{ opacity: 0, y: 40, scale: 0.95 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-100px" }}
@@ -94,19 +94,19 @@ export default function AgentTeaser() {
                                     transition={{ delay: 0.4, duration: 0.6, ease: MOTION_EASE }}
                                 >
                                     {/* Dashboard Header */}
-                                    <div className="mb-10">
+                                    <div className="mb-12">
                                         <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8">
                                             <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse" />
                                             <span className="text-base text-orange-400 font-medium uppercase tracking-wider">AI Agent</span>
                                         </div>
-                                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium text-white/90 mb-6 leading-tight">
+                                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-display font-medium text-white/90 mb-6 leading-tight">
                                             AI that helps loan officers{" "}
                                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">
                                                 move faster
                                             </span>{" "}
                                             and close better
                                         </h2>
-                                        <p className="text-xl md:text-2xl text-white/60 max-w-2xl font-body font-light leading-relaxed">
+                                        <p className="text-2xl md:text-3xl text-white/60 max-w-3xl font-body font-light leading-relaxed">
                                             Automates the busywork behind the scenes so your team stays focused on customers
                                         </p>
                                     </div>
