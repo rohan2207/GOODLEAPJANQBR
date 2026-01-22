@@ -395,14 +395,14 @@ export default function BeforeAfterShowstopper({
                                             <span className="font-semibold text-white">The New Way</span>
                                         </div>
 
-                                        {/* NEW Timestamp - Big and prominent */}
+                                        {/* NEW Timestamp - Positioned left side, above the white space */}
                                         <AnimatePresence>
                                             {isPlaying && hasNewVideo && (
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     exit={{ opacity: 0 }}
-                                                    className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20"
+                                                    className="absolute bottom-[28%] left-[3%] z-20"
                                                 >
                                                     <div className="bg-black/60 backdrop-blur-md px-8 py-4 rounded-2xl border border-emerald-500/30">
                                                         <p className="text-emerald-400 text-sm font-medium text-center mb-1">Elapsed Time</p>
@@ -489,17 +489,17 @@ export default function BeforeAfterShowstopper({
                                                 </>
                                             )}
 
-                                            {/* PHASE 2: 27-40s - Proposed Mortgage (top left) + Value Props (top right) */}
+                                            {/* PHASE 2: 27-40s - Proposed Mortgage (center-right) + Value Props (top right) */}
                                             {isPlaying && hasNewVideo && newCurrentTime >= 27 && newCurrentTime < 40 && (
                                                 <>
-                                                    {/* Proposed Mortgage Callout - Top left */}
+                                                    {/* Proposed Mortgage Callout - To the left of Value Props */}
                                                     <motion.div
                                                         key="proposed"
                                                         initial={{ opacity: 0, scale: 0.8, x: -30 }}
                                                         animate={{ opacity: 1, scale: 1, x: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, x: -20 }}
                                                         transition={{ duration: 0.6, ease: "easeOut" }}
-                                                        className="absolute left-[3%] top-[8%] z-40"
+                                                        className="absolute right-[26%] top-[8%] z-40"
                                                     >
                                                         {/* Glowing backdrop */}
                                                         <div className="absolute -inset-3 bg-emerald-500/20 rounded-2xl blur-xl" />
