@@ -38,12 +38,6 @@ export default function PropertyCard({ progress }: PropertyCardProps) {
     const deviceBlurOut = useTransform(p, [0.78, 0.85], [0, 15]);
     const sectionOpacity = useTransform(p, [0.95, 1], [1, 0]);
 
-    const comparables = [
-        { address: "1445 Oak Valley Dr", price: 792000, sqft: 2850, dist: "0.2 mi" },
-        { address: "1502 Maple Creek Ln", price: 768500, sqft: 2720, dist: "0.4 mi" },
-        { address: "1389 Cedar Ridge Ct", price: 801000, sqft: 2900, dist: "0.3 mi" },
-    ];
-
     return (
         <motion.div 
             className="absolute inset-0 w-full h-full bg-black flex items-center justify-center overflow-hidden"
@@ -272,19 +266,47 @@ export default function PropertyCard({ progress }: PropertyCardProps) {
                                         </div>
                                         
                                         <div className="col-span-5 bg-white rounded-xl p-3 border border-gray-200 shadow">
-                                            <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Comparable Sales</p>
+                                            <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Why This Value?</p>
                                             <div className="space-y-2">
-                                                {comparables.map((comp, i) => (
-                                                    <div key={i} className="p-2 rounded-lg bg-gray-50 border border-gray-100">
-                                                        <div className="flex justify-between items-start mb-1">
-                                                            <div>
-                                                                <p className="font-medium text-gray-900 text-xs">{comp.address}</p>
-                                                                <p className="text-gray-400 text-[10px]">{comp.dist}</p>
-                                                            </div>
-                                                            <p className="text-amber-600 font-bold text-xs">${(comp.price / 1000).toFixed(0)}K</p>
+                                                <div className="p-2 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200">
+                                                    <div className="flex items-start gap-2">
+                                                        <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-gray-900 text-xs">Recent Sales Support</p>
+                                                            <p className="text-gray-500 text-[10px]">3 similar homes sold within 0.5mi in last 90 days at $275/sqft avg</p>
                                                         </div>
                                                     </div>
-                                                ))}
+                                                </div>
+                                                <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+                                                    <div className="flex items-start gap-2">
+                                                        <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                                            </svg>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-gray-900 text-xs">Market Trending Up</p>
+                                                            <p className="text-gray-500 text-[10px]">McKinney prices +4.2% YoY, above DFW metro average</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+                                                    <div className="flex items-start gap-2">
+                                                        <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                            </svg>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-gray-900 text-xs">Property Features</p>
+                                                            <p className="text-gray-500 text-[10px]">Updated kitchen (+$15K), corner lot (+$8K) vs comps</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
