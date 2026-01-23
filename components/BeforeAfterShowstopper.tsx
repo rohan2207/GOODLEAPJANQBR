@@ -439,19 +439,19 @@ export default function BeforeAfterShowstopper({
                                                         <motion.div
                                                             initial={{ opacity: 0, y: -10 }}
                                                             animate={{ opacity: 1, y: 0 }}
-                                                            className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-xl border border-red-500/30"
+                                                            className="bg-black/70 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-red-500/40 shadow-lg shadow-red-500/20"
                                                         >
-                                                            <p className="text-red-400 text-xs font-bold uppercase tracking-wider text-center mb-1">Old Way • 10x Speed</p>
-                                                            <p className="text-white/80 text-3xl md:text-4xl font-mono font-bold tracking-wider text-center">
+                                                            <p className="text-red-400 text-sm font-bold uppercase tracking-wider text-center mb-1">Old Way • 10x Speed</p>
+                                                            <p className="text-white/80 text-5xl md:text-6xl font-mono font-bold tracking-wider text-center">
                                                                 {formatTime(oldCurrentTime)}
                                                             </p>
                                                         </motion.div>
                                                     )}
                                                     
                                                     {/* New Way Timer */}
-                                                    <div className="bg-black/60 backdrop-blur-md px-8 py-4 rounded-2xl border border-emerald-500/30">
-                                                        <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider text-center mb-1">New Way</p>
-                                                        <p className="text-white text-5xl md:text-6xl font-mono font-bold tracking-wider">
+                                                    <div className="bg-black/70 backdrop-blur-md px-10 py-5 rounded-2xl border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/20">
+                                                        <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider text-center mb-2">New Way</p>
+                                                        <p className="text-white text-6xl md:text-7xl lg:text-8xl font-mono font-bold tracking-wider">
                                                             {formatTime(newCurrentTime)}
                                                         </p>
                                                     </div>
