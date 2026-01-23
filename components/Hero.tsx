@@ -66,7 +66,7 @@ export default function Hero() {
                     transition={{ delay: 0.5, duration: 0.6, ease: MOTION_EASE }}
                     className="max-w-xl mx-auto text-blue-100/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed"
                 >
-                    Experience the future of mortgage. Where AI agents anticipate needs before you even ask.
+                    Experience the future of mortgage. Where AI assistants anticipate needs before you even ask.
                 </motion.p>
             </div>
 
