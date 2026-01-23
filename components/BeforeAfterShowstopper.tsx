@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, RotateCcw, Maximize, Minimize, Loader2 } from "lucide-react";
+import { Play, Pause, RotateCcw, Maximize, Minimize, Loader2 } from "lucide-react";
 import { useFullscreen } from "@/hooks/useFullscreen";
 
 // Types
@@ -44,6 +44,7 @@ export default function BeforeAfterShowstopper({
     const [oldStartTime, setOldStartTime] = useState(0);
     const [oldCurrentTime, setOldCurrentTime] = useState(0);
     const [newCurrentTime, setNewCurrentTime] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
 
     // Check if we have a new video
     const hasNewVideo = !!newSrc;
@@ -266,6 +267,24 @@ export default function BeforeAfterShowstopper({
         }
     }, [playState, calculateOldStartTime, startSyncLoop, pipDelaySeconds, hasNewVideo, testDuration, fullscreenSupported, isFullscreen]);
 
+    // Pause/Resume handler
+    const handlePauseResume = useCallback(() => {
+        const oldVideo = oldVideoRef.current;
+        const newVideo = newVideoRef.current;
+
+        if (isPaused) {
+            // Resume
+            if (oldVideo) oldVideo.play().catch(() => {});
+            if (newVideo) newVideo.play().catch(() => {});
+            setIsPaused(false);
+        } else {
+            // Pause
+            if (oldVideo) oldVideo.pause();
+            if (newVideo) newVideo.pause();
+            setIsPaused(true);
+        }
+    }, [isPaused]);
+
     // Replay handler
     const handleReplay = useCallback(() => {
         // Reset everything
@@ -288,6 +307,7 @@ export default function BeforeAfterShowstopper({
             clearTimeout(testTimerRef.current);
         }
 
+        setIsPaused(false);
         setPlayState("ready");
     }, []);
 
@@ -946,6 +966,21 @@ export default function BeforeAfterShowstopper({
                                 }`}>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-4">
+                                            {/* Pause/Play button during playback */}
+                                            {isPlaying && (
+                                                <button
+                                                    onClick={handlePauseResume}
+                                                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                                                    title={isPaused ? "Resume" : "Pause"}
+                                                >
+                                                    {isPaused ? (
+                                                        <Play className="w-5 h-5 text-white" />
+                                                    ) : (
+                                                        <Pause className="w-5 h-5 text-white" />
+                                                    )}
+                                                </button>
+                                            )}
+                                            
                                             {/* Replay button during playback */}
                                             {isPlaying && (
                                                 <button
