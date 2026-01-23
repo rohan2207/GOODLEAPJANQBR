@@ -29,7 +29,7 @@ export default function LaunchAnnouncement() {
                     transition={{ delay: 0.1, duration: 0.7, ease: MOTION_EASE }}
                 >
                     <p className="text-lg md:text-xl text-white/50 font-body font-light tracking-wide mb-4">
-                        Launching to Loan Officers
+                        Launching <span className="text-orange-400 font-semibold">Link 2.0</span> to Loan Officers
                     </p>
                     <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight">
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500">
@@ -63,16 +63,6 @@ export default function LaunchAnnouncement() {
                     </div>
                 </motion.div>
 
-                {/* Tagline */}
-                <motion.p
-                    className="text-base md:text-lg text-white/40 font-body font-light tracking-wide max-w-md mx-auto"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4, duration: 0.6, ease: MOTION_EASE }}
-                >
-                    The future of mortgage, delivered.
-                </motion.p>
 
             </div>
         </section>
