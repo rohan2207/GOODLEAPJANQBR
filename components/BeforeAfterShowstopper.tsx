@@ -439,22 +439,42 @@ export default function BeforeAfterShowstopper({
                                                         <motion.div
                                                             initial={{ opacity: 0, y: -10 }}
                                                             animate={{ opacity: 1, y: 0 }}
-                                                            className="bg-black/70 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-red-500/40 shadow-lg shadow-red-500/20"
+                                                            className="relative"
                                                         >
-                                                            <p className="text-red-400 text-sm font-bold uppercase tracking-wider text-center mb-1">Old Way • 10x Speed</p>
-                                                            <p className="text-white/80 text-5xl md:text-6xl font-mono font-bold tracking-wider text-center">
-                                                                {formatTime(oldCurrentTime)}
-                                                            </p>
+                                                            {/* Outer glow */}
+                                                            <div className="absolute -inset-2 bg-red-500/30 rounded-3xl blur-xl" />
+                                                            <div className="absolute -inset-1 bg-red-500/20 rounded-2xl blur-md" />
+                                                            <div className="relative bg-black/90 backdrop-blur-md px-8 py-4 rounded-2xl border-2 border-red-500/60 shadow-[0_0_30px_rgba(239,68,68,0.4)]">
+                                                                <p className="text-red-400 text-sm font-bold uppercase tracking-wider text-center mb-1">Old Way • 10x Speed</p>
+                                                                <p className="text-white text-5xl md:text-6xl font-mono font-bold tracking-wider text-center drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                                                                    {formatTime(oldCurrentTime)}
+                                                                </p>
+                                                            </div>
                                                         </motion.div>
                                                     )}
                                                     
                                                     {/* New Way Timer */}
-                                                    <div className="bg-black/70 backdrop-blur-md px-10 py-5 rounded-2xl border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/20">
-                                                        <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider text-center mb-2">New Way</p>
-                                                        <p className="text-white text-6xl md:text-7xl lg:text-8xl font-mono font-bold tracking-wider">
-                                                            {formatTime(newCurrentTime)}
-                                                        </p>
-                                                    </div>
+                                                    <motion.div 
+                                                        className="relative"
+                                                        animate={{ 
+                                                            boxShadow: [
+                                                                '0 0 30px rgba(16, 185, 129, 0.3)',
+                                                                '0 0 50px rgba(16, 185, 129, 0.5)',
+                                                                '0 0 30px rgba(16, 185, 129, 0.3)',
+                                                            ]
+                                                        }}
+                                                        transition={{ duration: 2, repeat: Infinity }}
+                                                    >
+                                                        {/* Outer glow */}
+                                                        <div className="absolute -inset-3 bg-emerald-500/30 rounded-3xl blur-xl animate-pulse" />
+                                                        <div className="absolute -inset-1 bg-emerald-500/20 rounded-2xl blur-md" />
+                                                        <div className="relative bg-black/90 backdrop-blur-md px-10 py-5 rounded-2xl border-2 border-emerald-400/70 shadow-[0_0_40px_rgba(16,185,129,0.5)]">
+                                                            <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider text-center mb-2">New Way</p>
+                                                            <p className="text-white text-6xl md:text-7xl lg:text-8xl font-mono font-bold tracking-wider drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                                                                {formatTime(newCurrentTime)}
+                                                            </p>
+                                                        </div>
+                                                    </motion.div>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
