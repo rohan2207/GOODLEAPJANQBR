@@ -249,12 +249,22 @@ export default function BeforeAfterShowstopper({
                 setPlayState("playingPip");
             }, pipDelaySeconds * 1000);
 
+            // Automatically enter fullscreen when video starts
+            if (fullscreenSupported && !isFullscreen && stageRef.current) {
+                try {
+                    await stageRef.current.requestFullscreen();
+                } catch (fsError) {
+                    // Fullscreen might be blocked by browser, continue without it
+                    console.log("Fullscreen request declined:", fsError);
+                }
+            }
+
         } catch (error) {
             console.error("Failed to play videos:", error);
             setErrorMessage("Failed to play videos. Please try again.");
             setPlayState("error");
         }
-    }, [playState, calculateOldStartTime, startSyncLoop, pipDelaySeconds, hasNewVideo, testDuration]);
+    }, [playState, calculateOldStartTime, startSyncLoop, pipDelaySeconds, hasNewVideo, testDuration, fullscreenSupported, isFullscreen]);
 
     // Replay handler
     const handleReplay = useCallback(() => {
