@@ -201,9 +201,6 @@ export function HeroSection() {
                     </div>
                 </h1>
 
-                <p className="max-w-xl mx-auto text-white/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed">
-                    Experience the future of mortgage. Where AI assistants anticipate needs before you even ask.
-                </p>
 
                 {/* Scroll Indicator */}
                 <div className="mt-16 flex flex-col items-center gap-2">
@@ -508,14 +505,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                             </div>
                         </h1>
 
-                        <motion.p
-                            initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
-                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            transition={{ delay: 0.5, duration: 0.7, ease: MOTION_EASE }}
-                            className="max-w-xl mx-auto text-white/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed"
-                        >
-                            Experience the future of mortgage. Where AI assistants anticipate needs before you even ask.
-                        </motion.p>
 
                         {/* Scroll Indicator */}
                         <motion.div

@@ -60,14 +60,6 @@ export default function Hero() {
                     </div>
                 </h1>
 
-                <motion.p
-                    initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    transition={{ delay: 0.5, duration: 0.6, ease: MOTION_EASE }}
-                    className="max-w-xl mx-auto text-blue-100/60 text-lg md:text-xl font-body font-light tracking-wide leading-relaxed"
-                >
-                    Experience the future of mortgage. Where AI assistants anticipate needs before you even ask.
-                </motion.p>
             </div>
 
             {/* Scroll Indicator */}

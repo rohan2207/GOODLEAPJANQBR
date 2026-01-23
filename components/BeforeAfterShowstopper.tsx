@@ -890,24 +890,6 @@ export default function BeforeAfterShowstopper({
                                                     <span className="text-white/80">Every conversation starts with confidence.</span>
                                                 </motion.p>
 
-                                                {/* Stats comparison */}
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.5 }}
-                                                    className="flex items-center justify-center gap-8 mb-10"
-                                                >
-                                                    <div className="text-center">
-                                                        <div className="text-red-400/60 line-through text-2xl font-mono mb-1">15+ minutes</div>
-                                                        <div className="text-white/40 text-sm">Old Process</div>
-                                                    </div>
-                                                    <div className="text-4xl">→</div>
-                                                    <div className="text-center">
-                                                        <div className="text-emerald-400 text-4xl font-bold font-mono mb-1">30 sec</div>
-                                                        <div className="text-emerald-400/60 text-sm">With LinkAI</div>
-                                                    </div>
-                                                </motion.div>
-
                                                 {/* CTA */}
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
