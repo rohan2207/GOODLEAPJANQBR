@@ -124,7 +124,7 @@ export default function Feb2ReleasePage() {
               Release Notes
             </p>
             <p className="text-white/60 text-lg">
-              February 2026
+              Feb 2
             </p>
           </motion.div>
         </motion.div>
@@ -245,7 +245,7 @@ export default function Feb2ReleasePage() {
           transition={{ delay: 1.4, duration: 0.6 }}
         >
           <p className="text-white/30 text-sm">
-            LinkAI v1.5 • Property Intelligence Release
+            LinkAI v1.5 • Feb 2 Release
           </p>
         </motion.div>
       </div>

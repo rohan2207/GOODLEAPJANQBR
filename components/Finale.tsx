@@ -58,11 +58,6 @@ export default function Finale() {
                         <span className="text-white/80"> closing deals.</span>
                     </p>
 
-                    {/* Q1 2026 badge */}
-                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-orange-500/10 to-blue-500/10 border border-white/10">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-white/70 font-medium">Launching Q1 2026</span>
-                    </div>
                 </motion.div>
             </div>
         </section>
