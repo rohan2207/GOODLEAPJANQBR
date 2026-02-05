@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, Lock, RefreshCw, Users, ArrowLeft, MapPin, DollarSign, Building2, Check, Printer } from "lucide-react";
+import { Home, Lock, RefreshCw, Users, ArrowLeft, Check, Printer, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -9,47 +9,6 @@ const MOTION_EASE = [0.25, 0.46, 0.45, 0.94];
 
 // Property data from the HTML
 const propertyData = {
-  address: {
-    street: "624 WESTMINSTER HILL RD",
-    city: "FITCHBURG",
-    state: "MA",
-    zip: "01420-2831",
-    county: "WORCESTER",
-    apn: "FITC M:0173 B:0079 L:0",
-    owners: "SCARELA LUIS M / LOPEZ MARIANELA",
-    ownershipRights: "HUSBAND AND WIFE",
-  },
-  investment: {
-    appreciation: "+84.2%",
-    equity: "$37,818",
-    pricePerSqFt: "$218",
-    ownership: "0 yrs",
-  },
-  valuation: {
-    purchasePrice: "$171,000",
-    avmValue: "$315,000",
-    avmLow: "$297,000",
-    avmHigh: "$333,000",
-    estimatedEquity: "$121,319",
-    cltv: "61%",
-  },
-  building: {
-    yearBuilt: "1910",
-    effectiveYear: "1975",
-    livingArea: "1,448 sq ft",
-    bedrooms: "2",
-    bathrooms: "1 (1F)",
-    totalRooms: "8",
-    stories: "2",
-    construction: "FRAME",
-    exterior: "ALUMINUM/VINYL",
-    lotSize: "0.196 acres",
-    lotSqFt: "8,529 sq ft",
-    heating: "FORCED AIR",
-    propertyType: "SFR",
-    floodZone: "X",
-    zoning: "RB",
-  },
   lastSale: {
     price: "$171,000",
     recorded: "Sep 4, 2018",
@@ -111,15 +70,6 @@ const propertyData = {
   ],
 };
 
-function DataRow({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className="flex justify-between items-center py-2 border-b border-gray-200 print:border-gray-300">
-      <span className="text-gray-500 print:text-gray-600 text-sm">{label}</span>
-      <span className={`text-sm font-medium ${highlight ? "text-emerald-600 print:text-emerald-700" : "text-gray-900 print:text-black"}`}>{value || "—"}</span>
-    </div>
-  );
-}
-
 function SectionCard({ 
   icon: Icon, 
   iconColor, 
@@ -128,7 +78,6 @@ function SectionCard({
   subtitle, 
   badge,
   children,
-  delay = 0 
 }: { 
   icon: React.ElementType; 
   iconColor: string; 
@@ -137,15 +86,9 @@ function SectionCard({
   subtitle?: string;
   badge?: React.ReactNode;
   children: React.ReactNode;
-  delay?: number;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5, ease: MOTION_EASE }}
-      className="bg-white border border-gray-200 rounded-xl overflow-hidden print:break-inside-avoid print:shadow-none print:border-gray-300"
-    >
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden print:break-inside-avoid print:shadow-none print:border-gray-300">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 print:border-gray-300 bg-gray-50 print:bg-gray-100">
         <div className="flex items-center gap-3">
@@ -163,7 +106,7 @@ function SectionCard({
       <div className="p-4">
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -196,7 +139,7 @@ export default function Feb2ReleasePage() {
           <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-blue-50" />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 py-8 print:px-4 print:py-4">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 py-8 print:px-4 print:py-4">
           {/* Navigation - hidden on print */}
           <div className="flex items-center justify-between mb-8 no-print">
             <Link 
@@ -241,103 +184,45 @@ export default function Feb2ReleasePage() {
               <span className="text-emerald-700 text-sm font-medium">New Feature: Property Intelligence</span>
             </div>
             
-            <p className="text-gray-600 print:text-gray-700 text-sm max-w-2xl mx-auto">
-              Instant access to comprehensive property data directly within the loan officer workflow.
+            <p className="text-gray-600 print:text-gray-700 text-sm max-w-2xl mx-auto mb-6">
+              Expanded property data now available directly within the loan officer workflow.
             </p>
           </div>
 
-          {/* Property Investment Analysis Header */}
-          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 print:from-gray-50 print:to-gray-100 border border-gray-200 print:border-gray-300 rounded-xl p-5 mb-5 print:break-inside-avoid">
-            <h3 className="text-base font-semibold text-gray-900 print:text-black mb-4">Property Investment Analysis</h3>
-            <div className="grid grid-cols-4 gap-4">
-              <div className="text-center">
-                <p className="text-xl font-bold text-emerald-600 print:text-emerald-700">{propertyData.investment.appreciation}</p>
-                <p className="text-gray-500 print:text-gray-600 text-xs">Appreciation</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-blue-600 print:text-blue-700">{propertyData.investment.equity}</p>
-                <p className="text-gray-500 print:text-gray-600 text-xs">Current Equity</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-cyan-600 print:text-cyan-700">{propertyData.investment.pricePerSqFt}</p>
-                <p className="text-gray-500 print:text-gray-600 text-xs">Price per Sq Ft</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-purple-600 print:text-purple-700">{propertyData.investment.ownership}</p>
-                <p className="text-gray-500 print:text-gray-600 text-xs">Ownership</p>
-              </div>
+          {/* How to Access */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: MOTION_EASE }}
+            className="bg-gradient-to-r from-blue-50 to-indigo-50 print:from-gray-50 print:to-gray-100 border border-blue-200 print:border-gray-300 rounded-xl p-5 mb-6 print:break-inside-avoid"
+          >
+            <h3 className="text-base font-semibold text-gray-900 print:text-black mb-2">How to Access</h3>
+            <p className="text-gray-600 print:text-gray-700 text-sm mb-3">
+              Navigate to the Property Details page and scroll down to find these new expandable sections:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white print:bg-gray-50 border border-gray-200 print:border-gray-300 rounded-full text-sm text-gray-700 print:text-gray-800">
+                <Home className="w-4 h-4 text-emerald-500" />
+                Last Market Sale
+                <ChevronDown className="w-3 h-3 text-gray-400" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white print:bg-gray-50 border border-gray-200 print:border-gray-300 rounded-full text-sm text-gray-700 print:text-gray-800">
+                <Lock className="w-4 h-4 text-amber-500" />
+                Open Liens
+                <ChevronDown className="w-3 h-3 text-gray-400" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white print:bg-gray-50 border border-gray-200 print:border-gray-300 rounded-full text-sm text-gray-700 print:text-gray-800">
+                <RefreshCw className="w-4 h-4 text-blue-500" />
+                Transfers
+                <ChevronDown className="w-3 h-3 text-gray-400" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white print:bg-gray-50 border border-gray-200 print:border-gray-300 rounded-full text-sm text-gray-700 print:text-gray-800">
+                <Users className="w-4 h-4 text-purple-500" />
+                Ownership History
+                <ChevronDown className="w-3 h-3 text-gray-400" />
+              </span>
             </div>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-            {/* Address & Location */}
-            <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 print:break-inside-avoid">
-              <div className="flex items-center gap-2 mb-3">
-                <MapPin className="w-5 h-5 text-orange-500 print:text-orange-600" />
-                <h3 className="text-gray-900 print:text-black font-semibold text-sm">Address & Location</h3>
-              </div>
-              <div className="space-y-0 text-sm">
-                <DataRow label="Street Address" value={propertyData.address.street} />
-                <DataRow label="City" value={propertyData.address.city} />
-                <DataRow label="State" value={propertyData.address.state} />
-                <DataRow label="ZIP Code" value={propertyData.address.zip} />
-                <DataRow label="County" value={propertyData.address.county} />
-                <DataRow label="APN" value={propertyData.address.apn} />
-                <DataRow label="Owners" value={propertyData.address.owners} />
-                <DataRow label="Ownership Rights" value={propertyData.address.ownershipRights} />
-              </div>
-            </div>
-
-            {/* Valuation & Financial Data */}
-            <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 print:break-inside-avoid">
-              <div className="flex items-center gap-2 mb-3">
-                <DollarSign className="w-5 h-5 text-emerald-500 print:text-emerald-600" />
-                <h3 className="text-gray-900 print:text-black font-semibold text-sm">Valuation & Financial Data</h3>
-              </div>
-              <div className="space-y-0 text-sm">
-                <DataRow label="Purchase Price" value={propertyData.valuation.purchasePrice} />
-                <DataRow label="AVM Value" value={propertyData.valuation.avmValue} highlight />
-                <DataRow label="AVM Low" value={propertyData.valuation.avmLow} />
-                <DataRow label="AVM High" value={propertyData.valuation.avmHigh} />
-                <DataRow label="Estimated Equity" value={propertyData.valuation.estimatedEquity} />
-                <DataRow label="CLTV" value={propertyData.valuation.cltv} />
-              </div>
-            </div>
-          </div>
-
-          {/* Building & Lot Details - Full Width */}
-          <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 mb-5 print:break-inside-avoid">
-            <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-5 h-5 text-blue-500 print:text-blue-600" />
-              <h3 className="text-gray-900 print:text-black font-semibold text-sm">Building & Lot Details</h3>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 text-sm">
-              <div className="space-y-0">
-                <DataRow label="Year Built" value={propertyData.building.yearBuilt} />
-                <DataRow label="Effective Year" value={propertyData.building.effectiveYear} />
-                <DataRow label="Living Area" value={propertyData.building.livingArea} />
-                <DataRow label="Bedrooms" value={propertyData.building.bedrooms} />
-              </div>
-              <div className="space-y-0">
-                <DataRow label="Bathrooms" value={propertyData.building.bathrooms} />
-                <DataRow label="Total Rooms" value={propertyData.building.totalRooms} />
-                <DataRow label="Stories" value={propertyData.building.stories} />
-                <DataRow label="Construction" value={propertyData.building.construction} />
-              </div>
-              <div className="space-y-0">
-                <DataRow label="Exterior" value={propertyData.building.exterior} />
-                <DataRow label="Lot Size" value={propertyData.building.lotSize} />
-                <DataRow label="Lot Sq Ft" value={propertyData.building.lotSqFt} />
-                <DataRow label="Heating" value={propertyData.building.heating} />
-              </div>
-              <div className="space-y-0">
-                <DataRow label="Property Type" value={propertyData.building.propertyType} />
-                <DataRow label="Flood Zone" value={propertyData.building.floodZone} />
-                <DataRow label="Zoning" value={propertyData.building.zoning} />
-              </div>
-            </div>
-          </div>
+          </motion.div>
 
           {/* Expandable Sections */}
           <div className="space-y-4">
@@ -348,7 +233,6 @@ export default function Feb2ReleasePage() {
               printIconColor="text-emerald-600"
               title="Last Market Sale"
               subtitle={propertyData.lastSale.price}
-              delay={0}
             >
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                 <div>
@@ -386,7 +270,6 @@ export default function Feb2ReleasePage() {
                   Multiple Liens
                 </span>
               }
-              delay={0}
             >
               <div className="space-y-3">
                 {propertyData.liens.map((lien, idx) => (
@@ -449,7 +332,6 @@ export default function Feb2ReleasePage() {
               printIconColor="text-blue-600"
               title="Transfers & Conveyances"
               subtitle="Current Owner Transaction History"
-              delay={0}
             >
               {propertyData.transfers.map((transfer, idx) => (
                 <div key={idx} className="bg-gray-50 print:bg-gray-100 border border-gray-200 print:border-gray-300 rounded-lg p-3 print:break-inside-avoid">
@@ -492,7 +374,6 @@ export default function Feb2ReleasePage() {
               printIconColor="text-purple-600"
               title="Ownership History (2)"
               subtitle="Complete ownership chain for this property"
-              delay={0}
             >
               <div className="space-y-3">
                 {propertyData.ownershipHistory.map((owner, idx) => (
