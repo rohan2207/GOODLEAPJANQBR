@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, Lock, RefreshCw, Users, ChevronUp, ArrowLeft, MapPin, DollarSign, Building2, Check } from "lucide-react";
+import { Home, Lock, RefreshCw, Users, ArrowLeft, MapPin, DollarSign, Building2, Check, Printer } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -113,9 +113,9 @@ const propertyData = {
 
 function DataRow({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="flex justify-between items-center py-2 border-b border-white/5">
-      <span className="text-white/50 text-sm">{label}</span>
-      <span className={`text-sm font-medium ${highlight ? "text-emerald-400" : "text-white"}`}>{value || "—"}</span>
+    <div className="flex justify-between items-center py-2 border-b border-gray-200 print:border-gray-300">
+      <span className="text-gray-500 print:text-gray-600 text-sm">{label}</span>
+      <span className={`text-sm font-medium ${highlight ? "text-emerald-600 print:text-emerald-700" : "text-gray-900 print:text-black"}`}>{value || "—"}</span>
     </div>
   );
 }
@@ -123,6 +123,7 @@ function DataRow({ label, value, highlight = false }: { label: string; value: st
 function SectionCard({ 
   icon: Icon, 
   iconColor, 
+  printIconColor,
   title, 
   subtitle, 
   badge,
@@ -131,6 +132,7 @@ function SectionCard({
 }: { 
   icon: React.ElementType; 
   iconColor: string; 
+  printIconColor: string;
   title: string; 
   subtitle?: string;
   badge?: React.ReactNode;
@@ -142,20 +144,19 @@ function SectionCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5, ease: MOTION_EASE }}
-      className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
+      className="bg-white border border-gray-200 rounded-xl overflow-hidden print:break-inside-avoid print:shadow-none print:border-gray-300"
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-white/5">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 print:border-gray-300 bg-gray-50 print:bg-gray-100">
         <div className="flex items-center gap-3">
-          <Icon className={`w-6 h-6 ${iconColor}`} />
+          <Icon className={`w-6 h-6 ${iconColor} print:${printIconColor}`} />
           <div>
-            <h3 className="text-white font-semibold">{title}</h3>
-            {subtitle && <p className="text-white/50 text-sm">{subtitle}</p>}
+            <h3 className="text-gray-900 print:text-black font-semibold">{title}</h3>
+            {subtitle && <p className="text-gray-500 print:text-gray-600 text-sm">{subtitle}</p>}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 print:hidden">
           {badge}
-          <ChevronUp className="w-5 h-5 text-white/30" />
         </div>
       </div>
       {/* Content */}
@@ -167,425 +168,376 @@ function SectionCard({
 }
 
 export default function Feb2ReleasePage() {
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <main className="min-h-screen bg-black text-white">
-      {/* Background effects */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-950/20 via-black to-blue-950/20" />
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]" />
-      </div>
+    <>
+      {/* Print Styles */}
+      <style jsx global>{`
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+          .print-break {
+            page-break-before: always;
+          }
+        }
+      `}</style>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
-        {/* Back link */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: MOTION_EASE }}
-        >
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 transition-colors mb-12 group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-medium">Back to Main</span>
-          </Link>
-        </motion.div>
-
-        {/* Hero Section */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: MOTION_EASE }}
-        >
-          {/* Logo */}
-          <motion.div
-            className="flex flex-col items-center mb-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6, ease: MOTION_EASE }}
-          >
-            <Image
-              src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
-              alt="LinkAI"
-              width={200}
-              height={60}
-              className="h-16 w-auto mb-4"
-              unoptimized
-            />
-            
-            {/* Version Badge with Glow */}
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 0.5, ease: MOTION_EASE }}
-            >
-              {/* Glow effect */}
-              <motion.div
-                className="absolute inset-0 -inset-x-4 rounded-full blur-xl"
-                style={{ background: "linear-gradient(90deg, rgba(249,115,22,0.4), rgba(59,130,246,0.4))" }}
-                animate={{
-                  opacity: [0.4, 0.7, 0.4],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <span className="relative text-3xl font-light tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-blue-400">
-                v1.5
-              </span>
-            </motion.div>
-          </motion.div>
-
-          {/* Release Notes Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6, ease: MOTION_EASE }}
-          >
-            <p className="text-white/40 text-sm font-medium uppercase tracking-widest mb-3">
-              Release Notes
-            </p>
-            <p className="text-white/60 text-lg">
-              Feb 2
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Feature Header */}
-        <motion.div
-          className="mb-10"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6, ease: MOTION_EASE }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-400 text-sm font-medium uppercase tracking-wider">New Feature</span>
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-semibold mb-4 tracking-tight">
-            Property Intelligence
-          </h2>
-          <p className="text-white/60 text-lg max-w-3xl leading-relaxed">
-            Instant access to comprehensive property data directly within the loan officer workflow. 
-            View expanded details for last market sale, open liens, transfers, and ownership history.
-          </p>
-        </motion.div>
-
-        {/* Property Investment Analysis Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.5, ease: MOTION_EASE }}
-          className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-white/10 rounded-xl p-6 mb-6"
-        >
-          <h3 className="text-lg font-semibold mb-4">Property Investment Analysis</h3>
-          <div className="grid grid-cols-4 gap-6">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-emerald-400">{propertyData.investment.appreciation}</p>
-              <p className="text-white/50 text-sm">Appreciation</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-400">{propertyData.investment.equity}</p>
-              <p className="text-white/50 text-sm">Current Equity</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-cyan-400">{propertyData.investment.pricePerSqFt}</p>
-              <p className="text-white/50 text-sm">Price per Sq Ft</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-purple-400">{propertyData.investment.ownership}</p>
-              <p className="text-white/50 text-sm">Ownership</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Address & Location */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5, ease: MOTION_EASE }}
-            className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-orange-400" />
-              <h3 className="text-white font-semibold">Address & Location</h3>
-            </div>
-            <div className="space-y-0">
-              <DataRow label="Street Address" value={propertyData.address.street} />
-              <DataRow label="City" value={propertyData.address.city} />
-              <DataRow label="State" value={propertyData.address.state} />
-              <DataRow label="ZIP Code" value={propertyData.address.zip} />
-              <DataRow label="County" value={propertyData.address.county} />
-              <DataRow label="APN" value={propertyData.address.apn} />
-              <DataRow label="Owners" value={propertyData.address.owners} />
-              <DataRow label="Ownership Rights" value={propertyData.address.ownershipRights} />
-            </div>
-          </motion.div>
-
-          {/* Valuation & Financial Data */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.5, ease: MOTION_EASE }}
-            className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <DollarSign className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-white font-semibold">Valuation & Financial Data</h3>
-            </div>
-            <div className="space-y-0">
-              <DataRow label="Purchase Price" value={propertyData.valuation.purchasePrice} />
-              <DataRow label="AVM Value" value={propertyData.valuation.avmValue} highlight />
-              <DataRow label="AVM Low" value={propertyData.valuation.avmLow} />
-              <DataRow label="AVM High" value={propertyData.valuation.avmHigh} />
-              <DataRow label="Estimated Equity" value={propertyData.valuation.estimatedEquity} />
-              <DataRow label="CLTV" value={propertyData.valuation.cltv} />
-            </div>
-          </motion.div>
+      <main className="min-h-screen bg-white text-gray-900 print:bg-white">
+        {/* Background effects - hidden on print */}
+        <div className="fixed inset-0 pointer-events-none no-print">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-blue-50" />
         </div>
 
-        {/* Building & Lot Details - Full Width */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.5, ease: MOTION_EASE }}
-          className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5 mb-6"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Building2 className="w-5 h-5 text-blue-400" />
-            <h3 className="text-white font-semibold">Building & Lot Details</h3>
+        <div className="relative z-10 max-w-5xl mx-auto px-6 py-8 print:px-4 print:py-4">
+          {/* Navigation - hidden on print */}
+          <div className="flex items-center justify-between mb-8 no-print">
+            <Link 
+              href="/" 
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors group"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-medium">Back to Main</span>
+            </Link>
+            
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Printer className="w-4 h-4" />
+              <span className="text-sm font-medium">Print / Save PDF</span>
+            </button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8">
-            <div className="space-y-0">
-              <DataRow label="Year Built" value={propertyData.building.yearBuilt} />
-              <DataRow label="Effective Year" value={propertyData.building.effectiveYear} />
-              <DataRow label="Living Area" value={propertyData.building.livingArea} />
-              <DataRow label="Bedrooms" value={propertyData.building.bedrooms} />
+
+          {/* Header */}
+          <div className="text-center mb-8 print:mb-6">
+            <div className="flex flex-col items-center mb-4">
+              <Image
+                src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
+                alt="LinkAI"
+                width={160}
+                height={48}
+                className="h-12 w-auto mb-2"
+                unoptimized
+              />
+              <div className="flex items-center gap-3">
+                <span className="text-2xl font-light tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-500 print:text-gray-800">
+                  v1.5
+                </span>
+                <span className="text-gray-400 print:text-gray-500">•</span>
+                <span className="text-gray-500 print:text-gray-600 text-sm">Release Notes • Feb 2</span>
+              </div>
             </div>
-            <div className="space-y-0">
-              <DataRow label="Bathrooms" value={propertyData.building.bathrooms} />
-              <DataRow label="Total Rooms" value={propertyData.building.totalRooms} />
-              <DataRow label="Stories" value={propertyData.building.stories} />
-              <DataRow label="Construction" value={propertyData.building.construction} />
+            
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 print:bg-emerald-50 border border-emerald-200 mb-4">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 no-print" />
+              <span className="text-emerald-700 text-sm font-medium">New Feature: Property Intelligence</span>
             </div>
-            <div className="space-y-0">
-              <DataRow label="Exterior" value={propertyData.building.exterior} />
-              <DataRow label="Lot Size" value={propertyData.building.lotSize} />
-              <DataRow label="Lot Sq Ft" value={propertyData.building.lotSqFt} />
-              <DataRow label="Heating" value={propertyData.building.heating} />
-            </div>
-            <div className="space-y-0">
-              <DataRow label="Property Type" value={propertyData.building.propertyType} />
-              <DataRow label="Flood Zone" value={propertyData.building.floodZone} />
-              <DataRow label="Zoning" value={propertyData.building.zoning} />
+            
+            <p className="text-gray-600 print:text-gray-700 text-sm max-w-2xl mx-auto">
+              Instant access to comprehensive property data directly within the loan officer workflow.
+            </p>
+          </div>
+
+          {/* Property Investment Analysis Header */}
+          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 print:from-gray-50 print:to-gray-100 border border-gray-200 print:border-gray-300 rounded-xl p-5 mb-5 print:break-inside-avoid">
+            <h3 className="text-base font-semibold text-gray-900 print:text-black mb-4">Property Investment Analysis</h3>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="text-center">
+                <p className="text-xl font-bold text-emerald-600 print:text-emerald-700">{propertyData.investment.appreciation}</p>
+                <p className="text-gray-500 print:text-gray-600 text-xs">Appreciation</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold text-blue-600 print:text-blue-700">{propertyData.investment.equity}</p>
+                <p className="text-gray-500 print:text-gray-600 text-xs">Current Equity</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold text-cyan-600 print:text-cyan-700">{propertyData.investment.pricePerSqFt}</p>
+                <p className="text-gray-500 print:text-gray-600 text-xs">Price per Sq Ft</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold text-purple-600 print:text-purple-700">{propertyData.investment.ownership}</p>
+                <p className="text-gray-500 print:text-gray-600 text-xs">Ownership</p>
+              </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* Expandable Sections */}
-        <div className="space-y-4">
-          {/* Last Market Sale */}
-          <SectionCard
-            icon={Home}
-            iconColor="text-emerald-500"
-            title="Last Market Sale"
-            subtitle={propertyData.lastSale.price}
-            delay={0.95}
-          >
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div>
-                <p className="text-white/40 text-xs mb-1">Sale Price</p>
-                <p className="text-white font-semibold">{propertyData.lastSale.price}</p>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+            {/* Address & Location */}
+            <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 print:break-inside-avoid">
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="w-5 h-5 text-orange-500 print:text-orange-600" />
+                <h3 className="text-gray-900 print:text-black font-semibold text-sm">Address & Location</h3>
               </div>
-              <div>
-                <p className="text-white/40 text-xs mb-1">Recorded</p>
-                <p className="text-white font-semibold">{propertyData.lastSale.recorded}</p>
-              </div>
-              <div>
-                <p className="text-white/40 text-xs mb-1">Seller</p>
-                <p className="text-white font-semibold">{propertyData.lastSale.seller}</p>
-              </div>
-              <div>
-                <p className="text-white/40 text-xs mb-1">Buyer</p>
-                <p className="text-white font-semibold text-sm">{propertyData.lastSale.buyer}</p>
-              </div>
-              <div>
-                <p className="text-white/40 text-xs mb-1">Doc ID</p>
-                <p className="text-white font-semibold">{propertyData.lastSale.docId}</p>
+              <div className="space-y-0 text-sm">
+                <DataRow label="Street Address" value={propertyData.address.street} />
+                <DataRow label="City" value={propertyData.address.city} />
+                <DataRow label="State" value={propertyData.address.state} />
+                <DataRow label="ZIP Code" value={propertyData.address.zip} />
+                <DataRow label="County" value={propertyData.address.county} />
+                <DataRow label="APN" value={propertyData.address.apn} />
+                <DataRow label="Owners" value={propertyData.address.owners} />
+                <DataRow label="Ownership Rights" value={propertyData.address.ownershipRights} />
               </div>
             </div>
-          </SectionCard>
 
-          {/* Open Liens */}
-          <SectionCard
-            icon={Lock}
-            iconColor="text-amber-500"
-            title="Open Liens (2)"
-            subtitle="$228,410 • 61% LTV"
-            badge={
-              <span className="px-2 py-0.5 bg-amber-500 text-white text-xs font-medium rounded-full">
-                Multiple Liens
-              </span>
-            }
-            delay={1}
-          >
-            <div className="space-y-4">
-              {propertyData.liens.map((lien, idx) => (
-                <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
-                    <div className="flex items-start gap-2">
-                      <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 mt-4">
-                        <span className="text-white text-xs font-bold">{lien.position}</span>
+            {/* Valuation & Financial Data */}
+            <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 print:break-inside-avoid">
+              <div className="flex items-center gap-2 mb-3">
+                <DollarSign className="w-5 h-5 text-emerald-500 print:text-emerald-600" />
+                <h3 className="text-gray-900 print:text-black font-semibold text-sm">Valuation & Financial Data</h3>
+              </div>
+              <div className="space-y-0 text-sm">
+                <DataRow label="Purchase Price" value={propertyData.valuation.purchasePrice} />
+                <DataRow label="AVM Value" value={propertyData.valuation.avmValue} highlight />
+                <DataRow label="AVM Low" value={propertyData.valuation.avmLow} />
+                <DataRow label="AVM High" value={propertyData.valuation.avmHigh} />
+                <DataRow label="Estimated Equity" value={propertyData.valuation.estimatedEquity} />
+                <DataRow label="CLTV" value={propertyData.valuation.cltv} />
+              </div>
+            </div>
+          </div>
+
+          {/* Building & Lot Details - Full Width */}
+          <div className="bg-white border border-gray-200 print:border-gray-300 rounded-xl p-4 mb-5 print:break-inside-avoid">
+            <div className="flex items-center gap-2 mb-3">
+              <Building2 className="w-5 h-5 text-blue-500 print:text-blue-600" />
+              <h3 className="text-gray-900 print:text-black font-semibold text-sm">Building & Lot Details</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 text-sm">
+              <div className="space-y-0">
+                <DataRow label="Year Built" value={propertyData.building.yearBuilt} />
+                <DataRow label="Effective Year" value={propertyData.building.effectiveYear} />
+                <DataRow label="Living Area" value={propertyData.building.livingArea} />
+                <DataRow label="Bedrooms" value={propertyData.building.bedrooms} />
+              </div>
+              <div className="space-y-0">
+                <DataRow label="Bathrooms" value={propertyData.building.bathrooms} />
+                <DataRow label="Total Rooms" value={propertyData.building.totalRooms} />
+                <DataRow label="Stories" value={propertyData.building.stories} />
+                <DataRow label="Construction" value={propertyData.building.construction} />
+              </div>
+              <div className="space-y-0">
+                <DataRow label="Exterior" value={propertyData.building.exterior} />
+                <DataRow label="Lot Size" value={propertyData.building.lotSize} />
+                <DataRow label="Lot Sq Ft" value={propertyData.building.lotSqFt} />
+                <DataRow label="Heating" value={propertyData.building.heating} />
+              </div>
+              <div className="space-y-0">
+                <DataRow label="Property Type" value={propertyData.building.propertyType} />
+                <DataRow label="Flood Zone" value={propertyData.building.floodZone} />
+                <DataRow label="Zoning" value={propertyData.building.zoning} />
+              </div>
+            </div>
+          </div>
+
+          {/* Expandable Sections */}
+          <div className="space-y-4">
+            {/* Last Market Sale */}
+            <SectionCard
+              icon={Home}
+              iconColor="text-emerald-500"
+              printIconColor="text-emerald-600"
+              title="Last Market Sale"
+              subtitle={propertyData.lastSale.price}
+              delay={0}
+            >
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-400 print:text-gray-500 text-xs mb-1">Sale Price</p>
+                  <p className="text-gray-900 print:text-black font-semibold">{propertyData.lastSale.price}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 print:text-gray-500 text-xs mb-1">Recorded</p>
+                  <p className="text-gray-900 print:text-black font-semibold">{propertyData.lastSale.recorded}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 print:text-gray-500 text-xs mb-1">Seller</p>
+                  <p className="text-gray-900 print:text-black font-semibold">{propertyData.lastSale.seller}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 print:text-gray-500 text-xs mb-1">Buyer</p>
+                  <p className="text-gray-900 print:text-black font-semibold text-xs">{propertyData.lastSale.buyer}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 print:text-gray-500 text-xs mb-1">Doc ID</p>
+                  <p className="text-gray-900 print:text-black font-semibold">{propertyData.lastSale.docId}</p>
+                </div>
+              </div>
+            </SectionCard>
+
+            {/* Open Liens */}
+            <SectionCard
+              icon={Lock}
+              iconColor="text-amber-500"
+              printIconColor="text-amber-600"
+              title="Open Liens (2)"
+              subtitle="$228,410 • 61% LTV"
+              badge={
+                <span className="px-2 py-0.5 bg-amber-500 text-white text-xs font-medium rounded-full">
+                  Multiple Liens
+                </span>
+              }
+              delay={0}
+            >
+              <div className="space-y-3">
+                {propertyData.liens.map((lien, idx) => (
+                  <div key={idx} className="bg-gray-50 print:bg-gray-100 border border-gray-200 print:border-gray-300 rounded-lg p-3 print:break-inside-avoid">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3 text-sm">
+                      <div className="flex items-start gap-2">
+                        <div className="w-5 h-5 rounded-full bg-amber-500 print:bg-amber-600 flex items-center justify-center flex-shrink-0 mt-3">
+                          <span className="text-white text-xs font-bold">{lien.position}</span>
+                        </div>
+                        <div>
+                          <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Position</p>
+                          <p className="text-gray-900 print:text-black font-semibold text-xs">{lien.type}</p>
+                        </div>
                       </div>
                       <div>
-                        <p className="text-white/40 text-xs mb-1">Position</p>
-                        <p className="text-white font-semibold text-sm">{lien.type}</p>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Lender</p>
+                        <p className="text-gray-900 print:text-black font-semibold text-xs">{lien.lender}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Loan Amount</p>
+                        <p className="text-gray-900 print:text-black font-semibold">{lien.amount}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Type / Term</p>
+                        <p className="text-gray-900 print:text-black font-semibold text-xs">{lien.type}</p>
+                        <p className="text-gray-500 print:text-gray-600 text-xs">{lien.term}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Rate</p>
+                        <p className="text-gray-900 print:text-black font-semibold">{lien.rate}</p>
+                        {lien.rate !== "—" && <p className="text-gray-500 print:text-gray-600 text-xs">EST</p>}
                       </div>
                     </div>
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Lender</p>
-                      <p className="text-white font-semibold text-sm">{lien.lender}</p>
-                    </div>
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Loan Amount</p>
-                      <p className="text-white font-semibold">{lien.amount}</p>
-                    </div>
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Type / Term</p>
-                      <p className="text-white font-semibold text-sm">{lien.type}</p>
-                      <p className="text-white/50 text-xs">{lien.term}</p>
-                    </div>
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Rate</p>
-                      <p className="text-white font-semibold">{lien.rate}</p>
-                      {lien.rate !== "—" && <p className="text-white/50 text-xs">EST</p>}
-                    </div>
-                  </div>
-                  <div className="border-t border-white/5 pt-3 flex flex-wrap justify-between items-center gap-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white/40">Borrower:</span>
-                      <span className="text-white/70">{lien.borrower}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white/40">Doc ID:</span>
-                        <span className="text-white/70">{lien.docId}</span>
+                    <div className="border-t border-gray-200 print:border-gray-300 pt-2 flex flex-wrap justify-between items-center gap-2 text-xs">
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-400 print:text-gray-500">Borrower:</span>
+                        <span className="text-gray-700 print:text-gray-800">{lien.borrower}</span>
                       </div>
-                      <span className="text-white/20">|</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white/40">Date:</span>
-                        <span className="text-white/70">{lien.date}</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-400 print:text-gray-500">Doc ID:</span>
+                          <span className="text-gray-700 print:text-gray-800">{lien.docId}</span>
+                        </div>
+                        <span className="text-gray-300 print:text-gray-400">|</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-400 print:text-gray-500">Date:</span>
+                          <span className="text-gray-700 print:text-gray-800">{lien.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-
-          {/* Transfers & Conveyances */}
-          <SectionCard
-            icon={RefreshCw}
-            iconColor="text-blue-500"
-            title="Transfers & Conveyances"
-            subtitle="Current Owner Transaction History"
-            delay={1.05}
-          >
-            {propertyData.transfers.map((transfer, idx) => (
-              <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <p className="text-white/40 text-xs mb-1">Transaction</p>
-                    <p className="text-white font-semibold">{transfer.type}</p>
-                    <p className="text-white/50 text-xs">{transfer.saleType}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/40 text-xs mb-1">Sale Price</p>
-                    <p className="text-white font-semibold">{transfer.price}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/40 text-xs mb-1">Date</p>
-                    <p className="text-white font-semibold">{transfer.date}</p>
-                  </div>
-                </div>
-                <div className="border-t border-white/5 pt-3 flex items-center gap-2 text-sm">
-                  {transfer.armsLength && (
-                    <span className="px-2 py-0.5 bg-emerald-500 text-white text-xs font-medium rounded-full flex items-center gap-1">
-                      <Check className="w-3 h-3" />
-                      Arms Length
-                    </span>
-                  )}
-                  <span className="text-white/20">|</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-white/40">Doc ID:</span>
-                    <span className="text-white/70">{transfer.docId}</span>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </SectionCard>
+            </SectionCard>
 
-          {/* Ownership History */}
-          <SectionCard
-            icon={Users}
-            iconColor="text-purple-500"
-            title="Ownership History (2)"
-            subtitle="Complete ownership chain for this property"
-            delay={1.1}
-          >
-            <div className="space-y-4">
-              {propertyData.ownershipHistory.map((owner, idx) => (
-                <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-4">
+            {/* Transfers & Conveyances */}
+            <SectionCard
+              icon={RefreshCw}
+              iconColor="text-blue-500"
+              printIconColor="text-blue-600"
+              title="Transfers & Conveyances"
+              subtitle="Current Owner Transaction History"
+              delay={0}
+            >
+              {propertyData.transfers.map((transfer, idx) => (
+                <div key={idx} className="bg-gray-50 print:bg-gray-100 border border-gray-200 print:border-gray-300 rounded-lg p-3 print:break-inside-avoid">
+                  <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
                     <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-white font-semibold">{owner.name}</p>
-                        {owner.current && (
-                          <span className="px-2 py-0.5 bg-emerald-500 text-white text-xs font-medium rounded-full">
-                            Current
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-white/50 text-sm">Purchased from: {owner.purchasedFrom}</p>
+                      <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Transaction</p>
+                      <p className="text-gray-900 print:text-black font-semibold">{transfer.type}</p>
+                      <p className="text-gray-500 print:text-gray-600 text-xs">{transfer.saleType}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-white font-semibold">{owner.price}</p>
-                      <p className="text-white/50 text-sm">{owner.date}</p>
+                    <div>
+                      <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Sale Price</p>
+                      <p className="text-gray-900 print:text-black font-semibold">{transfer.price}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Date</p>
+                      <p className="text-gray-900 print:text-black font-semibold">{transfer.date}</p>
                     </div>
                   </div>
-                  <div className="border-t border-white/5 pt-3 grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Document Type</p>
-                      <p className="text-white font-semibold">{owner.docType}</p>
-                    </div>
-                    <div>
-                      <p className="text-white/40 text-xs mb-1">Title Company</p>
-                      <p className="text-white font-semibold">—</p>
+                  <div className="border-t border-gray-200 print:border-gray-300 pt-2 flex items-center gap-2 text-xs">
+                    {transfer.armsLength && (
+                      <span className="px-2 py-0.5 bg-emerald-500 print:bg-emerald-600 text-white text-xs font-medium rounded-full flex items-center gap-1">
+                        <Check className="w-3 h-3" />
+                        Arms Length
+                      </span>
+                    )}
+                    <span className="text-gray-300 print:text-gray-400">|</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-gray-400 print:text-gray-500">Doc ID:</span>
+                      <span className="text-gray-700 print:text-gray-800">{transfer.docId}</span>
                     </div>
                   </div>
                 </div>
               ))}
-            </div>
-          </SectionCard>
-        </div>
+            </SectionCard>
 
-        {/* Footer */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-        >
-          <p className="text-white/30 text-sm">
-            LinkAI v1.5 • Feb 2 Release
-          </p>
-        </motion.div>
-      </div>
-    </main>
+            {/* Ownership History */}
+            <SectionCard
+              icon={Users}
+              iconColor="text-purple-500"
+              printIconColor="text-purple-600"
+              title="Ownership History (2)"
+              subtitle="Complete ownership chain for this property"
+              delay={0}
+            >
+              <div className="space-y-3">
+                {propertyData.ownershipHistory.map((owner, idx) => (
+                  <div key={idx} className="bg-gray-50 print:bg-gray-100 border border-gray-200 print:border-gray-300 rounded-lg p-3 print:break-inside-avoid">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-gray-900 print:text-black font-semibold text-sm">{owner.name}</p>
+                          {owner.current && (
+                            <span className="px-2 py-0.5 bg-emerald-500 print:bg-emerald-600 text-white text-xs font-medium rounded-full">
+                              Current
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-500 print:text-gray-600 text-xs">Purchased from: {owner.purchasedFrom}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-900 print:text-black font-semibold text-sm">{owner.price}</p>
+                        <p className="text-gray-500 print:text-gray-600 text-xs">{owner.date}</p>
+                      </div>
+                    </div>
+                    <div className="border-t border-gray-200 print:border-gray-300 pt-2 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Document Type</p>
+                        <p className="text-gray-900 print:text-black font-semibold text-sm">{owner.docType}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 print:text-gray-500 text-xs mb-0.5">Title Company</p>
+                        <p className="text-gray-900 print:text-black font-semibold text-sm">—</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SectionCard>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center print:mt-6">
+            <p className="text-gray-400 print:text-gray-500 text-xs">
+              LinkAI v1.5 • Feb 2 Release • Property Intelligence
+            </p>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
