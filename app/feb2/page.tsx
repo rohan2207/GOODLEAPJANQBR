@@ -10,61 +10,61 @@ const MOTION_EASE = [0.25, 0.46, 0.45, 0.94];
 // Property data from the HTML
 const propertyData = {
   lastSale: {
-    price: "$171,000",
-    recorded: "Sep 4, 2018",
-    seller: "KNOWLTON JENIFER",
-    buyer: "SCARELA LUIS M / LOPEZ MARIANELA",
-    docId: "2018.15337",
+    price: "$385,000",
+    recorded: "Mar 15, 2022",
+    seller: "SMITH ROBERT J",
+    buyer: "JOHNSON MICHAEL A / JOHNSON SARAH L",
+    docId: "2022.08472",
   },
   liens: [
     {
       position: 1,
-      type: "STAND ALONE FINANCE",
-      lender: "QUICKEN LOANS INC",
-      amount: "$165,410",
-      term: "20 YEARS",
-      rate: "2.9%",
-      borrower: "SCARELA LUIS M / LOPEZ MARIANELA",
-      docId: "2020.17280",
-      date: "Oct 1, 2020",
+      type: "CONVENTIONAL",
+      lender: "FIRST NATIONAL BANK",
+      amount: "$308,000",
+      term: "30 YEARS",
+      rate: "3.25%",
+      borrower: "JOHNSON MICHAEL A / JOHNSON SARAH L",
+      docId: "2022.08473",
+      date: "Mar 15, 2022",
     },
     {
       position: 2,
-      type: "STAND ALONE FINANCE",
-      lender: "ROCKET MORTGAGE LLC",
-      amount: "$63,000",
-      term: "30 YEARS",
-      rate: "—",
-      borrower: "SCARELA LUIS M / LOPEZ MARIANELA",
-      docId: "2025.13884",
-      date: "Oct 14, 2025",
+      type: "HELOC",
+      lender: "COMMUNITY CREDIT UNION",
+      amount: "$50,000",
+      term: "10 YEARS",
+      rate: "5.5%",
+      borrower: "JOHNSON MICHAEL A / JOHNSON SARAH L",
+      docId: "2024.12456",
+      date: "Jun 20, 2024",
     },
   ],
   transfers: [
     {
       type: "Deed Transfer",
       saleType: "SALE",
-      price: "$171,000",
-      date: "Sep 4, 2018",
+      price: "$385,000",
+      date: "Mar 15, 2022",
       armsLength: true,
-      docId: "2018.15337",
+      docId: "2022.08472",
     },
   ],
   ownershipHistory: [
     {
-      name: "Scarela Luis M / Lopez Marianela",
+      name: "Johnson Michael A / Johnson Sarah L",
       current: true,
-      purchasedFrom: "Knowlton Jenifer",
-      price: "$171,000",
-      date: "Sep 4, 2018",
+      purchasedFrom: "Smith Robert J",
+      price: "$385,000",
+      date: "Mar 15, 2022",
       docType: "Deed Transfer",
     },
     {
-      name: "Richard Jenifer L / Richard Jenifer",
+      name: "Smith Robert J",
       current: false,
-      purchasedFrom: "Hoover Alfred",
-      price: "$85,000",
-      date: "Feb 12, 2010",
+      purchasedFrom: "Williams David T",
+      price: "$245,000",
+      date: "Aug 10, 2015",
       docType: "Deed Transfer",
     },
   ],
@@ -264,7 +264,7 @@ export default function Feb2ReleasePage() {
               iconColor="text-amber-500"
               printIconColor="text-amber-600"
               title="Open Liens (2)"
-              subtitle="$228,410 • 61% LTV"
+              subtitle="$358,000 • 77% LTV"
               badge={
                 <span className="px-2 py-0.5 bg-amber-500 text-white text-xs font-medium rounded-full">
                   Multiple Liens
