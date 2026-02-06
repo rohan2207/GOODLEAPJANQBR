@@ -77,7 +77,7 @@ Enhancement to 'Property' tab in LinkAI — All relevant data from DataTree is n
 
 How to Access: Navigate to any loan in LinkAI → Click the 'Property' tab → Scroll down to find the new expandable sections.
 
-Questions? Contact the LinkAI Support Team.
+Questions? Use the Feedback button in LinkAI.
 `;
 
 // Rich HTML version for email formatting
@@ -100,7 +100,7 @@ const emailContentHtml = `
     <strong>How to Access:</strong> Navigate to any loan in LinkAI → Click the 'Property' tab → Scroll down to find the new expandable sections.
   </div>
   
-  <p style="color: #666; margin-top: 20px;">Questions? Contact the LinkAI Support Team.</p>
+  <p style="color: #666; margin-top: 20px;">Questions? Use the Feedback button in LinkAI.</p>
 </div>
 `;
 
@@ -333,7 +333,7 @@ export default function Feb2ReleasePage() {
 
               {/* Closing */}
               <p className="text-gray-600 print:text-gray-700 text-sm print:text-xs">
-                Questions? Contact the LinkAI Support Team.
+                Questions? Use the Feedback button in LinkAI.
               </p>
             </div>
 
