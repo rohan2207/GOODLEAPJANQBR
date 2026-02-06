@@ -1,11 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Home, Lock, RefreshCw, Users, ArrowLeft, Check, Printer, ChevronDown } from "lucide-react";
+import { Home, Lock, RefreshCw, Users, ArrowLeft, Printer, Copy, Check } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-
-const MOTION_EASE = [0.25, 0.46, 0.45, 0.94];
+import { useState } from "react";
 
 // Property data - TEST DATA (not real PII)
 const propertyData = {
@@ -60,14 +58,43 @@ const propertyData = {
   ],
 };
 
+const emailContent = `Subject: LinkAI V1.5 Release Notes // February 5th, 2026
+
+Effective February 5th, 2026, LinkAI V1.5 is released to production.
+
+Release Notes:
+
+Enhancement to 'Property' tab in LinkAI — All relevant data from DataTree is now feeding directly into LinkAI with four new expandable sections:
+
+• Last Market Sale — View complete sale history including sale price, recorded date, seller/buyer information, and document ID. No more switching to external systems.
+
+• Open Liens — Instantly see all open liens on the property with lender details, loan amounts, terms, rates, and LTV calculations. Multiple liens are clearly labeled and organized.
+
+• Transfers & Conveyances — Access the current owner's complete transaction history with deed transfer details, sale prices, and arms-length transaction indicators.
+
+• Ownership History — View the complete ownership chain for any property, showing all previous owners, purchase prices, and transaction dates.
+
+How to Access: Navigate to any loan in LinkAI → Click the 'Property' tab → Scroll down to find the new expandable sections.
+
+Questions? Contact the LinkAI Support Team.
+`;
+
 export default function Feb2ReleasePage() {
+  const [copied, setCopied] = useState(false);
+
   const handlePrint = () => {
     window.print();
   };
 
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(emailContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
-      {/* Print Styles - Optimized for 1 page */}
+      {/* Print Styles */}
       <style jsx global>{`
         @media print {
           body {
@@ -78,21 +105,16 @@ export default function Feb2ReleasePage() {
             display: none !important;
           }
           @page {
-            margin: 0.4in;
+            margin: 0.5in;
             size: letter;
           }
         }
       `}</style>
 
-      <main className="min-h-screen bg-white text-gray-900 print:bg-white">
-        {/* Background effects - hidden on print */}
-        <div className="fixed inset-0 pointer-events-none no-print">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-blue-50" />
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 py-8 print:px-0 print:py-2 print:max-w-none">
+      <main className="min-h-screen bg-gray-100 text-gray-900 print:bg-white">
+        <div className="max-w-3xl mx-auto px-4 py-8 print:px-0 print:py-4">
           {/* Navigation - hidden on print */}
-          <div className="flex items-center justify-between mb-8 no-print">
+          <div className="flex items-center justify-between mb-6 no-print">
             <Link 
               href="/" 
               className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors group"
@@ -101,166 +123,187 @@ export default function Feb2ReleasePage() {
               <span className="text-sm font-medium">Back to Main</span>
             </Link>
             
-            <button
-              onClick={handlePrint}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Printer className="w-4 h-4" />
-              <span className="text-sm font-medium">Print / Save PDF</span>
-            </button>
-          </div>
-
-          {/* Header - Compact for print */}
-          <div className="text-center mb-6 print:mb-3">
-            <div className="flex flex-col items-center mb-3 print:mb-2">
-              <Image
-                src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
-                alt="LinkAI"
-                width={160}
-                height={48}
-                className="h-12 print:h-8 w-auto mb-2 print:mb-1"
-                unoptimized
-              />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl print:text-lg font-light tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-500 print:text-gray-800">
-                  v1.5
-                </span>
-                <span className="text-gray-400 print:text-gray-500">•</span>
-                <span className="text-gray-500 print:text-gray-600 text-sm print:text-xs">Release Notes • Feb 2</span>
-              </div>
-            </div>
-            
-            <div className="inline-flex items-center gap-2 px-3 py-1 print:py-0.5 rounded-full bg-emerald-100 print:bg-emerald-50 border border-emerald-200 mb-3 print:mb-2">
-              <span className="text-emerald-700 text-sm print:text-xs font-medium">New Feature: Property Intelligence</span>
+            <div className="flex gap-2">
+              <Link
+                href="/releases"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                All Releases
+              </Link>
+              <button
+                onClick={handleCopy}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span className="text-sm font-medium">{copied ? "Copied!" : "Copy Email"}</span>
+              </button>
+              <button
+                onClick={handlePrint}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Printer className="w-4 h-4" />
+                <span className="text-sm font-medium">Print</span>
+              </button>
             </div>
           </div>
 
-          {/* How to Access - Compact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: MOTION_EASE }}
-            className="bg-gradient-to-r from-blue-50 to-indigo-50 print:from-gray-50 print:to-gray-100 border border-blue-200 print:border-gray-300 rounded-lg print:rounded p-4 print:p-2 mb-4 print:mb-3"
-          >
-            <p className="text-gray-700 print:text-gray-800 text-sm print:text-xs mb-2 print:mb-1">
-              <span className="font-semibold">How to Access:</span> Navigate to Property Details and scroll down to find these expandable sections:
-            </p>
-            <div className="flex flex-wrap gap-2 print:gap-1">
-              {[
-                { icon: Home, color: "text-emerald-500", label: "Last Market Sale" },
-                { icon: Lock, color: "text-amber-500", label: "Open Liens" },
-                { icon: RefreshCw, color: "text-blue-500", label: "Transfers" },
-                { icon: Users, color: "text-purple-500", label: "Ownership History" },
-              ].map((item) => (
-                <span key={item.label} className="inline-flex items-center gap-1 px-2 py-1 print:py-0.5 bg-white print:bg-gray-50 border border-gray-200 rounded-full text-xs text-gray-700">
-                  <item.icon className={`w-3 h-3 ${item.color}`} />
-                  {item.label}
-                  <ChevronDown className="w-2.5 h-2.5 text-gray-400" />
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Compact 2x2 Grid for Print */}
-          <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-3 print:gap-2">
-            {/* Last Market Sale */}
-            <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
-              <div className="flex items-center gap-2 p-3 print:p-2 border-b border-gray-100 bg-gray-50">
-                <Home className="w-4 h-4 print:w-3 print:h-3 text-emerald-500" />
-                <h3 className="text-gray-900 font-semibold text-sm print:text-xs">Last Market Sale</h3>
-                <span className="text-gray-500 text-xs print:text-[10px] ml-auto">{propertyData.lastSale.price}</span>
+          {/* Email Container */}
+          <div className="bg-white rounded-lg print:rounded-none shadow-lg print:shadow-none border border-gray-200 print:border-0 overflow-hidden">
+            {/* Email Header */}
+            <div className="bg-gray-50 print:bg-white border-b border-gray-200 print:border-gray-300 p-4 print:p-2">
+              <div className="flex items-center gap-3 mb-3 print:mb-2">
+                <Image
+                  src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
+                  alt="LinkAI"
+                  width={100}
+                  height={30}
+                  className="h-8 print:h-6 w-auto"
+                  unoptimized
+                />
               </div>
-              <div className="p-3 print:p-2 grid grid-cols-2 gap-2 print:gap-1 text-xs print:text-[10px]">
-                <div><span className="text-gray-400">Price:</span> <span className="font-medium">{propertyData.lastSale.price}</span></div>
-                <div><span className="text-gray-400">Date:</span> <span className="font-medium">{propertyData.lastSale.recorded}</span></div>
-                <div><span className="text-gray-400">Seller:</span> <span className="font-medium">{propertyData.lastSale.seller}</span></div>
-                <div><span className="text-gray-400">Doc ID:</span> <span className="font-medium">{propertyData.lastSale.docId}</span></div>
-                <div className="col-span-2"><span className="text-gray-400">Buyer:</span> <span className="font-medium">{propertyData.lastSale.buyer}</span></div>
+              <div className="text-sm print:text-xs">
+                <p className="text-gray-500 print:text-gray-600 mb-1"><span className="font-semibold text-gray-700 print:text-gray-800">Subject:</span> LinkAI V1.5 Release Notes // February 5th, 2026</p>
               </div>
             </div>
 
-            {/* Open Liens */}
-            <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
-              <div className="flex items-center gap-2 p-3 print:p-2 border-b border-gray-100 bg-gray-50">
-                <Lock className="w-4 h-4 print:w-3 print:h-3 text-amber-500" />
-                <h3 className="text-gray-900 font-semibold text-sm print:text-xs">Open Liens (2)</h3>
-                <span className="text-gray-500 text-xs print:text-[10px] ml-auto">$358,000 • 77% LTV</span>
-              </div>
-              <div className="p-3 print:p-2 space-y-2 print:space-y-1">
-                {propertyData.liens.map((lien, idx) => (
-                  <div key={idx} className="bg-gray-50 rounded p-2 print:p-1 text-xs print:text-[10px]">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="w-4 h-4 print:w-3 print:h-3 rounded-full bg-amber-500 text-white text-[10px] print:text-[8px] flex items-center justify-center font-bold">{lien.position}</span>
-                      <span className="font-medium">{lien.type}</span>
-                      <span className="ml-auto font-semibold">{lien.amount}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-gray-600 print:text-[9px]">
-                      <span>{lien.lender}</span>
-                      <span>{lien.term} @ {lien.rate}</span>
-                      <span>{lien.date}</span>
-                    </div>
+            {/* Email Body */}
+            <div className="p-6 print:p-4">
+              {/* Opening */}
+              <p className="text-gray-800 print:text-black mb-6 print:mb-4 print:text-sm">
+                Effective February 5th, 2026, <strong>LinkAI V1.5</strong> is released to production.
+              </p>
+
+              {/* Release Notes Header */}
+              <h2 className="text-lg print:text-base font-bold text-gray-900 print:text-black mb-2 print:mb-1">Release Notes:</h2>
+              <p className="text-gray-700 print:text-gray-800 mb-4 print:mb-3 print:text-sm">
+                Enhancement to <strong>'Property' tab</strong> in LinkAI — All relevant data from DataTree is now feeding directly into LinkAI with four new expandable sections:
+              </p>
+
+              {/* Bullet Points */}
+              <ul className="space-y-3 print:space-y-2 mb-6 print:mb-4">
+                <li className="flex gap-3 print:gap-2">
+                  <span className="flex-shrink-0 w-6 h-6 print:w-5 print:h-5 rounded-full bg-emerald-100 print:bg-emerald-50 flex items-center justify-center">
+                    <Home className="w-3.5 h-3.5 print:w-3 print:h-3 text-emerald-600" />
+                  </span>
+                  <div className="print:text-sm">
+                    <strong>Last Market Sale</strong> — View complete sale history including sale price, recorded date, seller/buyer information, and document ID. No more switching to external systems.
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Transfers & Conveyances */}
-            <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
-              <div className="flex items-center gap-2 p-3 print:p-2 border-b border-gray-100 bg-gray-50">
-                <RefreshCw className="w-4 h-4 print:w-3 print:h-3 text-blue-500" />
-                <h3 className="text-gray-900 font-semibold text-sm print:text-xs">Transfers & Conveyances</h3>
-              </div>
-              <div className="p-3 print:p-2">
-                <div className="bg-gray-50 rounded p-2 print:p-1 text-xs print:text-[10px]">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium">{propertyData.transfers.type}</span>
-                    <span className="font-semibold">{propertyData.transfers.price}</span>
+                </li>
+                <li className="flex gap-3 print:gap-2">
+                  <span className="flex-shrink-0 w-6 h-6 print:w-5 print:h-5 rounded-full bg-amber-100 print:bg-amber-50 flex items-center justify-center">
+                    <Lock className="w-3.5 h-3.5 print:w-3 print:h-3 text-amber-600" />
+                  </span>
+                  <div className="print:text-sm">
+                    <strong>Open Liens</strong> — Instantly see all open liens on the property with lender details, loan amounts, terms, rates, and LTV calculations. Multiple liens are clearly labeled and organized.
                   </div>
-                  <div className="flex gap-3 text-gray-600 print:text-[9px]">
-                    <span>{propertyData.transfers.date}</span>
-                    <span className="flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-500" />
-                      Arms Length
-                    </span>
-                    <span>Doc: {propertyData.transfers.docId}</span>
+                </li>
+                <li className="flex gap-3 print:gap-2">
+                  <span className="flex-shrink-0 w-6 h-6 print:w-5 print:h-5 rounded-full bg-blue-100 print:bg-blue-50 flex items-center justify-center">
+                    <RefreshCw className="w-3.5 h-3.5 print:w-3 print:h-3 text-blue-600" />
+                  </span>
+                  <div className="print:text-sm">
+                    <strong>Transfers & Conveyances</strong> — Access the current owner's complete transaction history with deed transfer details, sale prices, and arms-length transaction indicators.
+                  </div>
+                </li>
+                <li className="flex gap-3 print:gap-2">
+                  <span className="flex-shrink-0 w-6 h-6 print:w-5 print:h-5 rounded-full bg-purple-100 print:bg-purple-50 flex items-center justify-center">
+                    <Users className="w-3.5 h-3.5 print:w-3 print:h-3 text-purple-600" />
+                  </span>
+                  <div className="print:text-sm">
+                    <strong>Ownership History</strong> — View the complete ownership chain for any property, showing all previous owners, purchase prices, and transaction dates.
+                  </div>
+                </li>
+              </ul>
+
+              {/* How to Access */}
+              <div className="bg-blue-50 print:bg-gray-100 border border-blue-200 print:border-gray-300 rounded-lg print:rounded p-4 print:p-3 mb-6 print:mb-4">
+                <p className="text-sm print:text-xs text-gray-700 print:text-gray-800">
+                  <strong>How to Access:</strong> Navigate to any loan in LinkAI → Click the 'Property' tab → Scroll down to find the new expandable sections.
+                </p>
+              </div>
+
+              {/* Screenshots Section */}
+              <h3 className="text-base print:text-sm font-bold text-gray-900 print:text-black mb-3 print:mb-2">Screenshots:</h3>
+              
+              {/* Screenshot Grid - Compact for Print */}
+              <div className="grid grid-cols-2 gap-3 print:gap-2 mb-6 print:mb-4">
+                {/* Last Market Sale */}
+                <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
+                  <div className="flex items-center gap-2 p-2 print:p-1.5 border-b border-gray-100 bg-gray-50">
+                    <Home className="w-4 h-4 print:w-3 print:h-3 text-emerald-500" />
+                    <span className="text-gray-900 font-semibold text-xs print:text-[10px]">Last Market Sale</span>
+                  </div>
+                  <div className="p-2 print:p-1.5 text-[10px] print:text-[9px] space-y-1">
+                    <div className="flex justify-between"><span className="text-gray-400">Price:</span><span className="font-medium">{propertyData.lastSale.price}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-400">Date:</span><span className="font-medium">{propertyData.lastSale.recorded}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-400">Seller:</span><span className="font-medium">{propertyData.lastSale.seller}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-400">Doc ID:</span><span className="font-medium">{propertyData.lastSale.docId}</span></div>
+                  </div>
+                </div>
+
+                {/* Open Liens */}
+                <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
+                  <div className="flex items-center gap-2 p-2 print:p-1.5 border-b border-gray-100 bg-gray-50">
+                    <Lock className="w-4 h-4 print:w-3 print:h-3 text-amber-500" />
+                    <span className="text-gray-900 font-semibold text-xs print:text-[10px]">Open Liens (2)</span>
+                  </div>
+                  <div className="p-2 print:p-1.5 space-y-1">
+                    {propertyData.liens.map((lien, idx) => (
+                      <div key={idx} className="bg-gray-50 rounded p-1.5 print:p-1 text-[10px] print:text-[9px]">
+                        <div className="flex items-center gap-1 font-medium">
+                          <span className="w-3 h-3 print:w-2.5 print:h-2.5 rounded-full bg-amber-500 text-white text-[8px] flex items-center justify-center">{lien.position}</span>
+                          {lien.type} — {lien.amount}
+                        </div>
+                        <div className="text-gray-500 text-[9px] print:text-[8px]">{lien.lender} • {lien.rate}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Transfers */}
+                <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
+                  <div className="flex items-center gap-2 p-2 print:p-1.5 border-b border-gray-100 bg-gray-50">
+                    <RefreshCw className="w-4 h-4 print:w-3 print:h-3 text-blue-500" />
+                    <span className="text-gray-900 font-semibold text-xs print:text-[10px]">Transfers</span>
+                  </div>
+                  <div className="p-2 print:p-1.5 text-[10px] print:text-[9px]">
+                    <div className="flex justify-between font-medium mb-1">
+                      <span>{propertyData.transfers.type}</span>
+                      <span>{propertyData.transfers.price}</span>
+                    </div>
+                    <div className="text-gray-500 text-[9px] print:text-[8px]">{propertyData.transfers.date} • Arms Length</div>
+                  </div>
+                </div>
+
+                {/* Ownership History */}
+                <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
+                  <div className="flex items-center gap-2 p-2 print:p-1.5 border-b border-gray-100 bg-gray-50">
+                    <Users className="w-4 h-4 print:w-3 print:h-3 text-purple-500" />
+                    <span className="text-gray-900 font-semibold text-xs print:text-[10px]">Ownership History</span>
+                  </div>
+                  <div className="p-2 print:p-1.5 space-y-1">
+                    {propertyData.ownershipHistory.map((owner, idx) => (
+                      <div key={idx} className="text-[10px] print:text-[9px] flex justify-between">
+                        <span className="font-medium">{owner.name.split(' / ')[0]}{owner.current && <span className="ml-1 text-emerald-600 text-[8px]">Current</span>}</span>
+                        <span className="text-gray-500">{owner.price}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
+
+              {/* Closing */}
+              <p className="text-gray-600 print:text-gray-700 text-sm print:text-xs">
+                Questions? Contact the LinkAI Support Team.
+              </p>
             </div>
 
-            {/* Ownership History */}
-            <div className="bg-white border border-gray-200 rounded-lg print:rounded overflow-hidden">
-              <div className="flex items-center gap-2 p-3 print:p-2 border-b border-gray-100 bg-gray-50">
-                <Users className="w-4 h-4 print:w-3 print:h-3 text-purple-500" />
-                <h3 className="text-gray-900 font-semibold text-sm print:text-xs">Ownership History (2)</h3>
-              </div>
-              <div className="p-3 print:p-2 space-y-2 print:space-y-1">
-                {propertyData.ownershipHistory.map((owner, idx) => (
-                  <div key={idx} className="bg-gray-50 rounded p-2 print:p-1 text-xs print:text-[10px]">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="font-medium">{owner.name}</span>
-                        {owner.current && (
-                          <span className="ml-1 px-1.5 py-0.5 bg-emerald-500 text-white text-[9px] print:text-[8px] rounded-full">Current</span>
-                        )}
-                        <p className="text-gray-500 print:text-[9px]">From: {owner.from}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">{owner.price}</p>
-                        <p className="text-gray-500 print:text-[9px]">{owner.date}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {/* Footer */}
+            <div className="bg-gray-50 print:bg-white border-t border-gray-200 print:border-gray-300 px-6 py-3 print:px-4 print:py-2">
+              <p className="text-gray-400 print:text-gray-500 text-xs print:text-[10px] text-center">
+                LinkAI V1.5 • February 5th, 2026 • Property Intelligence Release
+              </p>
             </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-4 print:mt-2 text-center">
-            <p className="text-gray-400 text-xs print:text-[10px]">
-              LinkAI v1.5 • Feb 2 Release • Property Intelligence
-            </p>
           </div>
         </div>
       </main>
