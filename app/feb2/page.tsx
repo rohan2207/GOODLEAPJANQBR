@@ -58,7 +58,8 @@ const propertyData = {
   ],
 };
 
-const emailContent = `Subject: LinkAI V1.5 Release Notes // February 5th, 2026
+// Plain text version for fallback
+const emailContentPlain = `Subject: LinkAI V1.5 Release Notes // February 5th, 2026
 
 Effective February 5th, 2026, LinkAI V1.5 is released to production.
 
@@ -79,6 +80,30 @@ How to Access: Navigate to any loan in LinkAI → Click the 'Property' tab → S
 Questions? Contact the LinkAI Support Team.
 `;
 
+// Rich HTML version for email formatting
+const emailContentHtml = `
+<div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+  <p>Effective February 5th, 2026, <strong>LinkAI V1.5</strong> is released to production.</p>
+  
+  <h3 style="margin-top: 20px; margin-bottom: 10px;">Release Notes:</h3>
+  
+  <p>Enhancement to <strong>'Property' tab</strong> in LinkAI — All relevant data from DataTree is now feeding directly into LinkAI with four new expandable sections:</p>
+  
+  <ul style="margin: 16px 0; padding-left: 20px;">
+    <li style="margin-bottom: 12px;"><strong>Last Market Sale</strong> — View complete sale history including sale price, recorded date, seller/buyer information, and document ID. No more switching to external systems.</li>
+    <li style="margin-bottom: 12px;"><strong>Open Liens</strong> — Instantly see all open liens on the property with lender details, loan amounts, terms, rates, and LTV calculations. Multiple liens are clearly labeled and organized.</li>
+    <li style="margin-bottom: 12px;"><strong>Transfers & Conveyances</strong> — Access the current owner's complete transaction history with deed transfer details, sale prices, and arms-length transaction indicators.</li>
+    <li style="margin-bottom: 12px;"><strong>Ownership History</strong> — View the complete ownership chain for any property, showing all previous owners, purchase prices, and transaction dates.</li>
+  </ul>
+  
+  <div style="background-color: #f0f7ff; border: 1px solid #cce0ff; border-radius: 8px; padding: 12px; margin: 16px 0;">
+    <strong>How to Access:</strong> Navigate to any loan in LinkAI → Click the 'Property' tab → Scroll down to find the new expandable sections.
+  </div>
+  
+  <p style="color: #666; margin-top: 20px;">Questions? Contact the LinkAI Support Team.</p>
+</div>
+`;
+
 export default function Feb2ReleasePage() {
   const [copied, setCopied] = useState(false);
 
@@ -87,7 +112,21 @@ export default function Feb2ReleasePage() {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(emailContent);
+    try {
+      // Try to copy rich HTML (works in modern browsers)
+      const htmlBlob = new Blob([emailContentHtml], { type: 'text/html' });
+      const textBlob = new Blob([emailContentPlain], { type: 'text/plain' });
+      
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': htmlBlob,
+          'text/plain': textBlob,
+        }),
+      ]);
+    } catch {
+      // Fallback to plain text
+      await navigator.clipboard.writeText(emailContentPlain);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
