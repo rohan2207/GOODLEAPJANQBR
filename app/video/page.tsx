@@ -31,14 +31,7 @@ const TIMINGS = {
 export default function VideoPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  // Auto-start after a brief delay
-  useEffect(() => {
-    const startDelay = setTimeout(() => {
-      setIsPlaying(true);
-    }, 1000);
-    return () => clearTimeout(startDelay);
-  }, []);
+  const [showControls, setShowControls] = useState(true);
 
   // Timer that runs when playing
   useEffect(() => {
@@ -56,6 +49,20 @@ export default function VideoPage() {
 
     return () => clearInterval(interval);
   }, [isPlaying]);
+
+  // Handle timeline click/drag
+  const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    setCurrentTime(percentage * 214);
+  };
+
+  // Jump to section
+  const jumpToSection = (sectionKey: keyof typeof TIMINGS) => {
+    setCurrentTime(TIMINGS[sectionKey].start);
+    setIsPlaying(false);
+  };
 
   // Determine current section
   const getCurrentSection = () => {
@@ -111,26 +118,96 @@ export default function VideoPage() {
         {section === 'closing' && <ClosingSlide key="closing" progress={progress} />}
       </AnimatePresence>
 
-      {/* Progress bar (can be hidden for recording) */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-        <motion.div 
-          className="h-full bg-gradient-to-r from-orange-500 to-orange-400"
-          style={{ width: `${(currentTime / 214) * 100}%` }}
-        />
-      </div>
+      {/* Controls Panel */}
+      {showControls && (
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent pt-16 pb-6 px-8">
+          {/* Timeline with section markers */}
+          <div 
+            className="relative h-3 bg-white/10 rounded-full cursor-pointer mb-4 group"
+            onClick={handleTimelineClick}
+          >
+            {/* Section markers */}
+            {Object.entries(TIMINGS).map(([key, timing]) => (
+              <div
+                key={key}
+                className="absolute top-0 bottom-0 border-l border-white/30"
+                style={{ left: `${(timing.start / 214) * 100}%` }}
+              />
+            ))}
+            
+            {/* Progress fill */}
+            <div 
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"
+              style={{ width: `${(currentTime / 214) * 100}%` }}
+            />
+            
+            {/* Scrubber handle */}
+            <div 
+              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg transform -translate-x-1/2 group-hover:scale-110 transition-transform"
+              style={{ left: `${(currentTime / 214) * 100}%` }}
+            />
+          </div>
 
-      {/* Time display (for reference - can hide for recording) */}
-      <div className="absolute bottom-4 right-4 text-white/30 font-mono text-sm">
-        {formatTime(currentTime)} / 3:34
-      </div>
+          {/* Section buttons */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex gap-2">
+              {Object.entries(TIMINGS).map(([key, timing]) => (
+                <button
+                  key={key}
+                  onClick={() => jumpToSection(key as keyof typeof TIMINGS)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    section === key 
+                      ? 'bg-orange-500 text-white' 
+                      : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
+                  }`}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <span className="text-white/50 font-mono text-sm">
+                {formatTime(currentTime)} / 3:34
+              </span>
+            </div>
+          </div>
 
-      {/* Play/Pause control (for testing) */}
-      <button
-        onClick={() => setIsPlaying(!isPlaying)}
-        className="absolute bottom-4 left-4 text-white/30 hover:text-white/60 transition-colors text-sm"
-      >
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
+          {/* Main controls */}
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => setCurrentTime(0)}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors text-sm"
+            >
+              Restart
+            </button>
+            
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white font-semibold rounded-xl transition-all text-lg shadow-lg shadow-orange-500/30"
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </button>
+            
+            <button
+              onClick={() => setShowControls(false)}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors text-sm"
+            >
+              Hide Controls
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Show controls button (when hidden) */}
+      {!showControls && (
+        <button
+          onClick={() => setShowControls(true)}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white/60 rounded-lg transition-colors text-sm"
+        >
+          Show Controls
+        </button>
+      )}
     </div>
   );
 }
