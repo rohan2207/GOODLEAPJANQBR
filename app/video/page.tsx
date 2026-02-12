@@ -410,39 +410,54 @@ function DemoSlide({ progress }: { progress: number }) {
 }
 
 function FeaturesSlide({ progress }: { progress: number }) {
+  // 4 AI Assistants, each gets ~15 seconds (25% of 60s)
+  const currentFeature = Math.min(3, Math.floor(progress * 4));
+  const featureProgress = (progress * 4) % 1;
+
   const features = [
     {
-      icon: MessageSquare,
-      title: "Real-time AI Analysis",
-      description: "Conduct conversations with AI analyzing the borrower's unique needs and circumstances",
-      color: "from-blue-500 to-blue-400"
+      name: "Brief AI",
+      tagline: "Pre-call intelligence that knows your borrower",
+      color: "orange",
+      gradient: "from-orange-500 to-orange-600",
+      stats: [
+        { value: "4.2s", label: "generation" },
+        { value: "100%", label: "context" },
+      ]
     },
     {
-      icon: Calculator,
-      title: "Instant Scenario Comparisons",
-      description: "Generate debt consolidation, cash-out, rate buydowns, and payment structures instantly",
-      color: "from-emerald-500 to-emerald-400"
+      name: "Liability AI",
+      tagline: "Instant payoff strategy that optimizes DTI",
+      color: "blue",
+      gradient: "from-blue-500 to-blue-600",
+      stats: [
+        { value: "$4,280", label: "saved" },
+        { value: "-8.2%", label: "DTI" },
+      ]
     },
     {
-      icon: Lightbulb,
-      title: "Contextual Guidance",
-      description: "AI constantly suggests next-best questions and highlights optimal solutions",
-      color: "from-amber-500 to-amber-400"
+      name: "Property AVM",
+      tagline: "Real-time valuations with confidence scores",
+      color: "emerald",
+      gradient: "from-emerald-500 to-emerald-600",
+      stats: [
+        { value: "$785K", label: "value" },
+        { value: "94%", label: "confidence" },
+      ]
     },
     {
-      icon: FileCheck,
-      title: "First-Call Conversions",
-      description: "Create custom scenarios borrowers can agree to move forward with on that very first call",
-      color: "from-purple-500 to-purple-400"
+      name: "Sales Coach",
+      tagline: "Real-time guidance throughout every call",
+      color: "purple",
+      gradient: "from-purple-500 to-purple-600",
+      stats: [
+        { value: "Live", label: "suggestions" },
+        { value: "2x", label: "conversions" },
+      ]
     }
   ];
 
-  // Stagger the features based on progress (60 seconds total)
-  const getFeatureVisibility = (index: number) => {
-    const featureStart = index * 0.2; // Each feature starts at 0%, 20%, 40%, 60%
-    const featureEnd = featureStart + 0.3; // Each visible for 30% of the time
-    return progress >= featureStart;
-  };
+  const feature = features[currentFeature];
 
   return (
     <motion.div
@@ -450,44 +465,340 @@ function FeaturesSlide({ progress }: { progress: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="absolute inset-0 flex flex-col items-center justify-center px-20"
+      className="absolute inset-0 flex items-center justify-center px-16"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-16"
-      >
-        <p className="text-2xl text-orange-400 font-medium mb-4">Today</p>
-        <h2 className="text-5xl font-bold text-white">
-          A Fully Integrated Workspace
-        </h2>
-      </motion.div>
+      {/* Background glow based on current feature */}
+      <div className={`absolute inset-0 bg-gradient-radial from-${feature.color}-500/20 via-transparent to-transparent opacity-60 transition-all duration-1000`} />
 
-      <div className="grid grid-cols-2 gap-8 max-w-5xl">
-        {features.map((feature, index) => (
-          <motion.div
-            key={feature.title}
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ 
-              opacity: getFeatureVisibility(index) ? 1 : 0,
-              y: getFeatureVisibility(index) ? 0 : 30,
-              scale: getFeatureVisibility(index) ? 1 : 0.95
-            }}
-            transition={{ duration: 0.6 }}
-            className="relative group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0 rounded-2xl" />
-            <div className="relative p-8 border border-white/10 rounded-2xl backdrop-blur-sm">
-              <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} mb-4`}>
-                <feature.icon className="w-8 h-8 text-white" />
+      <div className="flex items-center gap-16 max-w-7xl w-full">
+        {/* Left: Feature Info */}
+        <div className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentFeature}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className={`text-${feature.color}-400 text-sm font-medium tracking-[0.3em] uppercase mb-4`}>
+                AI Assistant {currentFeature + 1} of 4
+              </p>
+              <h1 className={`text-6xl font-bold mb-4 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent`}>
+                {feature.name}
+              </h1>
+              <p className="text-2xl text-white/60 mb-8 max-w-lg">
+                {feature.tagline}
+              </p>
+              
+              <div className="flex gap-8">
+                {feature.stats.map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    className="text-center"
+                  >
+                    <p className="text-4xl font-bold text-white">{stat.value}</p>
+                    <p className="text-white/40 text-sm mt-1">{stat.label}</p>
+                  </motion.div>
+                ))}
               </div>
-              <h3 className="text-2xl font-semibold text-white mb-3">{feature.title}</h3>
-              <p className="text-lg text-white/60 leading-relaxed">{feature.description}</p>
-            </div>
-          </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Right: UI Screenshot */}
+        <div className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentFeature}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="relative"
+            >
+              {/* Browser chrome */}
+              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.08] overflow-hidden shadow-2xl">
+                <div className="flex items-center gap-2 px-3 py-2 bg-[#050505] border-b border-white/[0.05]">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                  </div>
+                  <div className="flex-1 flex justify-center">
+                    <div className="bg-white/[0.06] rounded px-3 py-1 text-white/30 text-xs font-mono">
+                      linkai.goodleap.com
+                    </div>
+                  </div>
+                </div>
+
+                {/* Screenshot content */}
+                <div className="aspect-[16/10] bg-gradient-to-br from-[#fefefe] to-[#f8fafc] p-4">
+                  {currentFeature === 0 && <BriefAIScreenshot />}
+                  {currentFeature === 1 && <LiabilityAIScreenshot />}
+                  {currentFeature === 2 && <PropertyAVMScreenshot />}
+                  {currentFeature === 3 && <SalesCoachScreenshot />}
+                </div>
+              </div>
+
+              {/* Glow effect */}
+              <div className={`absolute -inset-8 bg-gradient-radial from-${feature.color}-500/30 via-transparent to-transparent blur-2xl -z-10`} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Progress dots */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3">
+        {features.map((_, i) => (
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              i === currentFeature ? 'bg-white w-8' : 'bg-white/30'
+            }`}
+          />
         ))}
       </div>
     </motion.div>
+  );
+}
+
+// Screenshot Components for each AI Assistant
+
+function BriefAIScreenshot() {
+  return (
+    <div className="h-full grid grid-cols-12 gap-3">
+      <div className="col-span-8 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+            <span className="text-white text-lg">✦</span>
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900 text-sm">Call Prep Brief</h3>
+            <p className="text-gray-400 text-xs">AI-Generated</p>
+          </div>
+        </div>
+        <div className="bg-orange-50 rounded-lg p-3 mb-3 border border-orange-100">
+          <p className="text-orange-600 text-xs font-semibold uppercase mb-1">Summary</p>
+          <p className="text-gray-700 text-xs">Near-prime borrower in McKinney, TX looking to consolidate debt. Strong equity position with $358K available.</p>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: "Property", value: "$785K", color: "blue" },
+            { label: "Liens", value: "$428K", color: "orange" },
+            { label: "Equity", value: "$358K", color: "green" },
+          ].map((stat) => (
+            <div key={stat.label} className={`bg-${stat.color}-50 rounded-lg p-2 text-center border border-${stat.color}-100`}>
+              <p className="text-gray-900 font-bold text-sm">{stat.value}</p>
+              <p className="text-gray-500 text-[10px]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="col-span-4 space-y-3">
+        <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+          <p className="font-semibold text-gray-900 text-xs mb-2">Talk Track</p>
+          <p className="text-gray-600 text-[10px] italic leading-relaxed">"Thank you for your time today, I see you have significant equity we can leverage..."</p>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
+          <p className="font-semibold text-gray-900 text-xs mb-2">Local Context</p>
+          <p className="text-gray-600 text-xs">72°F Sunny • McKinney, TX</p>
+          <p className="text-gray-400 text-[10px] mt-1">Cowboys game this weekend</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LiabilityAIScreenshot() {
+  const debts = [
+    { name: "Amex Platinum", balance: 12800, rate: 24.9, status: "high" },
+    { name: "Capital One Venture", balance: 8200, rate: 22.4, status: "high" },
+    { name: "SoFi Personal", balance: 8500, rate: 12.0, status: "medium" },
+    { name: "Chase Auto Loan", balance: 18450, rate: 6.9, status: "good" },
+  ];
+
+  return (
+    <div className="h-full grid grid-cols-12 gap-3">
+      <div className="col-span-7 space-y-3">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white shadow-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-lg">✦</span>
+            <span className="text-blue-100 text-xs font-medium uppercase">AI Recommendation</span>
+          </div>
+          <h3 className="text-lg font-bold mb-2">Modified Avalanche Strategy</h3>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white/20 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold">$4,280</p>
+              <p className="text-blue-100 text-[10px]">Interest Saved</p>
+            </div>
+            <div className="bg-white/20 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold">-8.2%</p>
+              <p className="text-blue-100 text-[10px]">DTI Reduction</p>
+            </div>
+            <div className="bg-white/20 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold">18mo</p>
+              <p className="text-blue-100 text-[10px]">Payoff Time</p>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="bg-white rounded-lg p-3 border border-gray-200">
+            <p className="text-gray-400 text-[10px] font-semibold uppercase mb-1">Before</p>
+            <p className="text-gray-900 font-bold text-lg">$1,275/mo</p>
+            <p className="text-red-500 text-xs">42.3% DTI</p>
+          </div>
+          <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+            <p className="text-green-600 text-[10px] font-semibold uppercase mb-1">After</p>
+            <p className="text-gray-900 font-bold text-lg">$940/mo</p>
+            <p className="text-green-600 text-xs">34.1% DTI</p>
+          </div>
+        </div>
+      </div>
+      <div className="col-span-5 bg-white rounded-xl p-3 border border-gray-200 shadow">
+        <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Payoff Order</p>
+        <div className="space-y-2">
+          {debts.map((debt, i) => (
+            <div key={debt.name} className="flex items-center gap-2 p-1.5 rounded bg-gray-50">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-[10px] ${
+                debt.status === 'high' ? 'bg-red-500' : debt.status === 'medium' ? 'bg-orange-500' : 'bg-gray-400'
+              }`}>
+                {i + 1}
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-900 font-medium text-[10px]">{debt.name}</p>
+              </div>
+              <span className={`text-[10px] ${debt.status === 'high' ? 'text-red-500' : 'text-gray-400'}`}>{debt.rate}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PropertyAVMScreenshot() {
+  return (
+    <div className="h-full grid grid-cols-12 gap-3">
+      <div className="col-span-7 space-y-3">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-lg">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-gray-500 text-xs">Estimated Value</p>
+              <p className="text-3xl font-bold text-gray-900">$785,000</p>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+                <span>94%</span>
+                <span className="text-green-500">confidence</span>
+              </div>
+            </div>
+          </div>
+          <div className="h-24 bg-gradient-to-r from-emerald-100 to-emerald-50 rounded-lg flex items-end p-2">
+            {[65, 72, 68, 75, 82, 78, 85, 88, 85, 90, 94].map((h, i) => (
+              <div key={i} className="flex-1 mx-0.5">
+                <div 
+                  className="bg-emerald-500 rounded-t"
+                  style={{ height: `${h}%` }}
+                />
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-400 text-[10px] mt-2 text-center">12-month value trend</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="bg-white rounded-lg p-3 border border-gray-200">
+            <p className="text-gray-500 text-[10px]">Available Equity</p>
+            <p className="text-emerald-600 font-bold text-lg">$358,000</p>
+          </div>
+          <div className="bg-white rounded-lg p-3 border border-gray-200">
+            <p className="text-gray-500 text-[10px]">Current LTV</p>
+            <p className="text-gray-900 font-bold text-lg">54.5%</p>
+          </div>
+        </div>
+      </div>
+      <div className="col-span-5 bg-white rounded-xl p-3 border border-gray-200 shadow">
+        <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Why This Value?</p>
+        <div className="space-y-2">
+          {[
+            { icon: "🏠", label: "Recent Sales Support", detail: "3 comps within 0.5mi" },
+            { icon: "📈", label: "Market Trending Up", detail: "+4.2% YoY" },
+            { icon: "✨", label: "Property Features", detail: "Pool, updated kitchen" },
+          ].map((item) => (
+            <div key={item.label} className="flex items-start gap-2 p-2 rounded bg-gray-50">
+              <span className="text-sm">{item.icon}</span>
+              <div>
+                <p className="text-gray-900 font-medium text-xs">{item.label}</p>
+                <p className="text-gray-500 text-[10px]">{item.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SalesCoachScreenshot() {
+  return (
+    <div className="h-full flex gap-3">
+      {/* Main call interface */}
+      <div className="flex-1 bg-[#1a1a2e] rounded-xl p-4 text-white">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+              <span className="text-white font-semibold">JR</span>
+            </div>
+            <div>
+              <p className="font-semibold text-sm">James Rodriguez</p>
+              <p className="text-white/50 text-xs">Call in progress • 4:32</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            Live
+          </div>
+        </div>
+        
+        {/* Transcript */}
+        <div className="space-y-2 mb-4">
+          <div className="flex gap-2">
+            <span className="text-purple-400 text-xs font-medium">You:</span>
+            <p className="text-white/70 text-xs">"Based on your equity, we have several options..."</p>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-blue-400 text-xs font-medium">James:</span>
+            <p className="text-white/70 text-xs">"What about the interest rate on a cash-out?"</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* AI Coach sidebar */}
+      <div className="w-64 space-y-3">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-3 text-white shadow-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <span>✦</span>
+            <span className="text-purple-100 text-xs font-medium">AI Coach</span>
+          </div>
+          <p className="text-sm font-medium mb-2">Suggested Response</p>
+          <p className="text-purple-100 text-xs leading-relaxed">"Great question! With your credit profile, you'd qualify for 6.75% on a cash-out. That's $285/mo for $50K."</p>
+        </div>
+        
+        <div className="bg-white rounded-xl p-3 border border-gray-200">
+          <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Opportunity Detected</p>
+          <div className="flex items-center gap-2 p-2 rounded bg-amber-50 border border-amber-200">
+            <span className="text-amber-500">💡</span>
+            <div>
+              <p className="text-gray-900 font-medium text-xs">Debt Consolidation</p>
+              <p className="text-gray-500 text-[10px]">Save $335/mo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
