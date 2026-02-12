@@ -55,7 +55,7 @@ export default function PresentationPage() {
     const [isPlaying, setIsPlaying] = useState(false); // Start paused for checking
     const [currentTime, setCurrentTime] = useState(0);
     const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number | undefined>(undefined);
     const startTimeRef = useRef<number | null>(null);
     const previousTimeRef = useRef<number>(0);
 
