@@ -96,26 +96,76 @@ export default function VideoPage() {
   const progress = getSectionProgress();
 
   return (
-    <div className="relative w-screen h-screen bg-black overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 opacity-10">
+    <div className="relative w-screen h-screen bg-[#030308] overflow-hidden">
+      {/* Animated gradient mesh background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div 
+          className="absolute inset-0"
+          animate={{
+            background: [
+              'radial-gradient(ellipse at 20% 30%, rgba(249,115,22,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(59,130,246,0.06) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 30% 70%, rgba(168,85,247,0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 30%, rgba(249,115,22,0.06) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 20% 30%, rgba(249,115,22,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(59,130,246,0.06) 0%, transparent 50%)',
+            ]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-white/20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              x: [0, Math.random() * 50 - 25, 0],
+              opacity: [0.1, 0.4, 0.1],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 10 + Math.random() * 10,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Subtle grid */}
+      <div className="absolute inset-0 opacity-[0.03]">
         <div 
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+              linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
             `,
-            backgroundSize: '50px 50px'
+            backgroundSize: '60px 60px'
           }}
         />
       </div>
 
-      {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[150px]" />
-      </div>
+      {/* Dynamic section-based glow */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none"
+        animate={{
+          background: section === 'hero' || section === 'closing'
+            ? 'radial-gradient(circle at 50% 50%, rgba(249,115,22,0.12) 0%, transparent 60%)'
+            : section === 'features'
+            ? 'radial-gradient(circle at 60% 50%, rgba(249,115,22,0.1) 0%, transparent 50%)'
+            : section === 'lastMile'
+            ? 'radial-gradient(circle at 50% 50%, rgba(249,115,22,0.15) 0%, transparent 60%)'
+            : 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 60%)'
+        }}
+        transition={{ duration: 1.5 }}
+      />
 
       {/* Content */}
       <AnimatePresence mode="wait">
@@ -228,6 +278,63 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
+// Typewriter Text Component
+function TypewriterText({ text, delay = 0, speed = 0.03 }: { text: string; delay?: number; speed?: number }) {
+  const [displayedText, setDisplayedText] = useState('');
+  
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    let currentIndex = 0;
+    
+    const startTyping = () => {
+      if (currentIndex < text.length) {
+        setDisplayedText(text.slice(0, currentIndex + 1));
+        currentIndex++;
+        timeout = setTimeout(startTyping, speed * 1000);
+      }
+    };
+    
+    const delayTimeout = setTimeout(startTyping, delay * 1000);
+    
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(delayTimeout);
+    };
+  }, [text, delay, speed]);
+  
+  return (
+    <span>
+      {displayedText}
+      <motion.span
+        animate={{ opacity: [1, 0, 1] }}
+        transition={{ duration: 0.8, repeat: Infinity }}
+        className="inline-block w-0.5 h-[1em] bg-current ml-0.5 align-middle"
+      />
+    </span>
+  );
+}
+
+// Animated Counter Component
+function AnimatedCounter({ value, duration = 2 }: { value: number; duration?: number }) {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    const incrementTime = (duration * 1000) / end;
+    
+    const timer = setInterval(() => {
+      start += 1;
+      setCount(start);
+      if (start >= end) clearInterval(timer);
+    }, incrementTime);
+    
+    return () => clearInterval(timer);
+  }, [value, duration]);
+  
+  return <span>{count}</span>;
+}
+
 // ============ SLIDE COMPONENTS ============
 
 function HeroSlide({ progress }: { progress: number }) {
@@ -235,58 +342,125 @@ function HeroSlide({ progress }: { progress: number }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, scale: 1.1 }}
       transition={{ duration: 0.8 }}
       className="absolute inset-0 flex flex-col items-center justify-center"
     >
-      {/* Logo */}
+      {/* Converging particles effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 rounded-full"
+            style={{
+              background: `radial-gradient(circle, rgba(249,115,22,0.8) 0%, transparent 70%)`,
+              left: `${50 + (Math.random() - 0.5) * 80}%`,
+              top: `${50 + (Math.random() - 0.5) * 80}%`,
+            }}
+            initial={{ 
+              x: (Math.random() - 0.5) * 500, 
+              y: (Math.random() - 0.5) * 500, 
+              opacity: 0,
+              scale: 0
+            }}
+            animate={{ 
+              x: 0, 
+              y: 0, 
+              opacity: [0, 0.8, 0],
+              scale: [0, 1.5, 0]
+            }}
+            transition={{
+              duration: 2,
+              delay: i * 0.1,
+              ease: "easeOut"
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Logo with dramatic reveal */}
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        initial={{ scale: 0.5, opacity: 0, filter: "blur(20px)" }}
+        animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className="relative"
       >
-        <div className="absolute inset-0 blur-3xl bg-orange-500/30 scale-150" />
+        {/* Pulsing glow */}
+        <motion.div 
+          className="absolute inset-0 blur-3xl bg-orange-500/40 scale-150"
+          animate={{ 
+            opacity: [0.3, 0.6, 0.3],
+            scale: [1.4, 1.6, 1.4]
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
         <Image
           src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
           alt="LinkAI"
-          width={400}
-          height={120}
+          width={450}
+          height={135}
           className="relative z-10"
         />
       </motion.div>
 
-      {/* Version badge */}
+      {/* Version badge with shine effect */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="mt-8 flex items-center gap-3"
+        initial={{ opacity: 0, scale: 0.5, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.8, type: "spring" }}
+        className="mt-10 relative overflow-hidden"
       >
-        <span className="px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-orange-400/20 border border-orange-500/30 text-orange-400 text-2xl font-light tracking-wider">
+        <span className="relative px-6 py-2.5 rounded-full bg-gradient-to-r from-orange-500/20 to-orange-400/10 border border-orange-500/40 text-orange-400 text-3xl font-light tracking-wider inline-block">
           2.0
+          {/* Shine effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
+            animate={{ x: ["-200%", "200%"] }}
+            transition={{ duration: 2, delay: 1.5, repeat: Infinity, repeatDelay: 3 }}
+          />
         </span>
       </motion.div>
 
-      {/* Tagline */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="mt-12 text-3xl text-white/60 font-light tracking-wide"
-      >
-        The Platform That Thinks Ahead
-      </motion.p>
-
-      {/* Presenter info */}
+      {/* Tagline with typewriter effect */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: progress > 0.4 ? 1 : 0 }}
-        transition={{ duration: 0.6 }}
-        className="absolute bottom-24 text-center"
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="mt-12 text-3xl text-white/70 font-light tracking-wide"
       >
-        <p className="text-xl text-white/80">Steve Hulme</p>
-        <p className="text-lg text-white/50">Operations Executive, Mortgage Tech</p>
+        {progress > 0.2 ? (
+          <TypewriterText text="The Platform That Thinks Ahead" delay={0} speed={0.04} />
+        ) : (
+          <span className="opacity-0">The Platform That Thinks Ahead</span>
+        )}
+      </motion.div>
+
+      {/* Presenter info with fade up */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ 
+          opacity: progress > 0.5 ? 1 : 0, 
+          y: progress > 0.5 ? 0 : 30 
+        }}
+        transition={{ duration: 0.8 }}
+        className="absolute bottom-20 text-center"
+      >
+        <motion.p 
+          className="text-xl text-white/90 font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: progress > 0.5 ? 1 : 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Steve Hulme
+        </motion.p>
+        <motion.p 
+          className="text-lg text-white/50 mt-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: progress > 0.6 ? 1 : 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          Operations Executive, Mortgage Tech
+        </motion.p>
       </motion.div>
     </motion.div>
   );
@@ -523,32 +697,95 @@ function FeaturesSlide({ progress }: { progress: number }) {
         transition={{ duration: 0.8 }}
       />
 
-      {/* Journey line connecting left to right */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+      {/* Top Journey Line - Progress through all 4 features */}
+      <div className="absolute top-16 left-0 right-0 px-16 z-30">
+        <div className="relative flex items-center justify-between max-w-4xl mx-auto">
+          {/* Background track */}
+          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -translate-y-1/2" />
+          
+          {/* Animated progress line */}
+          <motion.div 
+            className="absolute left-0 top-1/2 h-1 rounded-full -translate-y-1/2"
+            style={{ backgroundColor: feature.color }}
+            animate={{ 
+              width: `${((currentFeature + featureProgress) / 4) * 100}%`,
+              boxShadow: `0 0 20px ${feature.color}80`
+            }}
+            transition={{ duration: 0.3 }}
+          />
+          
+          {/* Feature nodes */}
+          {features.map((f, i) => {
+            const isComplete = i < currentFeature;
+            const isCurrent = i === currentFeature;
+            const Icon = f.icon;
+            return (
+              <motion.div 
+                key={i}
+                className="relative z-10 flex flex-col items-center"
+                animate={{ scale: isCurrent ? 1.1 : 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <motion.div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                    isComplete || isCurrent ? '' : 'bg-white/5'
+                  }`}
+                  style={{
+                    backgroundColor: isComplete || isCurrent ? `${f.color}20` : undefined,
+                    border: `2px solid ${isComplete || isCurrent ? f.color : 'rgba(255,255,255,0.1)'}`
+                  }}
+                  animate={{
+                    boxShadow: isCurrent ? `0 0 25px ${f.color}60` : 'none'
+                  }}
+                >
+                  {isComplete ? (
+                    <CheckCircle2 className="w-5 h-5" style={{ color: f.color }} />
+                  ) : (
+                    <Icon className="w-5 h-5" style={{ color: isComplete || isCurrent ? f.color : 'rgba(255,255,255,0.3)' }} />
+                  )}
+                </motion.div>
+                <motion.p 
+                  className="text-xs mt-2 font-medium whitespace-nowrap"
+                  style={{ color: isComplete || isCurrent ? f.color : 'rgba(255,255,255,0.3)' }}
+                >
+                  {f.name}
+                </motion.p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Journey line connecting left to right (for current feature) */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" style={{ top: '120px' }}>
+        <defs>
+          <linearGradient id={`lineGrad-${currentFeature}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={feature.color} stopOpacity="0.1" />
+            <stop offset="50%" stopColor={feature.color} stopOpacity="0.5" />
+            <stop offset="100%" stopColor={feature.color} stopOpacity="0.1" />
+          </linearGradient>
+        </defs>
         <motion.path
-          d="M 0 50% Q 25% 30%, 50% 50% T 100% 50%"
+          d="M 100 300 Q 300 200, 500 300 T 900 300"
           fill="none"
-          stroke={feature.color}
+          stroke={`url(#lineGrad-${currentFeature})`}
           strokeWidth="2"
-          strokeDasharray="8 8"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: showUI ? 1 : 0.5, opacity: 0.3 }}
-          transition={{ duration: 1 }}
-          style={{
-            filter: `drop-shadow(0 0 10px ${feature.color})`
-          }}
+          strokeDasharray="6 6"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: showUI ? 1 : featureProgress * 2 }}
+          transition={{ duration: 0.8 }}
         />
         {/* Animated dot along the path */}
         <motion.circle
-          r="6"
+          r="8"
           fill={feature.color}
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 1,
-            cx: showUI ? "70%" : "30%",
-            cy: "50%"
+            cx: showUI ? 750 : 100 + featureProgress * 400,
+            cy: showUI ? 300 : 300 - Math.sin(featureProgress * Math.PI) * 100
           }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
           style={{
             filter: `drop-shadow(0 0 15px ${feature.color})`
           }}
@@ -764,13 +1001,34 @@ function LastMileSlide({ progress }: { progress: number }) {
       transition={{ duration: 0.8 }}
       className="absolute inset-0 flex flex-col items-center justify-center px-20"
     >
+      {/* Header: The Platform That Thinks Ahead */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute top-12 left-1/2 -translate-x-1/2"
+      >
+        <div className="flex items-center gap-4">
+          <Image
+            src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
+            alt="LinkAI"
+            width={120}
+            height={36}
+          />
+          <div className="h-8 w-px bg-white/20" />
+          <p className="text-xl text-white/60 font-light">
+            The Platform That <span className="text-orange-400">Thinks Ahead</span>
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        className="text-center mb-10"
       >
-        <p className="text-2xl text-orange-400 font-medium mb-4">What Makes LinkAI Unique</p>
-        <h2 className="text-5xl font-bold text-white mb-6">
+        <p className="text-xl text-orange-400 font-medium mb-4">What Makes LinkAI Unique</p>
+        <h2 className="text-5xl font-bold text-white mb-4">
           The Intelligent{' '}
           <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
             Last Mile
@@ -778,7 +1036,7 @@ function LastMileSlide({ progress }: { progress: number }) {
         </h2>
       </motion.div>
 
-      <div className="flex items-center gap-16 max-w-6xl">
+      <div className="flex items-center gap-12 max-w-5xl">
         {/* Left: LLMs */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -786,13 +1044,13 @@ function LastMileSlide({ progress }: { progress: number }) {
           transition={{ delay: 0.3 }}
           className="flex-1 text-center"
         >
-          <div className="p-8 border border-white/10 rounded-2xl bg-white/5">
-            <p className="text-xl text-white/50 mb-4">Core AI Capabilities</p>
-            <div className="flex justify-center gap-4 mb-4">
-              <span className="px-4 py-2 rounded-lg bg-white/10 text-white/70">Claude</span>
-              <span className="px-4 py-2 rounded-lg bg-white/10 text-white/70">OpenAI</span>
+          <div className="p-6 border border-white/10 rounded-2xl bg-white/5">
+            <p className="text-lg text-white/50 mb-4">Core AI Capabilities</p>
+            <div className="flex justify-center gap-3 mb-3">
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/70 text-sm">Claude</span>
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/70 text-sm">OpenAI</span>
             </div>
-            <p className="text-white/40 text-sm">Foundation models</p>
+            <p className="text-white/40 text-xs">Foundation models</p>
           </div>
         </motion.div>
 
@@ -801,7 +1059,7 @@ function LastMileSlide({ progress }: { progress: number }) {
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-5xl text-orange-500 font-light"
+          className="text-4xl text-orange-500 font-light"
         >
           +
         </motion.div>
@@ -813,18 +1071,18 @@ function LastMileSlide({ progress }: { progress: number }) {
           transition={{ delay: 0.6 }}
           className="flex-1"
         >
-          <div className="p-8 border border-orange-500/30 rounded-2xl bg-gradient-to-br from-orange-500/10 to-orange-500/5">
-            <p className="text-xl text-orange-400 mb-6 text-center">Our Critical Last Mile</p>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="p-6 border border-orange-500/30 rounded-2xl bg-gradient-to-br from-orange-500/10 to-orange-500/5">
+            <p className="text-lg text-orange-400 mb-4 text-center">Our Critical Last Mile</p>
+            <div className="grid grid-cols-2 gap-3">
               {dataPoints.map((point, index) => (
                 <motion.div
                   key={point.label}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: progress > 0.3 + index * 0.1 ? 1 : 0, y: progress > 0.3 + index * 0.1 ? 0 : 10 }}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-white/5"
                 >
-                  <point.icon className="w-5 h-5 text-orange-400" />
-                  <span className="text-white/80">{point.label}</span>
+                  <point.icon className="w-4 h-4 text-orange-400" />
+                  <span className="text-white/80 text-sm">{point.label}</span>
                 </motion.div>
               ))}
             </div>
@@ -835,13 +1093,51 @@ function LastMileSlide({ progress }: { progress: number }) {
       {/* Bottom insight */}
       <motion.p
         initial={{ opacity: 0 }}
-        animate={{ opacity: progress > 0.6 ? 1 : 0 }}
+        animate={{ opacity: progress > 0.5 ? 1 : 0 }}
         transition={{ duration: 0.6 }}
-        className="mt-12 text-xl text-white/50 text-center max-w-4xl"
+        className="mt-8 text-lg text-white/50 text-center max-w-3xl"
       >
         LinkAI anticipates needs, surfaces opportunities the loan officer might not consider,
         <br />and personalizes solutions based on what <span className="text-orange-400">only we know</span> about each borrower.
       </motion.p>
+
+      {/* Footer: Version Status */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: progress > 0.7 ? 1 : 0, y: progress > 0.7 ? 0 : 20 }}
+        transition={{ duration: 0.6 }}
+        className="absolute bottom-16 left-1/2 -translate-x-1/2"
+      >
+        <div className="flex items-center gap-8">
+          {/* Previous Version - Live */}
+          <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-emerald-400 text-sm font-medium">LIVE</span>
+            </div>
+            <div className="h-4 w-px bg-emerald-500/30" />
+            <div className="text-left">
+              <p className="text-white font-medium">LinkAI 1.0</p>
+              <p className="text-white/50 text-xs">Production</p>
+            </div>
+          </div>
+
+          <ArrowRight className="w-6 h-6 text-white/30" />
+
+          {/* New Version - Beta */}
+          <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-orange-500/10 border border-orange-500/30">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-orange-400 text-sm font-medium">BETA</span>
+            </div>
+            <div className="h-4 w-px bg-orange-500/30" />
+            <div className="text-left">
+              <p className="text-white font-medium">LinkAI 2.0</p>
+              <p className="text-white/50 text-xs">15 Loan Officers</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
