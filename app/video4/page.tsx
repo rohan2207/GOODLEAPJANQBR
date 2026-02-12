@@ -43,186 +43,133 @@ function OpeningSlide({ progress }: { progress: number }) {
     const integrationPhase = progress >= 0.7;
 
     return (
-        <div className="w-screen h-screen flex-shrink-0 relative overflow-hidden bg-black">
+        <div className="w-screen h-screen flex-shrink-0 relative overflow-hidden bg-black flex items-center justify-center">
             {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0a0f] to-black" />
             
             {/* Particle field background */}
-            <div className="absolute inset-0">
-                {[...Array(50)].map((_, i) => (
+            <div className="absolute inset-0 pointer-events-none">
+                {[...Array(30)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute w-1 h-1 rounded-full bg-white/20"
+                        className="absolute w-1 h-1 rounded-full bg-white/30"
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
+                            left: `${10 + (i * 3) % 80}%`,
+                            top: `${10 + (i * 7) % 80}%`,
                         }}
                         animate={{
-                            opacity: [0.1, 0.5, 0.1],
+                            opacity: [0.2, 0.6, 0.2],
                             scale: [1, 1.5, 1],
                         }}
                         transition={{
-                            duration: 2 + Math.random() * 2,
+                            duration: 3,
                             repeat: Infinity,
-                            delay: Math.random() * 2,
+                            delay: i * 0.1,
                         }}
                     />
                 ))}
             </div>
 
-            {/* Logo Phase */}
-            <AnimatePresence>
-                {logoPhase && (
-                    <motion.div
-                        className="absolute inset-0 flex items-center justify-center"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, scale: 1.1 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        {/* Logo with particle formation */}
-                        <div className="relative">
-                            <motion.div
-                                className="absolute inset-0 blur-3xl bg-orange-500/30 scale-150"
-                                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <motion.div
-                                initial={{ scale: 0.8, opacity: 0, filter: 'blur(20px)' }}
-                                animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-                                transition={{ duration: 1.5, ease: 'easeOut' }}
-                            >
-                                <Image
-                                    src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg"
-                                    alt="LinkAI"
-                                    width={400}
-                                    height={120}
-                                    className="relative z-10"
-                                />
-                            </motion.div>
-                            
-                            {/* 2.0 Badge */}
-                            <motion.div
-                                className="absolute -bottom-8 left-1/2 -translate-x-1/2"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.8, duration: 0.5 }}
-                            >
-                                <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30">
-                                    <span className="text-orange-400 font-semibold text-lg">2.0</span>
-                                </div>
-                            </motion.div>
+            {/* Logo Phase - Always render but control visibility */}
+            <motion.div
+                className="absolute inset-0 flex items-center justify-center z-10"
+                animate={{ 
+                    opacity: logoPhase ? 1 : 0,
+                    scale: logoPhase ? 1 : 1.1,
+                }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="relative">
+                    <div className="absolute -inset-20 blur-3xl bg-orange-500/20 rounded-full" />
+                    <Image
+                        src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg"
+                        alt="LinkAI"
+                        width={400}
+                        height={120}
+                        className="relative z-10"
+                        priority
+                    />
+                    
+                    {/* 2.0 Badge */}
+                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+                        <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30">
+                            <span className="text-orange-400 font-semibold text-lg">2.0</span>
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    </div>
+                </div>
+            </motion.div>
 
             {/* Pan Phase - Workspace Preview */}
-            <AnimatePresence>
-                {panPhase && (
-                    <motion.div
-                        className="absolute inset-0 flex items-center justify-center"
-                        initial={{ opacity: 0, x: 100 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <motion.div
-                            className="w-[90vw] h-[70vh] rounded-2xl bg-gradient-to-br from-white/5 to-white/2 border border-white/10 overflow-hidden"
-                            animate={{ x: [-50, 50, -50] }}
-                            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                            {/* Browser chrome */}
-                            <div className="h-10 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2">
-                                <div className="flex gap-1.5">
-                                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                                </div>
-                                <div className="flex-1 flex justify-center">
-                                    <div className="px-6 py-1 rounded-lg bg-white/5 border border-white/10">
-                                        <span className="text-white/40 text-sm">app.linkai.io</span>
-                                    </div>
-                                </div>
+            <motion.div
+                className="absolute inset-0 flex items-center justify-center z-10"
+                animate={{ 
+                    opacity: panPhase ? 1 : 0,
+                    x: panPhase ? 0 : 100,
+                }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="w-[85vw] h-[65vh] rounded-2xl bg-gradient-to-br from-white/5 to-white/2 border border-white/10 overflow-hidden">
+                    {/* Browser chrome */}
+                    <div className="h-10 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2">
+                        <div className="flex gap-1.5">
+                            <div className="w-3 h-3 rounded-full bg-white/20" />
+                            <div className="w-3 h-3 rounded-full bg-white/20" />
+                            <div className="w-3 h-3 rounded-full bg-white/20" />
+                        </div>
+                        <div className="flex-1 flex justify-center">
+                            <div className="px-6 py-1 rounded-lg bg-white/5 border border-white/10">
+                                <span className="text-white/40 text-sm">app.linkai.io</span>
                             </div>
-                            
-                            {/* Content placeholder */}
-                            <div className="p-8 grid grid-cols-3 gap-6 h-full">
-                                {[1, 2, 3].map((i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="rounded-xl bg-white/5 border border-white/10"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.2 }}
-                                    />
-                                ))}
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        </div>
+                    </div>
+                    
+                    {/* Content placeholder */}
+                    <div className="p-8 grid grid-cols-3 gap-6 h-[calc(100%-40px)]">
+                        {[1, 2, 3].map((i) => (
+                            <div
+                                key={i}
+                                className="rounded-xl bg-white/5 border border-white/10"
+                            />
+                        ))}
+                    </div>
+                </div>
+            </motion.div>
 
             {/* Integration Phase */}
-            <AnimatePresence>
-                {integrationPhase && (
-                    <motion.div
-                        className="absolute inset-0 flex items-center justify-center"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <div className="text-center">
-                            <motion.p
-                                className="text-white/60 text-xl mb-12"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                            >
-                                From fragmented systems to one intelligent workspace
-                            </motion.p>
-                            
-                            <div className="flex items-center justify-center gap-8">
-                                {INTEGRATIONS.map((integration, i) => (
-                                    <motion.div
-                                        key={integration.name}
-                                        className="flex flex-col items-center gap-3"
-                                        initial={{ opacity: 0, scale: 0.5, y: 30 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        transition={{ delay: i * 0.15, type: 'spring', stiffness: 200 }}
-                                    >
-                                        <motion.div
-                                            className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl"
-                                            style={{ 
-                                                backgroundColor: `${integration.color}20`,
-                                                border: `1px solid ${integration.color}40`
-                                            }}
-                                            animate={{ 
-                                                boxShadow: [
-                                                    `0 0 20px ${integration.color}20`,
-                                                    `0 0 40px ${integration.color}40`,
-                                                    `0 0 20px ${integration.color}20`,
-                                                ]
-                                            }}
-                                            transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                                        >
-                                            {integration.icon}
-                                        </motion.div>
-                                        <span className="text-white/60 text-sm">{integration.name}</span>
-                                    </motion.div>
-                                ))}
-                            </div>
-
-                            {/* Converging lines to center */}
+            <motion.div
+                className="absolute inset-0 flex items-center justify-center z-10"
+                animate={{ opacity: integrationPhase ? 1 : 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="text-center">
+                    <p className="text-white/60 text-xl mb-12">
+                        From fragmented systems to one intelligent workspace
+                    </p>
+                    
+                    <div className="flex items-center justify-center gap-8">
+                        {INTEGRATIONS.map((integration, i) => (
                             <motion.div
-                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-to-br from-orange-500/30 to-purple-500/30 blur-2xl"
-                                initial={{ scale: 0 }}
-                                animate={{ scale: [0, 1.5, 1] }}
-                                transition={{ delay: 0.8, duration: 1 }}
-                            />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                key={integration.name}
+                                className="flex flex-col items-center gap-3"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: integrationPhase ? 1 : 0, y: integrationPhase ? 0 : 20 }}
+                                transition={{ delay: i * 0.1 }}
+                            >
+                                <div
+                                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl"
+                                    style={{ 
+                                        backgroundColor: `${integration.color}20`,
+                                        border: `1px solid ${integration.color}40`
+                                    }}
+                                >
+                                    {integration.icon}
+                                </div>
+                                <span className="text-white/60 text-sm">{integration.name}</span>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </motion.div>
         </div>
     );
 }
@@ -1039,24 +986,23 @@ export default function Video4Page() {
 
     // Get current section and progress within section
     const getCurrentSection = () => {
-        for (const section of SECTIONS) {
+        for (let i = 0; i < SECTIONS.length; i++) {
+            const section = SECTIONS[i];
             if (currentTime >= section.start && currentTime < section.end) {
                 return {
                     ...section,
+                    index: i,
                     progress: (currentTime - section.start) / (section.end - section.start)
                 };
             }
         }
-        return { ...SECTIONS[SECTIONS.length - 1], progress: 1 };
+        // If past all sections, return last one
+        const lastSection = SECTIONS[SECTIONS.length - 1];
+        return { ...lastSection, index: SECTIONS.length - 1, progress: 1 };
     };
 
     const currentSection = getCurrentSection();
-
-    // Calculate which slide to show (for horizontal positioning)
-    const getSlideIndex = () => {
-        const idx = SECTIONS.findIndex(s => s.id === currentSection.id);
-        return idx >= 0 ? idx : 0;
-    };
+    const slideIndex = currentSection.index;
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -1079,7 +1025,8 @@ export default function Video4Page() {
             <motion.div
                 ref={containerRef}
                 className="flex h-full"
-                animate={{ x: `-${getSlideIndex() * 100}vw` }}
+                style={{ width: `${SECTIONS.length * 100}vw` }}
+                animate={{ x: `-${slideIndex * 100}vw` }}
                 transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
             >
                 {/* Opening */}
