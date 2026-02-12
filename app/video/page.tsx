@@ -1,21 +1,15 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
-import { 
-  MessageSquare, 
-  Calculator, 
-  Lightbulb, 
-  FileCheck,
-  Database,
-  Zap,
-  Users,
-  TrendingUp,
-  Shield,
-  Clock,
-  ArrowRight
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+
+// Import actual feature cards from main page
+import BriefAICard from '@/components/features/BriefAICard';
+import LiabilityAICard from '@/components/features/LiabilityAICard';
+import PropertyCard from '@/components/features/PropertyCard';
+import Agent2Stage from '@/components/stages/Agent2Stage';
 
 // Timing configuration (in seconds) - Total: 214s (3:34)
 const TIMINGS = {
@@ -411,30 +405,59 @@ function DemoSlide({ progress }: { progress: number }) {
 
 function FeaturesSlide({ progress }: { progress: number }) {
   // 4 AI Assistants, each gets ~15 seconds (25% of 60s)
+  // Each card needs progress from 0-1 to animate through its phases
   const currentFeature = Math.min(3, Math.floor(progress * 4));
+  const featureProgress = (progress * 4) % 1;
+  
+  // Create motion values for each feature card
+  const briefProgress = useMotionValue(0);
+  const liabilityProgress = useMotionValue(0);
+  const propertyProgress = useMotionValue(0);
+  
+  // Update the progress values based on current time
+  useEffect(() => {
+    if (currentFeature === 0) {
+      briefProgress.set(featureProgress);
+    } else if (currentFeature === 1) {
+      briefProgress.set(1);
+      liabilityProgress.set(featureProgress);
+    } else if (currentFeature === 2) {
+      briefProgress.set(1);
+      liabilityProgress.set(1);
+      propertyProgress.set(featureProgress);
+    } else {
+      briefProgress.set(1);
+      liabilityProgress.set(1);
+      propertyProgress.set(1);
+    }
+  }, [currentFeature, featureProgress, briefProgress, liabilityProgress, propertyProgress]);
 
   const features = [
     {
-      name: "Rapport Builder",
-      tagline: "Know your borrower before the first word",
+      name: "Brief AI",
+      subtitle: "Know Your Borrower",
+      tagline: "Pre-call intelligence that knows your borrower",
       color: "orange",
       gradient: "from-orange-500 to-orange-600",
     },
     {
       name: "Liability AI",
+      subtitle: "Optimize DTI",
       tagline: "Instant payoff strategy that optimizes DTI",
       color: "blue",
       gradient: "from-blue-500 to-cyan-500",
     },
     {
       name: "Property AVM",
+      subtitle: "Confident Pricing",
       tagline: "Real-time valuations with confidence scores",
       color: "amber",
       gradient: "from-amber-500 to-orange-500",
     },
     {
       name: "Sales Coach",
-      tagline: "Turn objections into opportunities",
+      subtitle: "Turn Objections into Opportunities",
+      tagline: "Real-time guidance throughout every call",
       color: "purple",
       gradient: "from-purple-500 to-fuchsia-500",
     }
@@ -448,7 +471,7 @@ function FeaturesSlide({ progress }: { progress: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="absolute inset-0 flex items-center justify-center"
+      className="absolute inset-0 flex items-center justify-center overflow-hidden"
     >
       {/* Dynamic background glow */}
       <motion.div 
@@ -465,46 +488,60 @@ function FeaturesSlide({ progress }: { progress: number }) {
         transition={{ duration: 1 }}
       />
 
-      {/* Main content area */}
-      <div className="relative w-full max-w-6xl mx-auto px-16">
-        {/* Title - floats above */}
+      {/* Full screen feature card - EXACT same as main page */}
+      <div className="absolute inset-0">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentFeature}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
-            <motion.p 
-              className="text-sm font-medium tracking-[0.3em] uppercase mb-3"
-              style={{ color: currentFeature === 0 ? '#f97316' : currentFeature === 1 ? '#3b82f6' : currentFeature === 2 ? '#f59e0b' : '#a855f7' }}
+          {currentFeature === 0 && (
+            <motion.div 
+              key="brief"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0"
             >
-              AI Assistant {currentFeature + 1} of 4
-            </motion.p>
-            <h1 className={`text-6xl font-bold mb-4 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent`}>
-              {feature.name}
-            </h1>
-            <p className="text-xl text-white/50">
-              {feature.tagline}
-            </p>
-          </motion.div>
+              <BriefAICard progress={briefProgress} />
+            </motion.div>
+          )}
+          {currentFeature === 1 && (
+            <motion.div 
+              key="liability"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0"
+            >
+              <LiabilityAICard progress={liabilityProgress} />
+            </motion.div>
+          )}
+          {currentFeature === 2 && (
+            <motion.div 
+              key="property"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0"
+            >
+              <PropertyCard progress={propertyProgress} />
+            </motion.div>
+          )}
+          {currentFeature === 3 && (
+            <motion.div 
+              key="sales"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="w-[600px] h-[500px]">
+                <Agent2Stage />
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
-
-        {/* Animated visualization area */}
-        <div className="relative h-[450px] flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            {currentFeature === 0 && <RapportBuilderAnimation key="rapport" />}
-            {currentFeature === 1 && <LiabilityAIAnimation key="liability" />}
-            {currentFeature === 2 && <PropertyAVMAnimation key="property" />}
-            {currentFeature === 3 && <SalesCoachAnimation key="sales" />}
-          </AnimatePresence>
-        </div>
       </div>
 
       {/* Progress dots */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-3">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-50">
         {features.map((f, i) => (
           <div
             key={i}
@@ -520,516 +557,6 @@ function FeaturesSlide({ progress }: { progress: number }) {
   );
 }
 
-// ============ ANIMATED VISUALIZATIONS ============
-
-function RapportBuilderAnimation() {
-  const INCOMING_DATA = [
-    { label: "Credit Bureau", icon: "📊", x: -200, y: -100 },
-    { label: "Property Records", icon: "🏠", x: 200, y: -80 },
-    { label: "Bank Statements", icon: "🏦", x: -220, y: 30 },
-    { label: "Employment", icon: "💼", x: 180, y: 70 },
-    { label: "Loan History", icon: "📋", x: -160, y: 120 },
-  ];
-
-  const PROFILE_DATA = [
-    { label: "Credit", value: "742", color: "#f97316" },
-    { label: "Equity", value: "$127K", color: "#3b82f6" },
-    { label: "DTI", value: "38%", color: "#22c55e" },
-    { label: "Tenure", value: "3yr", color: "#a855f7" },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="relative w-full h-full flex items-center justify-center"
-    >
-      {/* Floating data tokens */}
-      {INCOMING_DATA.map((data, i) => (
-        <motion.div
-          key={data.label}
-          className="absolute flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
-          initial={{ x: data.x * 1.5, y: data.y * 1.5, opacity: 0, scale: 0.8 }}
-          animate={{ 
-            x: [data.x * 1.5, data.x * 0.3, 0],
-            y: [data.y * 1.5, data.y * 0.3, 0],
-            opacity: [0, 1, 0],
-            scale: [0.8, 1, 0.3]
-          }}
-          transition={{
-            duration: 3,
-            delay: i * 0.5,
-            repeat: Infinity,
-            repeatDelay: 0.5,
-            ease: "easeInOut"
-          }}
-        >
-          <span className="text-xl">{data.icon}</span>
-          <span className="text-white/70 text-sm whitespace-nowrap">{data.label}</span>
-        </motion.div>
-      ))}
-
-      {/* AI Processing indicator */}
-      <motion.div
-        className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-purple-500/30"
-        animate={{ 
-          boxShadow: [
-            "0 0 20px rgba(147,51,234,0.2)",
-            "0 0 40px rgba(147,51,234,0.4)",
-            "0 0 20px rgba(147,51,234,0.2)"
-          ]
-        }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <motion.div 
-          className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"
-          animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <Zap className="w-3.5 h-3.5 text-white" />
-        </motion.div>
-        <span className="text-purple-300 text-sm font-medium">Analyzing data...</span>
-      </motion.div>
-
-      {/* Central Profile Card */}
-      <motion.div
-        className="relative z-10 w-80 rounded-2xl overflow-hidden"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        style={{
-          background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(249,115,22,0.05))",
-          border: "1px solid rgba(249,115,22,0.4)",
-          boxShadow: "0 0 60px rgba(249,115,22,0.25)"
-        }}
-      >
-        <div className="p-5 flex items-center gap-4 border-b border-orange-500/20">
-          <motion.div
-            className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg"
-            animate={{ 
-              boxShadow: [
-                "0 0 25px rgba(249,115,22,0.3)",
-                "0 0 45px rgba(249,115,22,0.5)",
-                "0 0 25px rgba(249,115,22,0.3)"
-              ]
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            JD
-          </motion.div>
-          <div>
-            <h3 className="text-white font-semibold text-xl">John Doe</h3>
-            <p className="text-white/40 text-sm">Borrower Profile</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 p-4">
-          {PROFILE_DATA.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              className="p-3 rounded-xl"
-              style={{ 
-                backgroundColor: `${stat.color}15`,
-                border: `1px solid ${stat.color}40`
-              }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 + i * 0.15 }}
-            >
-              <p className="text-white/40 text-xs mb-1">{stat.label}</p>
-              <p className="font-bold text-xl" style={{ color: stat.color }}>
-                {stat.value}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="px-4 pb-4">
-          <motion.div 
-            className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/25"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5 }}
-          >
-            <div className="flex items-start gap-2">
-              <span className="text-orange-500">✦</span>
-              <p className="text-white/70 text-sm leading-relaxed">
-                Strong equity position. Good refi candidate. Last contacted 6mo ago about HELOC.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* Background glow */}
-      <motion.div
-        className="absolute w-80 h-80 rounded-full bg-orange-500/15 blur-3xl -z-10"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.35, 0.2] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      />
-
-      {/* Timer */}
-      <motion.div
-        className="absolute bottom-0 flex items-center gap-2 text-white/50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        <Clock className="w-4 h-4" />
-        <span>Assembled in</span>
-        <span className="text-orange-400 font-semibold">4.2s</span>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function LiabilityAIAnimation() {
-  const debts = [
-    { name: "Amex Platinum", balance: "$12,800", rate: "24.9%", priority: 1 },
-    { name: "Capital One", balance: "$8,200", rate: "22.4%", priority: 2 },
-    { name: "SoFi Personal", balance: "$8,500", rate: "12.0%", priority: 3 },
-    { name: "Chase Auto", balance: "$18,450", rate: "6.9%", priority: 4 },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="relative w-full h-full flex items-center justify-center gap-12"
-    >
-      {/* Left: Debt cards flying in */}
-      <div className="relative w-72">
-        {debts.map((debt, i) => (
-          <motion.div
-            key={debt.name}
-            className="absolute w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
-            initial={{ x: -200, opacity: 0, rotate: -10 }}
-            animate={{ 
-              x: 0, 
-              y: i * 70, 
-              opacity: 1, 
-              rotate: 0 
-            }}
-            transition={{ delay: 0.2 + i * 0.2, type: "spring", stiffness: 100 }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white font-medium text-sm">{debt.name}</p>
-                <p className="text-white/40 text-xs">{debt.balance}</p>
-              </div>
-              <span className={`px-2 py-1 rounded text-xs font-medium ${
-                debt.priority <= 2 ? 'bg-red-500/20 text-red-400' : 'bg-white/10 text-white/50'
-              }`}>
-                {debt.rate}
-              </span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Center: Processing indicator */}
-      <motion.div
-        className="flex flex-col items-center"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: "spring" }}
-      >
-        <motion.div
-          className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg mb-4"
-          animate={{ 
-            boxShadow: [
-              "0 0 30px rgba(59,130,246,0.3)",
-              "0 0 60px rgba(59,130,246,0.5)",
-              "0 0 30px rgba(59,130,246,0.3)"
-            ]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <Calculator className="w-10 h-10 text-white" />
-        </motion.div>
-        <motion.p
-          className="text-blue-400 text-sm font-medium"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          Optimizing DTI...
-        </motion.p>
-      </motion.div>
-
-      {/* Right: Result card */}
-      <motion.div
-        className="w-80 rounded-2xl overflow-hidden"
-        initial={{ x: 200, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 1.5, type: "spring", stiffness: 80 }}
-        style={{
-          background: "linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.1))",
-          border: "1px solid rgba(59,130,246,0.4)",
-          boxShadow: "0 0 50px rgba(59,130,246,0.2)"
-        }}
-      >
-        <div className="p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-blue-400">✦</span>
-            <span className="text-blue-300 text-sm font-medium uppercase tracking-wide">AI Recommendation</span>
-          </div>
-          <h3 className="text-white text-xl font-bold mb-4">Modified Avalanche</h3>
-          
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {[
-              { value: "$4,280", label: "Saved" },
-              { value: "-8.2%", label: "DTI" },
-              { value: "18mo", label: "Payoff" },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                className="text-center p-2 rounded-lg bg-white/10"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2 + i * 0.1 }}
-              >
-                <p className="text-white font-bold text-lg">{stat.value}</p>
-                <p className="text-white/40 text-xs">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/10">
-              <p className="text-white/40 text-xs mb-1">Before</p>
-              <p className="text-red-400 font-bold">42.3% DTI</p>
-            </div>
-            <div className="flex-1 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
-              <p className="text-green-400 text-xs mb-1">After</p>
-              <p className="text-green-400 font-bold">34.1% DTI</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function PropertyAVMAnimation() {
-  const SOURCES = [
-    { name: "Internal AVM", icon: "🏛️", angle: 0 },
-    { name: "Zillow", icon: "🔵", angle: 90 },
-    { name: "Redfin", icon: "🔴", angle: 180 },
-    { name: "Realtor", icon: "⚪", angle: 270 },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="relative w-full h-full flex items-center justify-center"
-    >
-      {/* Orbiting sources */}
-      {SOURCES.map((source, i) => {
-        const radius = 200;
-        const angle = source.angle;
-        return (
-          <motion.div
-            key={source.name}
-            className="absolute"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ 
-              opacity: 1, 
-              scale: 1,
-              x: Math.cos((angle + 45) * Math.PI / 180) * radius,
-              y: Math.sin((angle + 45) * Math.PI / 180) * radius,
-            }}
-            transition={{ delay: 0.3 + i * 0.15 }}
-          >
-            <motion.div
-              className="px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 backdrop-blur-sm"
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.2 }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{source.icon}</span>
-                <span className="text-white/70 text-sm font-medium">{source.name}</span>
-              </div>
-            </motion.div>
-
-            {/* Connecting line */}
-            <motion.div
-              className="absolute top-1/2 left-1/2 h-px bg-gradient-to-r from-amber-500/40 to-transparent"
-              style={{
-                width: radius - 80,
-                transform: `rotate(${angle + 225}deg)`,
-                transformOrigin: '0 0',
-              }}
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 0.6 + i * 0.15, duration: 0.4 }}
-            />
-          </motion.div>
-        );
-      })}
-
-      {/* Center property card */}
-      <motion.div
-        className="relative z-10"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          className="absolute inset-0 rounded-2xl bg-amber-500/30 blur-2xl"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <div className="relative p-8 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/40">
-          <div className="flex flex-col items-center">
-            <motion.div
-              className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg"
-              animate={{ rotateY: [0, 360] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            >
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-            </motion.div>
-            <p className="text-amber-400 font-bold text-xl mb-1">$785,000</p>
-            <p className="text-white/50 text-sm mb-3">2116 Shrewsbury Dr, McKinney TX</p>
-            
-            <motion.div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-            >
-              <span className="text-green-400 text-sm font-medium">94% Confidence</span>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Bottom status */}
-      <motion.div
-        className="absolute bottom-0 flex items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <motion.div
-          className="w-2 h-2 rounded-full bg-amber-500"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1, repeat: Infinity }}
-        />
-        <span className="text-amber-400 text-sm">Comparing 4 sources for confidence</span>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function SalesCoachAnimation() {
-  const OBJECTIONS = [
-    { text: "Your rates are too high", x: -120, y: -80 },
-    { text: "Closing costs seem expensive", x: 140, y: -40 },
-    { text: "I want to wait for better rates", x: -80, y: 60 },
-  ];
-
-  const RESPONSES = [
-    { text: "Calculate blended rate", x: 160, y: 20 },
-    { text: "Monthly savings breakdown", x: -140, y: 100 },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="relative w-full h-full flex items-center justify-center"
-    >
-      {/* Objection bubbles */}
-      {OBJECTIONS.map((obj, i) => (
-        <motion.div
-          key={obj.text}
-          className="absolute px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 backdrop-blur-sm"
-          initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1, 
-            x: obj.x, 
-            y: obj.y 
-          }}
-          transition={{ delay: 0.2 + i * 0.2, type: "spring", stiffness: 100 }}
-          style={{ boxShadow: '0 0 25px rgba(244,63,94,0.15)' }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-rose-400">&ldquo;</span>
-            <p className="text-white/80 text-sm font-medium whitespace-nowrap">{obj.text}</p>
-            <span className="text-rose-400">&rdquo;</span>
-          </div>
-        </motion.div>
-      ))}
-
-      {/* Response bubbles */}
-      {RESPONSES.map((res, i) => (
-        <motion.div
-          key={res.text}
-          className="absolute px-4 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 backdrop-blur-sm"
-          initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1, 
-            x: res.x, 
-            y: res.y 
-          }}
-          transition={{ delay: 1 + i * 0.2, type: "spring", stiffness: 100 }}
-          style={{ boxShadow: '0 0 25px rgba(20,184,166,0.15)' }}
-        >
-          <div className="flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-teal-400" />
-            <p className="text-white/80 text-sm font-medium whitespace-nowrap">{res.text}</p>
-          </div>
-        </motion.div>
-      ))}
-
-      {/* Center AI icon */}
-      <motion.div
-        className="relative z-10"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.1, type: "spring" }}
-      >
-        <motion.div
-          className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center shadow-lg"
-          animate={{ 
-            boxShadow: [
-              "0 0 30px rgba(168,85,247,0.3)",
-              "0 0 60px rgba(168,85,247,0.5)",
-              "0 0 30px rgba(168,85,247,0.3)"
-            ]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <MessageSquare className="w-12 h-12 text-white" />
-        </motion.div>
-      </motion.div>
-
-      {/* Bottom coaching tip */}
-      <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 max-w-lg p-4 rounded-xl bg-purple-500/10 border border-purple-500/30"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8 }}
-      >
-        <div className="flex items-start gap-3">
-          <span className="text-purple-400">✦</span>
-          <p className="text-white/70 text-sm">
-            <span className="text-purple-400 font-medium">AI Coach:</span> "With your credit profile, you'd qualify for 6.75% on a cash-out. That saves $285/mo."
-          </p>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 
 function LastMileSlide({ progress }: { progress: number }) {
