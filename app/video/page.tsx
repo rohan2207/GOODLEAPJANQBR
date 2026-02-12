@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 
 // Import exact same components from main page
@@ -14,31 +14,20 @@ import Image from 'next/image';
 // Total duration in seconds (3:34 = 214 seconds)
 const DURATION = 214;
 
-// Easing function for cinematic feel
-function easeInOutCubic(t: number): number {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
 export default function VideoPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalHeight, setTotalHeight] = useState(0);
-  
-  // Smooth spring for scroll position
-  const scrollY = useMotionValue(0);
-  const smoothScrollY = useSpring(scrollY, { 
-    stiffness: 100, 
-    damping: 30,
-    mass: 0.5
-  });
+  const [hasStarted, setHasStarted] = useState(false);
 
   // Calculate total scrollable height on mount
   useEffect(() => {
-    if (containerRef.current) {
-      const height = containerRef.current.scrollHeight - window.innerHeight;
+    // Wait for content to render
+    const timer = setTimeout(() => {
+      const height = document.documentElement.scrollHeight - window.innerHeight;
       setTotalHeight(height);
-    }
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Timer that drives the scroll
@@ -59,22 +48,19 @@ export default function VideoPage() {
     return () => clearInterval(interval);
   }, [isPlaying, totalHeight]);
 
-  // Update scroll position based on time with easing
+  // Update WINDOW scroll position based on time
   useEffect(() => {
     if (totalHeight === 0) return;
     
     const progress = currentTime / DURATION;
-    // Apply easing for smoother feel at start/end of sections
-    const easedProgress = easeInOutCubic(progress);
-    const targetScroll = easedProgress * totalHeight;
+    const targetScroll = progress * totalHeight;
     
-    scrollY.set(targetScroll);
-    
-    // Also update actual scroll for scroll-based animations
-    if (containerRef.current) {
-      containerRef.current.scrollTop = targetScroll;
-    }
-  }, [currentTime, totalHeight, scrollY]);
+    // Scroll the window - this triggers Framer Motion's useScroll hooks
+    window.scrollTo({
+      top: targetScroll,
+      behavior: 'auto' // Use 'auto' for immediate scroll, driven by our timer
+    });
+  }, [currentTime, totalHeight]);
 
   // Format time display
   const formatTime = (seconds: number) => {
@@ -87,10 +73,13 @@ export default function VideoPage() {
   const handleRestart = () => {
     setCurrentTime(0);
     setIsPlaying(false);
-    scrollY.set(0);
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
-    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  // Handle play - mark as started
+  const handlePlay = () => {
+    setHasStarted(true);
+    setIsPlaying(true);
   };
 
   // Handle timeline click
@@ -102,11 +91,11 @@ export default function VideoPage() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-black">
-      {/* Intro overlay - shows before playing */}
-      {currentTime === 0 && !isPlaying && (
+    <div className="relative bg-black">
+      {/* Intro overlay - shows before started */}
+      {!hasStarted && (
         <motion.div 
-          className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
@@ -137,7 +126,7 @@ export default function VideoPage() {
             <p className="text-white/60 text-xl mb-8">The Platform That Thinks Ahead</p>
             
             <button
-              onClick={() => setIsPlaying(true)}
+              onClick={handlePlay}
               className="px-12 py-5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold text-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all flex items-center gap-4 mx-auto"
             >
               <Play className="w-7 h-7" fill="currentColor" />
@@ -156,17 +145,8 @@ export default function VideoPage() {
         </motion.div>
       )}
 
-      {/* Main scrollable content - exact same as main page */}
-      <div 
-        ref={containerRef}
-        className="h-full overflow-y-scroll scrollbar-hide"
-        style={{ 
-          scrollBehavior: 'auto',
-          // Hide scrollbar
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        }}
-      >
+      {/* Main content - SCROLLED BY WINDOW */}
+      <div>
         {/* Hero/Intro Section */}
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.15)_0%,transparent_70%)]" />
@@ -235,8 +215,8 @@ export default function VideoPage() {
         <Finale />
       </div>
 
-      {/* Controls overlay - only show when playing or after started */}
-      {(isPlaying || currentTime > 0) && (
+      {/* Controls overlay - only show after started */}
+      {hasStarted && (
         <motion.div 
           className="absolute bottom-0 left-0 right-0 z-50"
           initial={{ opacity: 0, y: 50 }}
@@ -299,8 +279,12 @@ export default function VideoPage() {
 
       {/* Hide scrollbar CSS */}
       <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
+        body::-webkit-scrollbar {
           display: none;
+        }
+        body {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </div>
