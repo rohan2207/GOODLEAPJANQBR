@@ -179,9 +179,9 @@ export default function VideoPage() {
         {section === 'closing' && <ClosingSlide key="closing" progress={progress} />}
       </AnimatePresence>
 
-      {/* Controls Panel */}
+      {/* Controls Panel - highest z-index to stay on top */}
       {showControls && (
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent pt-16 pb-6 px-8">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent pt-16 pb-6 px-8 z-[100]">
           {/* Timeline with section markers */}
           <div 
             className="relative h-3 bg-white/10 rounded-full cursor-pointer mb-4 group"
@@ -264,7 +264,7 @@ export default function VideoPage() {
       {!showControls && (
         <button
           onClick={() => setShowControls(true)}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white/60 rounded-lg transition-colors text-sm"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white/60 rounded-lg transition-colors text-sm z-[100]"
         >
           Show Controls
         </button>
@@ -688,7 +688,7 @@ function FeaturesSlide({ progress }: { progress: number }) {
       className="absolute inset-0 overflow-hidden"
     >
       {/* Top Journey Line - Progress through all 4 features */}
-      <div className="absolute top-6 left-0 right-0 px-12 z-50">
+      <div className="absolute top-6 left-0 right-0 px-12 z-40">
         <div className="relative flex items-center justify-between max-w-3xl mx-auto">
           {/* Background track */}
           <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -translate-y-1/2" />
@@ -803,7 +803,7 @@ function FeaturesSlide({ progress }: { progress: number }) {
       </AnimatePresence>
 
       {/* Bottom Progress Bar */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-40">
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/10">
           {features.map((f, i) => (
             <motion.div
