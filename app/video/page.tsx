@@ -19,13 +19,13 @@ import {
 
 // Timing configuration (in seconds) - Total: 214s (3:34)
 const TIMINGS = {
-  hero: { start: 0, end: 25 },           // 25s - Intro
-  context: { start: 25, end: 45 },       // 20s - Industry context
-  demo: { start: 45, end: 70 },          // 25s - Demo comparison
-  features: { start: 70, end: 130 },     // 60s - Features showcase (increased)
-  lastMile: { start: 130, end: 170 },    // 40s - Last Mile differentiator
-  beta: { start: 170, end: 195 },        // 25s - Beta announcement
-  closing: { start: 195, end: 214 },     // 19s - Roadmap + Close (reduced)
+  hero: { start: 0, end: 10 },           // 10s - Intro (reduced)
+  context: { start: 10, end: 30 },       // 20s - Industry context
+  demo: { start: 30, end: 55 },          // 25s - Demo comparison
+  features: { start: 55, end: 115 },     // 60s - Features showcase
+  lastMile: { start: 115, end: 155 },    // 40s - Last Mile differentiator
+  beta: { start: 155, end: 180 },        // 25s - Beta announcement
+  closing: { start: 180, end: 214 },     // 34s - Roadmap + Close
 };
 
 export default function VideoPage() {
