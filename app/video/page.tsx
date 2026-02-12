@@ -412,48 +412,31 @@ function DemoSlide({ progress }: { progress: number }) {
 function FeaturesSlide({ progress }: { progress: number }) {
   // 4 AI Assistants, each gets ~15 seconds (25% of 60s)
   const currentFeature = Math.min(3, Math.floor(progress * 4));
-  const featureProgress = (progress * 4) % 1;
 
   const features = [
     {
-      name: "Brief AI",
-      tagline: "Pre-call intelligence that knows your borrower",
+      name: "Rapport Builder",
+      tagline: "Know your borrower before the first word",
       color: "orange",
       gradient: "from-orange-500 to-orange-600",
-      stats: [
-        { value: "4.2s", label: "generation" },
-        { value: "100%", label: "context" },
-      ]
     },
     {
       name: "Liability AI",
       tagline: "Instant payoff strategy that optimizes DTI",
       color: "blue",
-      gradient: "from-blue-500 to-blue-600",
-      stats: [
-        { value: "$4,280", label: "saved" },
-        { value: "-8.2%", label: "DTI" },
-      ]
+      gradient: "from-blue-500 to-cyan-500",
     },
     {
       name: "Property AVM",
       tagline: "Real-time valuations with confidence scores",
-      color: "emerald",
-      gradient: "from-emerald-500 to-emerald-600",
-      stats: [
-        { value: "$785K", label: "value" },
-        { value: "94%", label: "confidence" },
-      ]
+      color: "amber",
+      gradient: "from-amber-500 to-orange-500",
     },
     {
       name: "Sales Coach",
-      tagline: "Real-time guidance throughout every call",
+      tagline: "Turn objections into opportunities",
       color: "purple",
-      gradient: "from-purple-500 to-purple-600",
-      stats: [
-        { value: "Live", label: "suggestions" },
-        { value: "2x", label: "conversions" },
-      ]
+      gradient: "from-purple-500 to-fuchsia-500",
     }
   ];
 
@@ -465,99 +448,70 @@ function FeaturesSlide({ progress }: { progress: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="absolute inset-0 flex items-center justify-center px-16"
+      className="absolute inset-0 flex items-center justify-center"
     >
-      {/* Background glow based on current feature */}
-      <div className={`absolute inset-0 bg-gradient-radial from-${feature.color}-500/20 via-transparent to-transparent opacity-60 transition-all duration-1000`} />
+      {/* Dynamic background glow */}
+      <motion.div 
+        className="absolute inset-0"
+        animate={{
+          background: currentFeature === 0 
+            ? 'radial-gradient(circle at center, rgba(249,115,22,0.15) 0%, transparent 70%)'
+            : currentFeature === 1
+            ? 'radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%)'
+            : currentFeature === 2
+            ? 'radial-gradient(circle at center, rgba(245,158,11,0.15) 0%, transparent 70%)'
+            : 'radial-gradient(circle at center, rgba(168,85,247,0.15) 0%, transparent 70%)'
+        }}
+        transition={{ duration: 1 }}
+      />
 
-      <div className="flex items-center gap-16 max-w-7xl w-full">
-        {/* Left: Feature Info */}
-        <div className="flex-1">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentFeature}
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 30 }}
-              transition={{ duration: 0.5 }}
+      {/* Main content area */}
+      <div className="relative w-full max-w-6xl mx-auto px-16">
+        {/* Title - floats above */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentFeature}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <motion.p 
+              className="text-sm font-medium tracking-[0.3em] uppercase mb-3"
+              style={{ color: currentFeature === 0 ? '#f97316' : currentFeature === 1 ? '#3b82f6' : currentFeature === 2 ? '#f59e0b' : '#a855f7' }}
             >
-              <p className={`text-${feature.color}-400 text-sm font-medium tracking-[0.3em] uppercase mb-4`}>
-                AI Assistant {currentFeature + 1} of 4
-              </p>
-              <h1 className={`text-6xl font-bold mb-4 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent`}>
-                {feature.name}
-              </h1>
-              <p className="text-2xl text-white/60 mb-8 max-w-lg">
-                {feature.tagline}
-              </p>
-              
-              <div className="flex gap-8">
-                {feature.stats.map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + i * 0.1 }}
-                    className="text-center"
-                  >
-                    <p className="text-4xl font-bold text-white">{stat.value}</p>
-                    <p className="text-white/40 text-sm mt-1">{stat.label}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              AI Assistant {currentFeature + 1} of 4
+            </motion.p>
+            <h1 className={`text-6xl font-bold mb-4 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent`}>
+              {feature.name}
+            </h1>
+            <p className="text-xl text-white/50">
+              {feature.tagline}
+            </p>
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Right: UI Screenshot */}
-        <div className="flex-1">
+        {/* Animated visualization area */}
+        <div className="relative h-[450px] flex items-center justify-center">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={currentFeature}
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              {/* Browser chrome */}
-              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.08] overflow-hidden shadow-2xl">
-                <div className="flex items-center gap-2 px-3 py-2 bg-[#050505] border-b border-white/[0.05]">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-                  </div>
-                  <div className="flex-1 flex justify-center">
-                    <div className="bg-white/[0.06] rounded px-3 py-1 text-white/30 text-xs font-mono">
-                      linkai.goodleap.com
-                    </div>
-                  </div>
-                </div>
-
-                {/* Screenshot content */}
-                <div className="aspect-[16/10] bg-gradient-to-br from-[#fefefe] to-[#f8fafc] p-4">
-                  {currentFeature === 0 && <BriefAIScreenshot />}
-                  {currentFeature === 1 && <LiabilityAIScreenshot />}
-                  {currentFeature === 2 && <PropertyAVMScreenshot />}
-                  {currentFeature === 3 && <SalesCoachScreenshot />}
-                </div>
-              </div>
-
-              {/* Glow effect */}
-              <div className={`absolute -inset-8 bg-gradient-radial from-${feature.color}-500/30 via-transparent to-transparent blur-2xl -z-10`} />
-            </motion.div>
+            {currentFeature === 0 && <RapportBuilderAnimation key="rapport" />}
+            {currentFeature === 1 && <LiabilityAIAnimation key="liability" />}
+            {currentFeature === 2 && <PropertyAVMAnimation key="property" />}
+            {currentFeature === 3 && <SalesCoachAnimation key="sales" />}
           </AnimatePresence>
         </div>
       </div>
 
       {/* Progress dots */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3">
-        {features.map((_, i) => (
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-3">
+        {features.map((f, i) => (
           <div
             key={i}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === currentFeature ? 'bg-white w-8' : 'bg-white/30'
+            className={`h-2 rounded-full transition-all duration-500 ${
+              i === currentFeature 
+                ? `w-10 ${i === 0 ? 'bg-orange-500' : i === 1 ? 'bg-blue-500' : i === 2 ? 'bg-amber-500' : 'bg-purple-500'}` 
+                : 'w-2 bg-white/20'
             }`}
           />
         ))}
@@ -566,241 +520,517 @@ function FeaturesSlide({ progress }: { progress: number }) {
   );
 }
 
-// Screenshot Components for each AI Assistant
+// ============ ANIMATED VISUALIZATIONS ============
 
-function BriefAIScreenshot() {
-  return (
-    <div className="h-full grid grid-cols-12 gap-3">
-      <div className="col-span-8 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-            <span className="text-white text-lg">✦</span>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-sm">Call Prep Brief</h3>
-            <p className="text-gray-400 text-xs">AI-Generated</p>
-          </div>
-        </div>
-        <div className="bg-orange-50 rounded-lg p-3 mb-3 border border-orange-100">
-          <p className="text-orange-600 text-xs font-semibold uppercase mb-1">Summary</p>
-          <p className="text-gray-700 text-xs">Near-prime borrower in McKinney, TX looking to consolidate debt. Strong equity position with $358K available.</p>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { label: "Property", value: "$785K", color: "blue" },
-            { label: "Liens", value: "$428K", color: "orange" },
-            { label: "Equity", value: "$358K", color: "green" },
-          ].map((stat) => (
-            <div key={stat.label} className={`bg-${stat.color}-50 rounded-lg p-2 text-center border border-${stat.color}-100`}>
-              <p className="text-gray-900 font-bold text-sm">{stat.value}</p>
-              <p className="text-gray-500 text-[10px]">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="col-span-4 space-y-3">
-        <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-          <p className="font-semibold text-gray-900 text-xs mb-2">Talk Track</p>
-          <p className="text-gray-600 text-[10px] italic leading-relaxed">"Thank you for your time today, I see you have significant equity we can leverage..."</p>
-        </div>
-        <div className="bg-white rounded-xl shadow-lg p-3 border border-gray-100">
-          <p className="font-semibold text-gray-900 text-xs mb-2">Local Context</p>
-          <p className="text-gray-600 text-xs">72°F Sunny • McKinney, TX</p>
-          <p className="text-gray-400 text-[10px] mt-1">Cowboys game this weekend</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+function RapportBuilderAnimation() {
+  const INCOMING_DATA = [
+    { label: "Credit Bureau", icon: "📊", x: -200, y: -100 },
+    { label: "Property Records", icon: "🏠", x: 200, y: -80 },
+    { label: "Bank Statements", icon: "🏦", x: -220, y: 30 },
+    { label: "Employment", icon: "💼", x: 180, y: 70 },
+    { label: "Loan History", icon: "📋", x: -160, y: 120 },
+  ];
 
-function LiabilityAIScreenshot() {
-  const debts = [
-    { name: "Amex Platinum", balance: 12800, rate: 24.9, status: "high" },
-    { name: "Capital One Venture", balance: 8200, rate: 22.4, status: "high" },
-    { name: "SoFi Personal", balance: 8500, rate: 12.0, status: "medium" },
-    { name: "Chase Auto Loan", balance: 18450, rate: 6.9, status: "good" },
+  const PROFILE_DATA = [
+    { label: "Credit", value: "742", color: "#f97316" },
+    { label: "Equity", value: "$127K", color: "#3b82f6" },
+    { label: "DTI", value: "38%", color: "#22c55e" },
+    { label: "Tenure", value: "3yr", color: "#a855f7" },
   ];
 
   return (
-    <div className="h-full grid grid-cols-12 gap-3">
-      <div className="col-span-7 space-y-3">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white shadow-xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg">✦</span>
-            <span className="text-blue-100 text-xs font-medium uppercase">AI Recommendation</span>
-          </div>
-          <h3 className="text-lg font-bold mb-2">Modified Avalanche Strategy</h3>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="bg-white/20 rounded-lg p-2 text-center">
-              <p className="text-xl font-bold">$4,280</p>
-              <p className="text-blue-100 text-[10px]">Interest Saved</p>
-            </div>
-            <div className="bg-white/20 rounded-lg p-2 text-center">
-              <p className="text-xl font-bold">-8.2%</p>
-              <p className="text-blue-100 text-[10px]">DTI Reduction</p>
-            </div>
-            <div className="bg-white/20 rounded-lg p-2 text-center">
-              <p className="text-xl font-bold">18mo</p>
-              <p className="text-blue-100 text-[10px]">Payoff Time</p>
-            </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative w-full h-full flex items-center justify-center"
+    >
+      {/* Floating data tokens */}
+      {INCOMING_DATA.map((data, i) => (
+        <motion.div
+          key={data.label}
+          className="absolute flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
+          initial={{ x: data.x * 1.5, y: data.y * 1.5, opacity: 0, scale: 0.8 }}
+          animate={{ 
+            x: [data.x * 1.5, data.x * 0.3, 0],
+            y: [data.y * 1.5, data.y * 0.3, 0],
+            opacity: [0, 1, 0],
+            scale: [0.8, 1, 0.3]
+          }}
+          transition={{
+            duration: 3,
+            delay: i * 0.5,
+            repeat: Infinity,
+            repeatDelay: 0.5,
+            ease: "easeInOut"
+          }}
+        >
+          <span className="text-xl">{data.icon}</span>
+          <span className="text-white/70 text-sm whitespace-nowrap">{data.label}</span>
+        </motion.div>
+      ))}
+
+      {/* AI Processing indicator */}
+      <motion.div
+        className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-purple-500/30"
+        animate={{ 
+          boxShadow: [
+            "0 0 20px rgba(147,51,234,0.2)",
+            "0 0 40px rgba(147,51,234,0.4)",
+            "0 0 20px rgba(147,51,234,0.2)"
+          ]
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <motion.div 
+          className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <Zap className="w-3.5 h-3.5 text-white" />
+        </motion.div>
+        <span className="text-purple-300 text-sm font-medium">Analyzing data...</span>
+      </motion.div>
+
+      {/* Central Profile Card */}
+      <motion.div
+        className="relative z-10 w-80 rounded-2xl overflow-hidden"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        style={{
+          background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(249,115,22,0.05))",
+          border: "1px solid rgba(249,115,22,0.4)",
+          boxShadow: "0 0 60px rgba(249,115,22,0.25)"
+        }}
+      >
+        <div className="p-5 flex items-center gap-4 border-b border-orange-500/20">
+          <motion.div
+            className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg"
+            animate={{ 
+              boxShadow: [
+                "0 0 25px rgba(249,115,22,0.3)",
+                "0 0 45px rgba(249,115,22,0.5)",
+                "0 0 25px rgba(249,115,22,0.3)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            JD
+          </motion.div>
+          <div>
+            <h3 className="text-white font-semibold text-xl">John Doe</h3>
+            <p className="text-white/40 text-sm">Borrower Profile</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white rounded-lg p-3 border border-gray-200">
-            <p className="text-gray-400 text-[10px] font-semibold uppercase mb-1">Before</p>
-            <p className="text-gray-900 font-bold text-lg">$1,275/mo</p>
-            <p className="text-red-500 text-xs">42.3% DTI</p>
-          </div>
-          <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-            <p className="text-green-600 text-[10px] font-semibold uppercase mb-1">After</p>
-            <p className="text-gray-900 font-bold text-lg">$940/mo</p>
-            <p className="text-green-600 text-xs">34.1% DTI</p>
-          </div>
-        </div>
-      </div>
-      <div className="col-span-5 bg-white rounded-xl p-3 border border-gray-200 shadow">
-        <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Payoff Order</p>
-        <div className="space-y-2">
-          {debts.map((debt, i) => (
-            <div key={debt.name} className="flex items-center gap-2 p-1.5 rounded bg-gray-50">
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-[10px] ${
-                debt.status === 'high' ? 'bg-red-500' : debt.status === 'medium' ? 'bg-orange-500' : 'bg-gray-400'
-              }`}>
-                {i + 1}
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-900 font-medium text-[10px]">{debt.name}</p>
-              </div>
-              <span className={`text-[10px] ${debt.status === 'high' ? 'text-red-500' : 'text-gray-400'}`}>{debt.rate}%</span>
-            </div>
+
+        <div className="grid grid-cols-2 gap-3 p-4">
+          {PROFILE_DATA.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              className="p-3 rounded-xl"
+              style={{ 
+                backgroundColor: `${stat.color}15`,
+                border: `1px solid ${stat.color}40`
+              }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 + i * 0.15 }}
+            >
+              <p className="text-white/40 text-xs mb-1">{stat.label}</p>
+              <p className="font-bold text-xl" style={{ color: stat.color }}>
+                {stat.value}
+              </p>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </div>
+
+        <div className="px-4 pb-4">
+          <motion.div 
+            className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/25"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5 }}
+          >
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500">✦</span>
+              <p className="text-white/70 text-sm leading-relaxed">
+                Strong equity position. Good refi candidate. Last contacted 6mo ago about HELOC.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Background glow */}
+      <motion.div
+        className="absolute w-80 h-80 rounded-full bg-orange-500/15 blur-3xl -z-10"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.35, 0.2] }}
+        transition={{ duration: 4, repeat: Infinity }}
+      />
+
+      {/* Timer */}
+      <motion.div
+        className="absolute bottom-0 flex items-center gap-2 text-white/50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
+        <Clock className="w-4 h-4" />
+        <span>Assembled in</span>
+        <span className="text-orange-400 font-semibold">4.2s</span>
+      </motion.div>
+    </motion.div>
   );
 }
 
-function PropertyAVMScreenshot() {
+function LiabilityAIAnimation() {
+  const debts = [
+    { name: "Amex Platinum", balance: "$12,800", rate: "24.9%", priority: 1 },
+    { name: "Capital One", balance: "$8,200", rate: "22.4%", priority: 2 },
+    { name: "SoFi Personal", balance: "$8,500", rate: "12.0%", priority: 3 },
+    { name: "Chase Auto", balance: "$18,450", rate: "6.9%", priority: 4 },
+  ];
+
   return (
-    <div className="h-full grid grid-cols-12 gap-3">
-      <div className="col-span-7 space-y-3">
-        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-lg">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="text-gray-500 text-xs">Estimated Value</p>
-              <p className="text-3xl font-bold text-gray-900">$785,000</p>
-            </div>
-            <div className="text-right">
-              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
-                <span>94%</span>
-                <span className="text-green-500">confidence</span>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative w-full h-full flex items-center justify-center gap-12"
+    >
+      {/* Left: Debt cards flying in */}
+      <div className="relative w-72">
+        {debts.map((debt, i) => (
+          <motion.div
+            key={debt.name}
+            className="absolute w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
+            initial={{ x: -200, opacity: 0, rotate: -10 }}
+            animate={{ 
+              x: 0, 
+              y: i * 70, 
+              opacity: 1, 
+              rotate: 0 
+            }}
+            transition={{ delay: 0.2 + i * 0.2, type: "spring", stiffness: 100 }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-medium text-sm">{debt.name}</p>
+                <p className="text-white/40 text-xs">{debt.balance}</p>
               </div>
+              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                debt.priority <= 2 ? 'bg-red-500/20 text-red-400' : 'bg-white/10 text-white/50'
+              }`}>
+                {debt.rate}
+              </span>
             </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Center: Processing indicator */}
+      <motion.div
+        className="flex flex-col items-center"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1, type: "spring" }}
+      >
+        <motion.div
+          className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg mb-4"
+          animate={{ 
+            boxShadow: [
+              "0 0 30px rgba(59,130,246,0.3)",
+              "0 0 60px rgba(59,130,246,0.5)",
+              "0 0 30px rgba(59,130,246,0.3)"
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Calculator className="w-10 h-10 text-white" />
+        </motion.div>
+        <motion.p
+          className="text-blue-400 text-sm font-medium"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          Optimizing DTI...
+        </motion.p>
+      </motion.div>
+
+      {/* Right: Result card */}
+      <motion.div
+        className="w-80 rounded-2xl overflow-hidden"
+        initial={{ x: 200, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 1.5, type: "spring", stiffness: 80 }}
+        style={{
+          background: "linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.1))",
+          border: "1px solid rgba(59,130,246,0.4)",
+          boxShadow: "0 0 50px rgba(59,130,246,0.2)"
+        }}
+      >
+        <div className="p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-blue-400">✦</span>
+            <span className="text-blue-300 text-sm font-medium uppercase tracking-wide">AI Recommendation</span>
           </div>
-          <div className="h-24 bg-gradient-to-r from-emerald-100 to-emerald-50 rounded-lg flex items-end p-2">
-            {[65, 72, 68, 75, 82, 78, 85, 88, 85, 90, 94].map((h, i) => (
-              <div key={i} className="flex-1 mx-0.5">
-                <div 
-                  className="bg-emerald-500 rounded-t"
-                  style={{ height: `${h}%` }}
-                />
-              </div>
+          <h3 className="text-white text-xl font-bold mb-4">Modified Avalanche</h3>
+          
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            {[
+              { value: "$4,280", label: "Saved" },
+              { value: "-8.2%", label: "DTI" },
+              { value: "18mo", label: "Payoff" },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                className="text-center p-2 rounded-lg bg-white/10"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2 + i * 0.1 }}
+              >
+                <p className="text-white font-bold text-lg">{stat.value}</p>
+                <p className="text-white/40 text-xs">{stat.label}</p>
+              </motion.div>
             ))}
           </div>
-          <p className="text-gray-400 text-[10px] mt-2 text-center">12-month value trend</p>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white rounded-lg p-3 border border-gray-200">
-            <p className="text-gray-500 text-[10px]">Available Equity</p>
-            <p className="text-emerald-600 font-bold text-lg">$358,000</p>
-          </div>
-          <div className="bg-white rounded-lg p-3 border border-gray-200">
-            <p className="text-gray-500 text-[10px]">Current LTV</p>
-            <p className="text-gray-900 font-bold text-lg">54.5%</p>
-          </div>
-        </div>
-      </div>
-      <div className="col-span-5 bg-white rounded-xl p-3 border border-gray-200 shadow">
-        <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Why This Value?</p>
-        <div className="space-y-2">
-          {[
-            { icon: "🏠", label: "Recent Sales Support", detail: "3 comps within 0.5mi" },
-            { icon: "📈", label: "Market Trending Up", detail: "+4.2% YoY" },
-            { icon: "✨", label: "Property Features", detail: "Pool, updated kitchen" },
-          ].map((item) => (
-            <div key={item.label} className="flex items-start gap-2 p-2 rounded bg-gray-50">
-              <span className="text-sm">{item.icon}</span>
-              <div>
-                <p className="text-gray-900 font-medium text-xs">{item.label}</p>
-                <p className="text-gray-500 text-[10px]">{item.detail}</p>
-              </div>
+
+          <div className="flex gap-3">
+            <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/10">
+              <p className="text-white/40 text-xs mb-1">Before</p>
+              <p className="text-red-400 font-bold">42.3% DTI</p>
             </div>
-          ))}
+            <div className="flex-1 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+              <p className="text-green-400 text-xs mb-1">After</p>
+              <p className="text-green-400 font-bold">34.1% DTI</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
-function SalesCoachScreenshot() {
+function PropertyAVMAnimation() {
+  const SOURCES = [
+    { name: "Internal AVM", icon: "🏛️", angle: 0 },
+    { name: "Zillow", icon: "🔵", angle: 90 },
+    { name: "Redfin", icon: "🔴", angle: 180 },
+    { name: "Realtor", icon: "⚪", angle: 270 },
+  ];
+
   return (
-    <div className="h-full flex gap-3">
-      {/* Main call interface */}
-      <div className="flex-1 bg-[#1a1a2e] rounded-xl p-4 text-white">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-              <span className="text-white font-semibold">JR</span>
-            </div>
-            <div>
-              <p className="font-semibold text-sm">James Rodriguez</p>
-              <p className="text-white/50 text-xs">Call in progress • 4:32</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Live
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative w-full h-full flex items-center justify-center"
+    >
+      {/* Orbiting sources */}
+      {SOURCES.map((source, i) => {
+        const radius = 200;
+        const angle = source.angle;
+        return (
+          <motion.div
+            key={source.name}
+            className="absolute"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1,
+              x: Math.cos((angle + 45) * Math.PI / 180) * radius,
+              y: Math.sin((angle + 45) * Math.PI / 180) * radius,
+            }}
+            transition={{ delay: 0.3 + i * 0.15 }}
+          >
+            <motion.div
+              className="px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 backdrop-blur-sm"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.2 }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{source.icon}</span>
+                <span className="text-white/70 text-sm font-medium">{source.name}</span>
+              </div>
+            </motion.div>
+
+            {/* Connecting line */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 h-px bg-gradient-to-r from-amber-500/40 to-transparent"
+              style={{
+                width: radius - 80,
+                transform: `rotate(${angle + 225}deg)`,
+                transformOrigin: '0 0',
+              }}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.6 + i * 0.15, duration: 0.4 }}
+            />
+          </motion.div>
+        );
+      })}
+
+      {/* Center property card */}
+      <motion.div
+        className="relative z-10"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="absolute inset-0 rounded-2xl bg-amber-500/30 blur-2xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <div className="relative p-8 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/40">
+          <div className="flex flex-col items-center">
+            <motion.div
+              className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg"
+              animate={{ rotateY: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </motion.div>
+            <p className="text-amber-400 font-bold text-xl mb-1">$785,000</p>
+            <p className="text-white/50 text-sm mb-3">2116 Shrewsbury Dr, McKinney TX</p>
+            
+            <motion.div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
+            >
+              <span className="text-green-400 text-sm font-medium">94% Confidence</span>
+            </motion.div>
           </div>
         </div>
-        
-        {/* Transcript */}
-        <div className="space-y-2 mb-4">
-          <div className="flex gap-2">
-            <span className="text-purple-400 text-xs font-medium">You:</span>
-            <p className="text-white/70 text-xs">"Based on your equity, we have several options..."</p>
-          </div>
-          <div className="flex gap-2">
-            <span className="text-blue-400 text-xs font-medium">James:</span>
-            <p className="text-white/70 text-xs">"What about the interest rate on a cash-out?"</p>
-          </div>
-        </div>
-      </div>
-      
-      {/* AI Coach sidebar */}
-      <div className="w-64 space-y-3">
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-3 text-white shadow-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span>✦</span>
-            <span className="text-purple-100 text-xs font-medium">AI Coach</span>
-          </div>
-          <p className="text-sm font-medium mb-2">Suggested Response</p>
-          <p className="text-purple-100 text-xs leading-relaxed">"Great question! With your credit profile, you'd qualify for 6.75% on a cash-out. That's $285/mo for $50K."</p>
-        </div>
-        
-        <div className="bg-white rounded-xl p-3 border border-gray-200">
-          <p className="text-gray-500 text-[10px] font-semibold uppercase mb-2">Opportunity Detected</p>
-          <div className="flex items-center gap-2 p-2 rounded bg-amber-50 border border-amber-200">
-            <span className="text-amber-500">💡</span>
-            <div>
-              <p className="text-gray-900 font-medium text-xs">Debt Consolidation</p>
-              <p className="text-gray-500 text-[10px]">Save $335/mo</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Bottom status */}
+      <motion.div
+        className="absolute bottom-0 flex items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <motion.div
+          className="w-2 h-2 rounded-full bg-amber-500"
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1, repeat: Infinity }}
+        />
+        <span className="text-amber-400 text-sm">Comparing 4 sources for confidence</span>
+      </motion.div>
+    </motion.div>
   );
 }
+
+function SalesCoachAnimation() {
+  const OBJECTIONS = [
+    { text: "Your rates are too high", x: -120, y: -80 },
+    { text: "Closing costs seem expensive", x: 140, y: -40 },
+    { text: "I want to wait for better rates", x: -80, y: 60 },
+  ];
+
+  const RESPONSES = [
+    { text: "Calculate blended rate", x: 160, y: 20 },
+    { text: "Monthly savings breakdown", x: -140, y: 100 },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative w-full h-full flex items-center justify-center"
+    >
+      {/* Objection bubbles */}
+      {OBJECTIONS.map((obj, i) => (
+        <motion.div
+          key={obj.text}
+          className="absolute px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 backdrop-blur-sm"
+          initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            x: obj.x, 
+            y: obj.y 
+          }}
+          transition={{ delay: 0.2 + i * 0.2, type: "spring", stiffness: 100 }}
+          style={{ boxShadow: '0 0 25px rgba(244,63,94,0.15)' }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-rose-400">&ldquo;</span>
+            <p className="text-white/80 text-sm font-medium whitespace-nowrap">{obj.text}</p>
+            <span className="text-rose-400">&rdquo;</span>
+          </div>
+        </motion.div>
+      ))}
+
+      {/* Response bubbles */}
+      {RESPONSES.map((res, i) => (
+        <motion.div
+          key={res.text}
+          className="absolute px-4 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/30 backdrop-blur-sm"
+          initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            x: res.x, 
+            y: res.y 
+          }}
+          transition={{ delay: 1 + i * 0.2, type: "spring", stiffness: 100 }}
+          style={{ boxShadow: '0 0 25px rgba(20,184,166,0.15)' }}
+        >
+          <div className="flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-teal-400" />
+            <p className="text-white/80 text-sm font-medium whitespace-nowrap">{res.text}</p>
+          </div>
+        </motion.div>
+      ))}
+
+      {/* Center AI icon */}
+      <motion.div
+        className="relative z-10"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.1, type: "spring" }}
+      >
+        <motion.div
+          className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center shadow-lg"
+          animate={{ 
+            boxShadow: [
+              "0 0 30px rgba(168,85,247,0.3)",
+              "0 0 60px rgba(168,85,247,0.5)",
+              "0 0 30px rgba(168,85,247,0.3)"
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <MessageSquare className="w-12 h-12 text-white" />
+        </motion.div>
+      </motion.div>
+
+      {/* Bottom coaching tip */}
+      <motion.div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 max-w-lg p-4 rounded-xl bg-purple-500/10 border border-purple-500/30"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.8 }}
+      >
+        <div className="flex items-start gap-3">
+          <span className="text-purple-400">✦</span>
+          <p className="text-white/70 text-sm">
+            <span className="text-purple-400 font-medium">AI Coach:</span> "With your credit profile, you'd qualify for 6.75% on a cash-out. That saves $285/mo."
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 
 function LastMileSlide({ progress }: { progress: number }) {
   const dataPoints = [
