@@ -3,7 +3,23 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Database, 
+  TrendingUp, 
+  Shield, 
+  Users,
+  Sparkles,
+  Calculator,
+  Home,
+  MessageSquare,
+  CheckCircle2,
+  Zap,
+  Target,
+  BarChart3,
+  FileText,
+  CreditCard
+} from 'lucide-react';
 
 // Import actual feature cards from main page
 import BriefAICard from '@/components/features/BriefAICard';
@@ -405,7 +421,6 @@ function DemoSlide({ progress }: { progress: number }) {
 
 function FeaturesSlide({ progress }: { progress: number }) {
   // 4 AI Assistants, each gets ~15 seconds (25% of 60s)
-  // Each card needs progress from 0-1 to animate through its phases
   const currentFeature = Math.min(3, Math.floor(progress * 4));
   const featureProgress = (progress * 4) % 1;
   
@@ -436,34 +451,60 @@ function FeaturesSlide({ progress }: { progress: number }) {
     {
       name: "Brief AI",
       subtitle: "Know Your Borrower",
-      tagline: "Pre-call intelligence that knows your borrower",
-      color: "orange",
-      gradient: "from-orange-500 to-orange-600",
+      tagline: "Pre-call intelligence assembled in seconds",
+      color: "#f97316",
+      icon: Sparkles,
+      stats: [
+        { label: "Credit", value: "742" },
+        { label: "Equity", value: "$127K" },
+        { label: "DTI", value: "38%" },
+      ]
     },
     {
       name: "Liability AI",
       subtitle: "Optimize DTI",
-      tagline: "Instant payoff strategy that optimizes DTI",
-      color: "blue",
-      gradient: "from-blue-500 to-cyan-500",
+      tagline: "Instant payoff strategy that saves thousands",
+      color: "#3b82f6",
+      icon: Calculator,
+      stats: [
+        { label: "Saved", value: "$4,280" },
+        { label: "DTI", value: "-8.2%" },
+        { label: "Payoff", value: "18mo" },
+      ]
     },
     {
       name: "Property AVM",
       subtitle: "Confident Pricing",
       tagline: "Real-time valuations with confidence scores",
-      color: "amber",
-      gradient: "from-amber-500 to-orange-500",
+      color: "#f59e0b",
+      icon: Home,
+      stats: [
+        { label: "Value", value: "$785K" },
+        { label: "Equity", value: "$358K" },
+        { label: "Confidence", value: "94%" },
+      ]
     },
     {
       name: "Sales Coach",
-      subtitle: "Turn Objections into Opportunities",
+      subtitle: "Handle Objections",
       tagline: "Real-time guidance throughout every call",
-      color: "purple",
-      gradient: "from-purple-500 to-fuchsia-500",
+      color: "#a855f7",
+      icon: MessageSquare,
+      stats: [
+        { label: "Live", value: "Coaching" },
+        { label: "Objections", value: "Handled" },
+        { label: "Conversions", value: "2x" },
+      ]
     }
   ];
 
   const feature = features[currentFeature];
+  const FeatureIcon = feature.icon;
+
+  // Determine which phase of the feature we're in
+  // Phase 1 (0-40%): Show text intro + backend animation
+  // Phase 2 (40-100%): Show the actual UI card
+  const showUI = featureProgress > 0.4;
 
   return (
     <motion.div
@@ -471,33 +512,159 @@ function FeaturesSlide({ progress }: { progress: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="absolute inset-0 flex items-center justify-center overflow-hidden"
+      className="absolute inset-0 flex overflow-hidden"
     >
       {/* Dynamic background glow */}
       <motion.div 
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         animate={{
-          background: currentFeature === 0 
-            ? 'radial-gradient(circle at center, rgba(249,115,22,0.15) 0%, transparent 70%)'
-            : currentFeature === 1
-            ? 'radial-gradient(circle at center, rgba(59,130,246,0.15) 0%, transparent 70%)'
-            : currentFeature === 2
-            ? 'radial-gradient(circle at center, rgba(245,158,11,0.15) 0%, transparent 70%)'
-            : 'radial-gradient(circle at center, rgba(168,85,247,0.15) 0%, transparent 70%)'
+          background: `radial-gradient(circle at 30% 50%, ${feature.color}20 0%, transparent 50%), radial-gradient(circle at 70% 50%, ${feature.color}10 0%, transparent 50%)`
         }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.8 }}
       />
 
-      {/* Full screen feature card - EXACT same as main page */}
-      <div className="absolute inset-0">
+      {/* Journey line connecting left to right */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+        <motion.path
+          d="M 0 50% Q 25% 30%, 50% 50% T 100% 50%"
+          fill="none"
+          stroke={feature.color}
+          strokeWidth="2"
+          strokeDasharray="8 8"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: showUI ? 1 : 0.5, opacity: 0.3 }}
+          transition={{ duration: 1 }}
+          style={{
+            filter: `drop-shadow(0 0 10px ${feature.color})`
+          }}
+        />
+        {/* Animated dot along the path */}
+        <motion.circle
+          r="6"
+          fill={feature.color}
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 1,
+            cx: showUI ? "70%" : "30%",
+            cy: "50%"
+          }}
+          transition={{ duration: 0.8 }}
+          style={{
+            filter: `drop-shadow(0 0 15px ${feature.color})`
+          }}
+        />
+      </svg>
+
+      {/* Left Side: Text + Backend Animation */}
+      <motion.div 
+        className="w-1/2 h-full flex flex-col justify-center pl-16 pr-8 relative z-20"
+        animate={{
+          opacity: showUI ? 0.6 : 1,
+          x: showUI ? -50 : 0,
+          scale: showUI ? 0.9 : 1
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Feature badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-3 mb-6"
+        >
+          <div 
+            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: `${feature.color}20`, border: `1px solid ${feature.color}40` }}
+          >
+            <FeatureIcon className="w-6 h-6" style={{ color: feature.color }} />
+          </div>
+          <div 
+            className="px-3 py-1 rounded-full text-sm font-medium"
+            style={{ backgroundColor: `${feature.color}15`, color: feature.color }}
+          >
+            AI Assistant {currentFeature + 1} of 4
+          </div>
+        </motion.div>
+
+        {/* Title */}
+        <motion.h1
+          key={`title-${currentFeature}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-bold text-white mb-2"
+        >
+          {feature.name}
+        </motion.h1>
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-2xl font-medium mb-4"
+          style={{ color: feature.color }}
+        >
+          {feature.subtitle}
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-lg text-white/60 mb-8 max-w-md"
+        >
+          {feature.tagline}
+        </motion.p>
+
+        {/* Stats that appear */}
+        <motion.div 
+          className="flex gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: showUI ? 1 : 0, y: showUI ? 0 : 20 }}
+          transition={{ delay: 0.3 }}
+        >
+          {feature.stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 + i * 0.1 }}
+              className="text-center"
+            >
+              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-sm text-white/40">{stat.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Backend animation preview (small) */}
+        {!showUI && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-8 relative"
+          >
+            <div className="flex items-center gap-2 text-white/40 text-sm mb-4">
+              <motion.div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: feature.color }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span>Processing data...</span>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
+
+      {/* Right Side: Feature Card UI */}
+      <div className="w-1/2 h-full flex items-center justify-center relative z-20">
         <AnimatePresence mode="wait">
           {currentFeature === 0 && (
             <motion.div 
               key="brief"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 0.9, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full"
             >
               <BriefAICard progress={briefProgress} />
             </motion.div>
@@ -505,10 +672,11 @@ function FeaturesSlide({ progress }: { progress: number }) {
           {currentFeature === 1 && (
             <motion.div 
               key="liability"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 0.9, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full"
             >
               <LiabilityAICard progress={liabilityProgress} />
             </motion.div>
@@ -516,10 +684,11 @@ function FeaturesSlide({ progress }: { progress: number }) {
           {currentFeature === 2 && (
             <motion.div 
               key="property"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 0.9, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full"
             >
               <PropertyCard progress={propertyProgress} />
             </motion.div>
@@ -527,12 +696,13 @@ function FeaturesSlide({ progress }: { progress: number }) {
           {currentFeature === 3 && (
             <motion.div 
               key="sales"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center"
+              initial={{ opacity: 0, scale: 0.9, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, x: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full flex items-center justify-center"
             >
-              <div className="w-[600px] h-[500px]">
+              <div className="w-[550px] h-[450px]">
                 <Agent2Stage />
               </div>
             </motion.div>
@@ -540,17 +710,36 @@ function FeaturesSlide({ progress }: { progress: number }) {
         </AnimatePresence>
       </div>
 
-      {/* Progress dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-50">
+      {/* Progress indicator at bottom */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 z-50">
         {features.map((f, i) => (
-          <div
+          <motion.div
             key={i}
-            className={`h-2 rounded-full transition-all duration-500 ${
-              i === currentFeature 
-                ? `w-10 ${i === 0 ? 'bg-orange-500' : i === 1 ? 'bg-blue-500' : i === 2 ? 'bg-amber-500' : 'bg-purple-500'}` 
-                : 'w-2 bg-white/20'
-            }`}
-          />
+            className="flex items-center gap-2"
+            animate={{ opacity: i === currentFeature ? 1 : 0.4 }}
+          >
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                i === currentFeature ? 'scale-110' : 'scale-90'
+              }`}
+              style={{ 
+                backgroundColor: i === currentFeature ? `${f.color}30` : 'rgba(255,255,255,0.05)',
+                border: `2px solid ${i === currentFeature ? f.color : 'transparent'}`
+              }}
+            >
+              <f.icon className="w-5 h-5" style={{ color: i === currentFeature ? f.color : 'rgba(255,255,255,0.3)' }} />
+            </div>
+            {i === currentFeature && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-sm font-medium"
+                style={{ color: f.color }}
+              >
+                {f.name}
+              </motion.span>
+            )}
+          </motion.div>
         ))}
       </div>
     </motion.div>
@@ -728,10 +917,30 @@ function BetaSlide({ progress }: { progress: number }) {
 
 function ClosingSlide({ progress }: { progress: number }) {
   const roadmapItems = [
-    "Expanded soft credit exploitation",
-    "Additional product integrations",
-    "Complex loan product rule sets"
+    { 
+      title: "Expanded Soft Credit", 
+      description: "Pre-qualification without hard pulls",
+      icon: CreditCard,
+      color: "#22c55e"
+    },
+    { 
+      title: "Product Integrations", 
+      description: "Figure, Encompass, and more",
+      icon: Zap,
+      color: "#3b82f6"
+    },
+    { 
+      title: "Complex Loan Rules", 
+      description: "Advanced scenario modeling",
+      icon: Target,
+      color: "#f59e0b"
+    },
   ];
+
+  // Phase breakdown:
+  // 0-60%: Roadmap showcase
+  // 60-100%: Final logo + tagline
+  const showFinal = progress > 0.6;
 
   return (
     <motion.div
@@ -739,54 +948,184 @@ function ClosingSlide({ progress }: { progress: number }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="absolute inset-0 flex flex-col items-center justify-center"
+      className="absolute inset-0 flex flex-col items-center justify-center px-16"
     >
-      {progress < 0.5 ? (
-        // Roadmap (first half)
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center"
-        >
-          <p className="text-xl text-orange-400 mb-6">Next on the Roadmap</p>
-          <div className="space-y-4">
-            {roadmapItems.map((item, index) => (
+      <AnimatePresence mode="wait">
+        {!showFinal ? (
+          // Roadmap Phase - More impactful design
+          <motion.div
+            key="roadmap"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -30 }}
+            className="w-full max-w-5xl"
+          >
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-12"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/30 mb-6">
+                <BarChart3 className="w-4 h-4 text-orange-400" />
+                <span className="text-orange-400 text-sm font-medium">What's Next</span>
+              </div>
+              <h2 className="text-5xl font-bold text-white mb-4">
+                2026 Roadmap
+              </h2>
+              <p className="text-xl text-white/50">
+                Continued innovation in the intelligent last mile
+              </p>
+            </motion.div>
+
+            {/* Roadmap Cards with Timeline */}
+            <div className="relative">
+              {/* Timeline line */}
               <motion.div
-                key={item}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.15 }}
-                className="flex items-center gap-4"
-              >
-                <div className="w-2 h-2 rounded-full bg-orange-500" />
-                <span className="text-2xl text-white/80">{item}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      ) : (
-        // Final logo (second half)
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
-          <div className="relative mb-8">
-            <div className="absolute inset-0 blur-3xl bg-orange-500/20 scale-150" />
-            <Image
-              src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
-              alt="LinkAI"
-              width={300}
-              height={90}
-              className="relative z-10"
-            />
-          </div>
-          <p className="text-2xl text-white/60">
-            Leading the industry revolution through the{' '}
-            <span className="text-orange-400">intelligent last mile</span>
-          </p>
-        </motion.div>
-      )}
+                className="absolute left-1/2 top-0 bottom-0 w-1 -translate-x-1/2"
+                style={{
+                  background: 'linear-gradient(to bottom, rgba(249,115,22,0.5), rgba(249,115,22,0.1))'
+                }}
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 1 }}
+              />
+
+              <div className="space-y-8">
+                {roadmapItems.map((item, index) => {
+                  const isLeft = index % 2 === 0;
+                  const ItemIcon = item.icon;
+                  const itemProgress = Math.min(1, (progress * 3) - index * 0.3);
+                  
+                  return (
+                    <motion.div
+                      key={item.title}
+                      initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                      animate={{ 
+                        opacity: itemProgress > 0 ? 1 : 0, 
+                        x: itemProgress > 0 ? 0 : (isLeft ? -50 : 50)
+                      }}
+                      transition={{ delay: index * 0.15, duration: 0.5 }}
+                      className={`flex items-center gap-8 ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
+                    >
+                      {/* Card */}
+                      <div className={`flex-1 ${isLeft ? 'text-right' : 'text-left'}`}>
+                        <motion.div
+                          className="inline-block p-6 rounded-2xl border backdrop-blur-sm"
+                          style={{
+                            backgroundColor: `${item.color}10`,
+                            borderColor: `${item.color}30`,
+                            boxShadow: `0 0 40px ${item.color}15`
+                          }}
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          <div className={`flex items-center gap-3 mb-2 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center"
+                              style={{ backgroundColor: `${item.color}20` }}
+                            >
+                              <ItemIcon className="w-5 h-5" style={{ color: item.color }} />
+                            </div>
+                            <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                          </div>
+                          <p className="text-white/60">{item.description}</p>
+                        </motion.div>
+                      </div>
+
+                      {/* Timeline dot */}
+                      <motion.div
+                        className="relative z-10"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: itemProgress > 0 ? 1 : 0 }}
+                        transition={{ delay: index * 0.15 + 0.2 }}
+                      >
+                        <div
+                          className="w-6 h-6 rounded-full border-4 border-black"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <motion.div
+                          className="absolute inset-0 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      </motion.div>
+
+                      {/* Spacer for alignment */}
+                      <div className="flex-1" />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          // Final Phase - Logo + Closing
+          <motion.div
+            key="final"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center"
+          >
+            {/* Glowing logo */}
+            <motion.div
+              className="relative mb-10"
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+            >
+              <motion.div
+                className="absolute inset-0 blur-3xl bg-orange-500/30 scale-150"
+                animate={{ 
+                  opacity: [0.3, 0.5, 0.3],
+                  scale: [1.4, 1.6, 1.4]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <Image
+                src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
+                alt="LinkAI"
+                width={350}
+                height={105}
+                className="relative z-10"
+              />
+            </motion.div>
+
+            {/* Tagline */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-3xl text-white/70 font-light mb-8"
+            >
+              Leading the industry revolution
+            </motion.p>
+
+            {/* Key differentiator */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-orange-500/20 to-orange-400/10 border border-orange-500/30"
+            >
+              <Sparkles className="w-5 h-5 text-orange-400" />
+              <span className="text-xl text-white">
+                Through the{' '}
+                <span className="text-orange-400 font-semibold">intelligent last mile</span>
+              </span>
+            </motion.div>
+
+            {/* Thank you */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="mt-12 text-lg text-white/40"
+            >
+              Thank you for watching
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
