@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, SkipForward, SkipBack, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 
@@ -194,7 +194,7 @@ export default function PresentationPage() {
                         );
                         acc.time += scene.duration;
                         return acc;
-                    }, { time: 0, markers: [] } as { time: number, markers: JSX.Element[] }).markers}
+                    }, { time: 0, markers: [] as React.ReactNode[] }).markers}
 
                     {/* Progress Bar */}
                     <div
