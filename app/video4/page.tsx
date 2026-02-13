@@ -1158,15 +1158,26 @@ function FeatureContent({ feature, progress }: { feature: typeof FEATURES[0]; pr
     const contextOpacity = progress > 0.65 ? Math.min(1, (progress - 0.65) / 0.10) : 0;
     const contextScale = contextOpacity > 0 ? 0.95 + contextOpacity * 0.05 : 0.95;
 
+    // Auto-scroll the panel content during Phase 2 (0.35 to 0.70)
+    // Maps progress 0.35-0.70 to scroll 0 to -800
+    const panelScrollProgress = Math.max(0, Math.min(1, (progress - 0.35) / 0.35));
+    const contentScrollY = panelScrollProgress * -800;
+
     // Get backend stage component
     const BackendStage = feature.id === 'rapport' ? Agent1StageBackend 
         : feature.id === 'salesCoach' ? Agent2StageBackend 
         : Agent3StageBackend;
 
-    // Get AI panel component
-    const AIPanel = feature.id === 'rapport' ? RapportBuilderPanel 
-        : feature.id === 'salesCoach' ? SalesCoachPanel 
-        : ValuationPanel;
+    // Render the appropriate AI panel with scrollY
+    const renderAIPanel = () => {
+        if (feature.id === 'rapport') {
+            return <RapportBuilderPanel contentScrollY={contentScrollY} />;
+        } else if (feature.id === 'salesCoach') {
+            return <SalesCoachPanel contentScrollY={contentScrollY} />;
+        } else {
+            return <ValuationPanel contentScrollY={contentScrollY} />;
+        }
+    };
 
     // Text floats left and shrinks in Phase 3
     const textScale = progress > 0.65 ? Math.max(0.5, 1 - (progress - 0.65) * 1.4) : 1;
@@ -1283,7 +1294,7 @@ function FeatureContent({ feature, progress }: { feature: typeof FEATURES[0]; pr
                                     className="absolute -inset-6 rounded-3xl blur-2xl -z-10"
                                     style={{ backgroundColor: `${feature.accentColor}25`, opacity: panelOpacity * 0.6 }}
                                 />
-                                <AIPanel />
+                                {renderAIPanel()}
                             </motion.div>
                         </div>
                     </div>
@@ -3214,10 +3225,10 @@ function ClosingSection({ scrollYProgress }: { scrollYProgress: any }) {
 // ============================================================================
 
 // Full Rapport Builder Panel (Call Prep Brief) - Phase 2
-function RapportBuilderPanel() {
+function RapportBuilderPanel({ contentScrollY }: { contentScrollY: number }) {
     const accentColor = '#D946EF';
     return (
-        <div className="relative w-[600px]">
+        <div className="relative w-[700px]">
             {/* Outer glow */}
             <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
@@ -3226,23 +3237,28 @@ function RapportBuilderPanel() {
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Panel container */}
+            {/* Panel container - clips content properly */}
             <div
-                className="rounded-xl bg-white flex flex-col max-h-[75vh] overflow-hidden"
+                className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
                 {/* Header */}
-                <div className="px-5 py-4 bg-white border-b border-black/5 flex-shrink-0">
+                <div className="px-6 py-5 bg-white border-b border-black/5 flex-shrink-0">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                                <Phone className="w-5 h-5 text-white" />
+                        <div className="flex items-center gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                <Phone className="w-[22px] h-[22px] text-white" />
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold text-[#1d1d1f] tracking-tight">Call Prep Brief</h1>
-                                <p className="text-xs text-[#86868b]">Everything you need for the first 5 minutes</p>
+                                <h1 className="text-xl font-bold text-[#1d1d1f] tracking-tight">Call Prep Brief</h1>
+                                <p className="text-sm text-[#86868b]">Everything you need for the first 5 minutes</p>
                             </div>
                         </div>
+                        <button className="p-2 rounded-lg border border-black/10 hover:bg-black/5">
+                            <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -3251,97 +3267,205 @@ function RapportBuilderPanel() {
                     <p className="text-xs text-amber-700"><span className="font-semibold">AI-Generated</span> — Verify all facts</p>
                 </div>
 
-                {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto p-5 bg-[#f5f5f7]">
-                    <div className="space-y-3">
-                        {/* Summary Card */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <p className="text-sm font-medium text-[#1d1d1f] leading-relaxed">
-                                The customer is a near-prime borrower in McKinney, TX, looking for options to manage their debt and improve their financial situation.
-                            </p>
-                        </div>
-
-                        {/* Financial Stats Row 1 */}
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-white rounded-xl p-3 shadow-sm">
-                                <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center mb-2">
-                                    <Home className="w-3.5 h-3.5 text-white" />
+                {/* Scrollable Content - auto-scrolls */}
+                <div className="flex-1 overflow-hidden">
+                    <motion.div
+                        className="p-6 bg-[#f5f5f7]"
+                        style={{ y: contentScrollY }}
+                    >
+                        <div className="space-y-4 max-w-2xl mx-auto">
+                            {/* Summary Card with copy */}
+                            <div className="bg-white rounded-xl p-6 shadow-sm">
+                                <div className="flex items-start justify-between gap-4">
+                                    <p className="text-lg font-medium text-[#1d1d1f] leading-relaxed">
+                                        The customer is a near-prime borrower in McKinney, TX, looking for options to manage their debt and improve their financial situation.
+                                    </p>
+                                    <button className="p-2 rounded-lg hover:bg-black/5 flex-shrink-0">
+                                        <svg className="w-[18px] h-[18px] text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" strokeWidth={2}></rect>
+                                            <path strokeWidth={2} d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                        </svg>
+                                    </button>
                                 </div>
-                                <p className="text-xl font-bold text-[#1d1d1f]">$785K</p>
-                                <p className="text-[10px] text-[#86868b]">Property Value</p>
+                                <p className="text-xs text-[#86868b] mt-3">Press <kbd className="px-1.5 py-0.5 bg-black/5 rounded text-[10px] font-mono">C</kbd> to copy</p>
                             </div>
-                            <div className="bg-white rounded-xl p-3 shadow-sm">
-                                <div className="w-7 h-7 rounded-lg bg-purple-500 flex items-center justify-center mb-2">
-                                    <FileText className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <p className="text-xl font-bold text-[#1d1d1f]">$428K</p>
-                                <p className="text-[10px] text-[#86868b]">Total Liens</p>
-                            </div>
-                            <div className="bg-green-50 rounded-xl p-3 shadow-sm border border-green-100">
-                                <div className="w-7 h-7 rounded-lg bg-green-500 flex items-center justify-center mb-2">
-                                    <TrendingUp className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <p className="text-xl font-bold text-green-600">$358K</p>
-                                <p className="text-[10px] text-green-700">Equity</p>
-                            </div>
-                        </div>
 
-                        {/* Financial Stats Row 2 */}
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-white rounded-xl p-3 shadow-sm">
-                                <p className="text-lg font-bold text-[#1d1d1f]">$56K</p>
-                                <p className="text-[10px] text-[#86868b]">Other Debt</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-3 shadow-sm">
-                                <p className="text-lg font-bold text-[#1d1d1f]">$1,196</p>
-                                <p className="text-[10px] text-[#86868b]">Monthly</p>
-                            </div>
-                            <div className="bg-white rounded-xl p-3 shadow-sm">
-                                <p className="text-lg font-bold text-[#1d1d1f]">608 / 650</p>
-                                <p className="text-[10px] text-[#86868b]">Credit</p>
-                            </div>
-                        </div>
-
-                        {/* How We Can Help */}
-                        <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-                            <div className="p-4 bg-purple-50/50">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 rounded-lg bg-purple-500 flex items-center justify-center">
-                                        <Zap className="w-3 h-3 text-white" />
+                            {/* Financial Stats Row 1 */}
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
                                     </div>
-                                    <h3 className="font-semibold text-sm text-[#1d1d1f]">How We Can Help</h3>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$785K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Property Value</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$428K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Total Liens</p>
+                                </div>
+                                <div className="bg-green-50 rounded-xl p-4 shadow-sm border border-green-100">
+                                    <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-green-600">$358K</p>
+                                    <p className="text-xs text-green-700 mt-1">Equity</p>
+                                </div>
+                            </div>
+
+                            {/* Financial Stats Row 2 */}
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <rect width="20" height="14" x="2" y="5" rx="2" strokeWidth={2}></rect>
+                                            <line x1="2" x2="22" y1="10" y2="10" strokeWidth={2}></line>
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$56K</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Other Debt</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <line x1="12" x2="12" y1="2" y2="22" strokeWidth={2}></line>
+                                            <path strokeWidth={2} d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">$1,196</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Monthly</p>
+                                </div>
+                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center mb-3">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-2xl font-bold text-[#1d1d1f]">608 / 650</p>
+                                    <p className="text-xs text-[#86868b] mt-1">Credit</p>
+                                </div>
+                            </div>
+
+                            {/* How We Can Help */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-5 bg-purple-50/50">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="font-semibold text-[#1d1d1f]">How We Can Help</h3>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {["explore debt consolidation options", "potential for rate and term refinance", "discuss credit improvement strategies"].map((item, i) => (
+                                            <div key={i} className="flex items-start gap-3">
+                                                <svg className="w-[18px] h-[18px] text-purple-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <p className="text-sm text-[#1d1d1f]">{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="p-4 border-t border-black/5">
+                                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-medium">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" strokeWidth={2}></circle>
+                                            <circle cx="12" cy="12" r="6" strokeWidth={2}></circle>
+                                            <circle cx="12" cy="12" r="2" strokeWidth={2}></circle>
+                                        </svg>
+                                        View Recommended Payoff Plan
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Suggested Talk Track */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-5 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="font-semibold text-[#1d1d1f]">Suggested Talk Track</h3>
+                                    </div>
+                                </div>
+                                <div className="px-5 pb-5 space-y-3">
+                                    <div className="p-4 rounded-xl bg-orange-50 border border-orange-100">
+                                        <p className="text-xs font-semibold text-orange-600 mb-2">Opening Line</p>
+                                        <p className="text-sm text-[#1d1d1f] italic">&quot;Thank you for taking the time to speak with me today about your financial goals.&quot;</p>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                        <p className="text-xs font-semibold text-slate-600 mb-2">Discovery Questions</p>
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-[#1d1d1f]">• &quot;What are your primary financial goals at this time?&quot;</p>
+                                            <p className="text-sm text-[#1d1d1f]">• &quot;How do you feel about your current monthly payments and debts?&quot;</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 rounded-xl bg-green-50 border border-green-100">
+                                        <p className="text-xs font-semibold text-green-600 mb-2">Value Statement</p>
+                                        <p className="text-sm text-[#1d1d1f] italic">&quot;We can look into options that may simplify your payments and potentially lower your interest rates.&quot;</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* What We See */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-[#1d1d1f]">What We See</h3>
+                                    <span className="text-[10px] px-2 py-0.5 bg-gray-100 rounded-full text-gray-500">Credit Report</span>
                                 </div>
                                 <div className="space-y-2">
-                                    {["Explore debt consolidation options", "Potential for rate and term refinance", "Discuss credit improvement strategies"].map((item, i) => (
-                                        <div key={i} className="flex items-start gap-2">
-                                            <CheckCircle className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                                            <p className="text-xs text-[#1d1d1f]">{item}</p>
+                                    {["equity assessment", "debt assessment", "credit flags", "complexity note"].map((item, i) => (
+                                        <div key={i} className="flex items-start gap-3">
+                                            <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                                            <p className="text-sm text-[#1d1d1f]">{item}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Suggested Talk Track */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="w-6 h-6 rounded-lg bg-orange-500 flex items-center justify-center">
-                                    <MessageSquare className="w-3 h-3 text-white" />
+                            {/* Confirm on Call */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-[#1d1d1f]">Confirm on Call</h3>
                                 </div>
-                                <h3 className="font-semibold text-sm text-[#1d1d1f]">Suggested Talk Track</h3>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="p-3 rounded-lg bg-orange-50 border border-orange-100">
-                                    <p className="text-[10px] font-semibold text-orange-600 mb-1">Opening Line</p>
-                                    <p className="text-xs text-[#1d1d1f] italic">&quot;Thank you for taking the time to speak with me today about your financial goals.&quot;</p>
-                                </div>
-                                <div className="p-3 rounded-lg bg-green-50 border border-green-100">
-                                    <p className="text-[10px] font-semibold text-green-600 mb-1">Value Statement</p>
-                                    <p className="text-xs text-[#1d1d1f] italic">&quot;We can look into options that may simplify your payments and potentially lower your interest rates.&quot;</p>
+                                <div className="space-y-1">
+                                    <p className="text-sm text-[#86868b]">• Current employment status</p>
+                                    <p className="text-sm text-[#86868b]">• Monthly income</p>
+                                    <p className="text-sm text-[#86868b]">• Any upcoming large expenses or financial changes</p>
                                 </div>
                             </div>
+
+                            {/* Footer note */}
+                            <p className="text-xs text-[#86868b] text-center py-2">
+                                Some interest rates estimated based on debt type. Property values from internal AVM.
+                            </p>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>
@@ -3349,10 +3473,10 @@ function RapportBuilderPanel() {
 }
 
 // Full Sales Coach Presentation Panel (from main page)
-function SalesCoachPanel() {
+function SalesCoachPanel({ contentScrollY }: { contentScrollY: number }) {
     const accentColor = '#F97316';
     return (
-        <div className="relative w-[600px]">
+        <div className="relative w-[700px]">
             {/* Outer glow */}
             <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
@@ -3363,21 +3487,29 @@ function SalesCoachPanel() {
 
             {/* Panel container */}
             <div
-                className="rounded-xl bg-white flex flex-col max-h-[75vh] overflow-hidden"
+                className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
                 {/* Header */}
-                <div className="px-5 py-4 bg-white border-b border-black/5 flex-shrink-0">
+                <div className="px-6 py-5 bg-white border-b border-black/5 flex-shrink-0">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                                <MessageSquare className="w-5 h-5 text-white" />
+                        <div className="flex items-center gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold text-[#1d1d1f] tracking-tight">Sales Coach</h1>
-                                <p className="text-xs text-[#86868b]">Rate too high objection</p>
+                                <h1 className="text-xl font-bold text-[#1d1d1f] tracking-tight">Sales Coach</h1>
+                                <p className="text-sm text-[#86868b]">Rate too high objection</p>
                             </div>
                         </div>
+                        <button className="p-2 rounded-lg hover:bg-black/5 transition-colors">
+                            <svg className="w-5 h-5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -3387,108 +3519,168 @@ function SalesCoachPanel() {
                 </div>
 
                 {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto p-5 bg-[#f5f5f7]">
-                    <div className="space-y-3">
-                        {/* AI Avatar */}
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
-                                <Zap className="w-4 h-4 text-white" />
+                <div className="flex-1 overflow-hidden">
+                    <motion.div
+                        className="p-6 bg-[#f5f5f7]"
+                        style={{ y: contentScrollY }}
+                    >
+                        <div className="space-y-4">
+                            {/* AI Avatar */}
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-[#1d1d1f]">AI Sales Coach</p>
+                                    <p className="text-xs text-[#86868b]">Rate too high objection</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-semibold text-sm text-[#1d1d1f]">AI Sales Coach</p>
-                                <p className="text-xs text-[#86868b]">Rate too high objection</p>
-                            </div>
-                        </div>
 
-                        {/* Response Card */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <div className="space-y-3">
-                                <p className="text-sm text-[#1d1d1f] leading-relaxed">
-                                    I understand your client&apos;s concern about the mortgage rate. Let&apos;s look at how a blended rate can actually work in their favor.
-                                </p>
-
-                                {/* Current Mortgages */}
-                                <div className="bg-stone-50 rounded-lg p-3 space-y-1.5">
-                                    <p className="text-xs text-[#1d1d1f] font-semibold flex items-center gap-2">
-                                        <span className="w-4 h-4 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold">1</span>
-                                        Current Mortgages:
+                            {/* Response Card */}
+                            <div className="bg-white rounded-xl p-5 shadow-sm">
+                                <div className="space-y-4">
+                                    <p className="text-sm text-[#1d1d1f] leading-relaxed">
+                                        I understand your client&apos;s concern about the mortgage rate. Let&apos;s look at how a blended rate can actually work in their favor by considering their current debts.
                                     </p>
-                                    <p className="text-xs text-[#1d1d1f] ml-6">1st Mortgage: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1 rounded">$247,500</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1 rounded">3.75%</span></p>
-                                    <p className="text-xs text-[#1d1d1f] ml-6">2nd Mortgage/HELOC: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1 rounded">$180,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1 rounded">4.25%</span></p>
-                                </div>
 
-                                {/* Selected Debts */}
-                                <div className="bg-stone-50 rounded-lg p-3 space-y-1.5">
-                                    <p className="text-xs text-[#1d1d1f] font-semibold flex items-center gap-2">
-                                        <span className="w-4 h-4 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[10px] font-bold">2</span>
-                                        Selected Debts for Payoff:
-                                    </p>
-                                    <p className="text-xs text-[#1d1d1f] ml-6">CHASE AUTO: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1 rounded">$18,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1 rounded">6.9%</span></p>
-                                    <p className="text-xs text-[#1d1d1f] ml-6">WFBNA CARD: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1 rounded">$10,200</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1 rounded">24.99%</span></p>
-                                    <p className="text-xs text-[#1d1d1f] ml-6">AMERICAN EXPRESS: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1 rounded">$2,500</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1 rounded">19.99%</span></p>
-                                </div>
-
-                                {/* Debt Summary */}
-                                <div className="bg-stone-50 rounded-lg p-3 space-y-1">
-                                    <p className="text-xs text-[#1d1d1f] font-semibold">Debt Summary:</p>
-                                    <p className="text-xs text-[#1d1d1f]">Total Debt to Pay Off: <span className="font-semibold text-emerald-600">$55,814</span></p>
-                                    <p className="text-xs text-[#1d1d1f]">Monthly Payments Eliminated: <span className="font-semibold text-emerald-600">$1,196</span></p>
-                                </div>
-
-                                {/* Blended Rate - THE MIC DROP */}
-                                <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg p-4 border border-orange-200">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <div className="w-5 h-5 rounded bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                                            <Zap className="w-3 h-3 text-white" />
+                                    {/* Current Mortgages */}
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-orange-100 text-orange-600">1</span>
+                                            <p className="text-sm text-[#1d1d1f] font-semibold">Current Mortgages:</p>
                                         </div>
-                                        <h4 className="font-semibold text-xs text-orange-800">Blended Rate Calculation:</h4>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <p className="text-xs text-[#1d1d1f]">Total Debt (incl. mortgages): <span className="font-semibold text-emerald-600">$483,314</span></p>
-                                        <p className="text-xs text-[#1d1d1f]">Current Weighted Interest: <span className="font-semibold text-rose-600">$64,973/year</span></p>
-                                        <div className="pt-2 border-t border-orange-200 mt-2">
-                                            <p className="text-base font-bold text-orange-700">
-                                                Current Blended Rate = <span className="text-xl text-rose-600 bg-rose-50 px-2 py-0.5 rounded-lg shadow-sm">13.2%</span>
-                                            </p>
-                                            <p className="text-xs text-emerald-600 mt-1.5">
-                                                → Consolidate at <span className="font-bold">7.25%</span> to save <span className="font-bold">$30,000+/year</span>
-                                            </p>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">1st Mortgage: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$247,500</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">3.75%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">2nd Mortgage/HELOC: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$180,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">4.25%</span></p>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Conclusion */}
-                                <p className="text-xs text-[#1d1d1f] leading-relaxed bg-green-50 p-3 rounded-lg border border-green-100">
-                                    While the mortgage rate may seem high, consolidating high-interest debt could <span className="font-semibold text-green-700">lower their overall financial burden</span>, leading to savings in monthly payments and interest costs.
-                                </p>
+                                    {/* Selected Debts */}
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-orange-100 text-orange-600">2</span>
+                                            <p className="text-sm text-[#1d1d1f] font-semibold">Selected Debts for Payoff:</p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">CHASE AUTO: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$18,000</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">6.9%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">5/3 DIVIDEND: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$12,645</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">5.5%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">WFBNA AUTO: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$11,219</span> at <span className="font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">7.2%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">WFBNA CARD: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$10,200</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">24.99%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">AMERICAN EXPRESS: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$2,500</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">19.99%</span></p>
+                                        </div>
+                                        <div className="flex gap-3 ml-1">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">CITI BANK: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$750</span> at <span className="font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">22.99%</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Debt Summary */}
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <div className="w-5 h-5 rounded bg-stone-100 flex items-center justify-center text-stone-500">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                        </div>
+                                        <h4 className="font-medium text-sm text-[#1d1d1f]">Current Debt Summary:</h4>
+                                    </div>
+                                    <div className="bg-stone-50 rounded-xl p-4 space-y-2">
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">Total Debt to Pay Off: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$55,814</span></p>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-stone-200 text-stone-500">•</span>
+                                            <p className="text-sm text-[#1d1d1f]">Monthly Payments Eliminated: <span className="font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">$1,196</span></p>
+                                        </div>
+                                    </div>
+
+                                    {/* Blended Rate - THE MIC DROP */}
+                                    <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-5 border border-orange-200">
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <div className="w-6 h-6 rounded bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+                                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <h4 className="font-semibold text-sm text-orange-800">Blended Rate Calculation:</h4>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-sm text-[#1d1d1f]">Total Debt (including mortgages): <span className="font-semibold text-emerald-600">$483,314</span></p>
+                                            <p className="text-sm text-[#1d1d1f]">Current Weighted Interest: <span className="font-semibold text-rose-600">$64,973/year</span></p>
+                                            <div className="pt-2 border-t border-orange-200 mt-3">
+                                                <p className="text-lg font-bold text-orange-700">
+                                                    Current Blended Rate = <span className="text-2xl text-rose-600 bg-rose-50 px-3 py-1 rounded-lg shadow-sm">13.45%</span>
+                                                </p>
+                                                <p className="text-sm text-emerald-600 mt-2">
+                                                    → Consolidate at <span className="font-bold">7.25%</span> to save <span className="font-bold">$30,000+/year</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Conclusion */}
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <div className="w-5 h-5 rounded bg-green-100 flex items-center justify-center text-green-600">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                        </div>
+                                        <h4 className="font-medium text-sm text-[#1d1d1f]">Conclusion:</h4>
+                                    </div>
+                                    <p className="text-sm text-[#1d1d1f] leading-relaxed bg-green-50 p-4 rounded-xl border border-green-100">
+                                        While the mortgage rate may seem high, consolidating high-interest debt could <span className="font-semibold text-green-700">lower their overall financial burden</span>, leading to savings in monthly payments and interest costs. Would your client be open to exploring this option further?
+                                    </p>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-2 pt-2">
+                                        <button className="flex-1 py-3 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors flex items-center justify-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                            Try Another Topic
+                                        </button>
+                                        <button className="px-5 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl text-sm font-medium flex items-center gap-2 shadow-md">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>
     );
 }
 
-// Full Valuation AI Presentation Panel
-function ValuationPanel() {
+// Full Valuation AI Presentation Panel (exact match to main page)
+function ValuationPanel({ contentScrollY }: { contentScrollY: number }) {
     const accentColor = '#F59E0B';
-    
-    const valuationSources = [
-        { name: 'Internal AVM', value: '$785,000', confidence: '94%', color: '#8B5CF6' },
-        { name: 'Zillow', value: '$769,000', confidence: '87%', color: '#3B82F6' },
-        { name: 'Redfin', value: '$801,000', confidence: '89%', color: '#EF4444' },
-        { name: 'Realtor', value: '$777,000', confidence: '85%', color: '#64748B' },
-    ];
-    
-    const comparables = [
-        { address: '2104 Shrewsbury Dr', price: '$782,000', sqft: '2,380', beds: 4, sold: '12 days ago' },
-        { address: '2210 Lakewood Ct', price: '$795,000', sqft: '2,510', beds: 4, sold: '23 days ago' },
-        { address: '1908 Highland Ave', price: '$768,000', sqft: '2,320', beds: 4, sold: '31 days ago' },
-    ];
-    
     return (
-        <div className="relative w-[600px]">
+        <div className="relative w-[700px]">
             {/* Outer glow */}
             <motion.div
                 className="absolute -inset-4 rounded-2xl blur-2xl -z-10"
@@ -3499,127 +3691,233 @@ function ValuationPanel() {
 
             {/* Panel container */}
             <div
-                className="rounded-xl bg-white flex flex-col max-h-[75vh] overflow-hidden"
+                className="rounded-xl bg-white flex flex-col h-[85vh] max-h-[880px] overflow-hidden"
                 style={{ boxShadow: `0 0 60px ${accentColor}20, 0 25px 50px rgba(0,0,0,0.4)` }}
             >
                 {/* Header */}
-                <div className="px-5 py-4 bg-white border-b border-black/5 flex-shrink-0">
+                <div className="px-6 py-5 bg-white border-b border-black/5 flex-shrink-0">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center">
-                                <Home className="w-5 h-5 text-white" />
+                        <div className="flex items-center gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold text-[#1d1d1f] tracking-tight">Property Valuation AI</h1>
-                                <p className="text-xs text-[#86868b]">2116 Shrewsbury Dr, McKinney TX</p>
+                                <h1 className="text-xl font-bold text-[#1d1d1f] tracking-tight">Working Value for AUS</h1>
+                                <p className="text-sm text-[#86868b]">Property Valuation Analysis</p>
                             </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button className="p-2 rounded-lg hover:bg-black/5 transition-colors border border-stone-200">
+                                <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </button>
+                            <button className="p-2 rounded-lg hover:bg-black/5 transition-colors border border-stone-200">
+                                <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* AI Badge */}
+                {/* AI Warning Banner */}
                 <div className="px-4 py-2 bg-amber-50 border-b border-amber-100 flex-shrink-0">
-                    <p className="text-xs text-amber-700"><span className="font-semibold">AI Valuation</span> - Multi-source analysis with confidence scoring</p>
+                    <p className="text-xs text-amber-700"><span className="font-semibold">AI-Generated</span> — Verify with appraisal</p>
                 </div>
 
                 {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto p-5 bg-[#f5f5f7]">
-                    <div className="space-y-3">
-                        {/* AI Estimated Value - Hero */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm text-center">
-                            <p className="text-xs text-[#86868b] mb-1">AI Estimated Value</p>
-                            <motion.p 
-                                className="text-4xl font-bold text-amber-600"
-                                animate={{ scale: [1, 1.02, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            >
-                                $785,000
-                            </motion.p>
-                            <div className="flex items-center justify-center gap-4 mt-2">
-                                <span className="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded">+4.2% YoY</span>
-                                <span className="text-xs text-amber-600 font-medium bg-amber-50 px-2 py-0.5 rounded">94% Confidence</span>
+                <div className="flex-1 overflow-hidden bg-[#f5f5f7]">
+                    <motion.div
+                        className="p-6"
+                        style={{ y: contentScrollY }}
+                    >
+                        <div className="space-y-4 max-w-2xl mx-auto">
+                            {/* Property Address Card */}
+                            <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-base font-semibold text-[#1d1d1f] truncate">2116 Shrewsbury Dr</p>
+                                    <p className="text-sm text-[#86868b]">McKinney, TX • 5bd 4.5ba • 3,850 sqft</p>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Valuation Sources Grid */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <h4 className="font-semibold text-sm text-[#1d1d1f] mb-3 flex items-center gap-2">
-                                <Zap className="w-4 h-4 text-amber-500" />
-                                Multi-Source Analysis
-                            </h4>
-                            <div className="grid grid-cols-2 gap-2">
-                                {valuationSources.map((source) => (
-                                    <div key={source.name} className="p-2.5 rounded-lg bg-stone-50 border border-stone-100">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: source.color }} />
-                                            <span className="text-xs text-[#86868b]">{source.name}</span>
+                            {/* AUS Recommended Card */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm ring-2 ring-green-500">
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                                            </svg>
+                                            <span className="text-xs font-bold text-green-700 uppercase tracking-wide">AUS Recommended</span>
                                         </div>
-                                        <p className="text-sm font-bold text-[#1d1d1f]">{source.value}</p>
-                                        <p className="text-xs text-emerald-600">{source.confidence} confident</p>
+                                        <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">High</span>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Property Details */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <h4 className="font-semibold text-sm text-[#1d1d1f] mb-2">Property Details</h4>
-                            <div className="grid grid-cols-4 gap-2 text-center">
-                                <div className="p-2 bg-amber-50 rounded-lg">
-                                    <p className="text-lg font-bold text-amber-700">4</p>
-                                    <p className="text-xs text-[#86868b]">Beds</p>
-                                </div>
-                                <div className="p-2 bg-amber-50 rounded-lg">
-                                    <p className="text-lg font-bold text-amber-700">3</p>
-                                    <p className="text-xs text-[#86868b]">Baths</p>
-                                </div>
-                                <div className="p-2 bg-amber-50 rounded-lg">
-                                    <p className="text-lg font-bold text-amber-700">2,450</p>
-                                    <p className="text-xs text-[#86868b]">Sq Ft</p>
-                                </div>
-                                <div className="p-2 bg-amber-50 rounded-lg">
-                                    <p className="text-lg font-bold text-amber-700">2021</p>
-                                    <p className="text-xs text-[#86868b]">Renovated</p>
+                                    <p className="text-5xl font-bold text-[#1d1d1f] mb-4">$785,000</p>
+                                    <div className="flex items-center gap-2 p-3 rounded-xl bg-green-50 border border-green-100 mb-4">
+                                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm text-green-700">Supported by multiple sources with low variance</span>
+                                    </div>
+                                    <p className="text-sm text-[#86868b]">The internal AVM value is supported by a low variance and high confidence level.</p>
+                                    <div className="mt-4 pt-4 border-t border-black/5 text-center">
+                                        <span className="text-sm text-green-600 font-semibold">✓ Currently selected for AUS</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Comparable Sales */}
-                        <div className="bg-white rounded-xl p-4 shadow-sm">
-                            <h4 className="font-semibold text-sm text-[#1d1d1f] mb-2 flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                                Recent Comparable Sales
-                            </h4>
-                            <div className="space-y-2">
-                                {comparables.map((comp) => (
-                                    <div key={comp.address} className="flex items-center justify-between p-2 rounded-lg bg-stone-50">
-                                        <div>
-                                            <p className="text-xs font-medium text-[#1d1d1f]">{comp.address}</p>
-                                            <p className="text-xs text-[#86868b]">{comp.beds}bd • {comp.sqft} sqft • {comp.sold}</p>
+                            {/* Alternative Options */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5">
+                                    <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Alternative Options</span>
+                                </div>
+                                <div className="divide-y divide-black/5">
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div>
+                                                <p className="text-sm font-semibold text-[#1d1d1f]">Safest for underwriting</p>
+                                                <p className="text-xs text-[#86868b]">Lowest defensible value across all sources</p>
+                                            </div>
                                         </div>
-                                        <p className="text-sm font-bold text-emerald-600">{comp.price}</p>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$769K</span>
                                     </div>
-                                ))}
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div>
+                                                <p className="text-sm font-semibold text-[#1d1d1f]">Balanced estimate</p>
+                                                <p className="text-xs text-[#86868b]">Median of all available sources</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$785K</span>
+                                    </div>
+                                    <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-5 h-5 rounded-full border-2 border-black/20" />
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <p className="text-sm font-semibold text-[#1d1d1f]">Best case (not recommended)</p>
+                                                    <p className="text-xs text-[#86868b]">Upper bound - may increase appraisal risk</p>
+                                                </div>
+                                                <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg font-bold text-[#1d1d1f]">$801K</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Equity Summary */}
-                        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-200">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs text-emerald-600 font-medium">Available Equity</p>
-                                    <p className="text-2xl font-bold text-emerald-700">$358,000</p>
+                            {/* Source Comparison */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                                    <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Source Comparison</span>
+                                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">4% variance</span>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-xs text-[#86868b]">Current Liens</p>
-                                    <p className="text-lg font-semibold text-[#1d1d1f]">$427,000</p>
+                                <div className="p-5">
+                                    <div className="grid grid-cols-4 gap-3 mb-4">
+                                        <div className="text-center p-3 rounded-xl bg-purple-50 border border-purple-100">
+                                            <p className="text-[10px] text-purple-700 font-semibold uppercase">Internal</p>
+                                            <p className="text-base font-bold text-purple-700 mt-1">$785K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-blue-50 border border-blue-100">
+                                            <p className="text-[10px] text-blue-700 font-semibold uppercase">Zillow</p>
+                                            <p className="text-base font-bold text-blue-700 mt-1">$769K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-red-50 border border-red-100">
+                                            <p className="text-[10px] text-red-700 font-semibold uppercase">Redfin</p>
+                                            <p className="text-base font-bold text-red-700 mt-1">$801K</p>
+                                        </div>
+                                        <div className="text-center p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                            <p className="text-[10px] text-slate-700 font-semibold uppercase">Realtor</p>
+                                            <p className="text-base font-bold text-slate-700 mt-1">$777K</p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style={{ width: '80%' }} />
+                                        </div>
+                                        <p className="text-xs text-[#86868b] text-center">Values within 5% variance are typically considered stable across AVMs</p>
+                                    </div>
                                 </div>
                             </div>
-                            <p className="text-xs text-emerald-600 mt-2 pt-2 border-t border-emerald-200">
-                                → Client has strong equity position for HELOC or cash-out refinance
-                            </p>
+
+                            {/* Why This Value */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-pointer">
+                                    <div className="flex items-center gap-3">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span className="text-sm font-semibold text-[#1d1d1f]">Why This Value?</span>
+                                    </div>
+                                    <svg className="w-5 h-5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Underwriting Readiness */}
+                            <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-black/5 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <span className="text-xs font-bold text-[#1d1d1f] uppercase tracking-wide">Underwriting Readiness</span>
+                                    </div>
+                                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Yes</span>
+                                </div>
+                                <div className="p-4 space-y-1">
+                                    <div className="flex items-center justify-between py-2 border-b border-black/5">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Multiple sources present</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">Yes</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2 border-b border-black/5">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Variance within tolerance</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">4%</span>
+                                    </div>
+                                    <div className="flex items-center justify-between py-2">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span className="text-sm text-[#1d1d1f]">Internal model alignment</span>
+                                        </div>
+                                        <span className="text-sm font-semibold text-green-600">Yes</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Disclaimer */}
+                            <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <p className="text-xs text-[#86868b]">AVMs are estimates; final value determined by appraisal or underwriting. Selected value prioritizes stability and defensibility.</p>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>
