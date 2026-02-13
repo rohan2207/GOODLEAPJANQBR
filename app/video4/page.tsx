@@ -784,17 +784,6 @@ function SteveIntroContent() {
                 <span className="text-emerald-400 font-semibold text-lg">V1 Launched to All Loan Officers</span>
             </motion.div>
 
-            {/* Presenter */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 pt-8 border-t border-white/10"
-            >
-                <p className="text-white/40 text-sm tracking-widest uppercase mb-2">Presented by</p>
-                <p className="text-2xl text-white font-semibold">Steve Hulme</p>
-                <p className="text-white/50">VP Product, GoodLeap</p>
-            </motion.div>
         </div>
     );
 }
@@ -1775,17 +1764,6 @@ function SteveIntroSection({ scrollYProgress }: { scrollYProgress: any }) {
                         <span className="text-emerald-400 font-semibold text-lg">V1 Launched to All Loan Officers</span>
                     </motion.div>
 
-                    {/* Presenter */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-12 pt-8 border-t border-white/10"
-                    >
-                        <p className="text-white/40 text-sm tracking-widest uppercase mb-2">Presented by</p>
-                        <p className="text-2xl text-white font-semibold">Steve Hulme</p>
-                        <p className="text-white/50">VP Product, GoodLeap</p>
-                    </motion.div>
                 </div>
             </motion.div>
         </div>
