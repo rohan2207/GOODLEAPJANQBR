@@ -1611,26 +1611,6 @@ function ExecutiveCloseContent() {
                 </div>
             </motion.div>
 
-            {/* Handoff */}
-            <motion.div
-                className="pt-8 border-t border-white/10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-            >
-                <p className="text-white/40 text-sm tracking-widest uppercase mb-3">Transitioning to</p>
-                <p className="text-2xl text-white font-semibold">Ronni Anchondo</p>
-            </motion.div>
-
-            {/* Thank you */}
-            <motion.p
-                className="mt-10 text-white/30 text-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}
-            >
-                Thank you
-            </motion.p>
         </div>
     );
 }
@@ -2969,26 +2949,6 @@ function ExecutiveCloseSection({ scrollYProgress }: { scrollYProgress: any }) {
                     </div>
                 </motion.div>
 
-                {/* Handoff */}
-                <motion.div
-                    className="pt-8 border-t border-white/10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                >
-                    <p className="text-white/40 text-sm tracking-widest uppercase mb-3">Transitioning to</p>
-                    <p className="text-2xl text-white font-semibold">Ronni Anchondo</p>
-                </motion.div>
-
-                {/* Thank you */}
-                <motion.p
-                    className="mt-10 text-white/30 text-sm"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                >
-                    Thank you
-                </motion.p>
             </motion.div>
         </div>
     );
