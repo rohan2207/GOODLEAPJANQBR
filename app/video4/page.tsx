@@ -1320,12 +1320,12 @@ function FeatureContent({ feature, progress }: { feature: typeof FEATURES[0]; pr
 function BetaJourneyContent({ progress }: { progress: number }) {
     const milestones = [
         { date: 'NOV 2024', title: 'V1 Launch', description: 'Launched to all loan officers', color: '#8B5CF6', badge: 'V1' },
-        { date: 'FEB 2025', title: 'Beta Live', description: '15 Loan Officers on real customer calls with 2 AI assistants', color: '#10B981', badge: 'BETA' },
+        { date: 'FEB 2025', title: 'V2 Live', description: '15 Loan Officers on real customer calls with 2 AI assistants', color: '#10B981', badge: 'V2' },
         { date: 'NEXT', title: 'Expanded Rollout', description: 'Reimagined pricing experience and HELOC integration', color: '#3B82F6', badge: 'SOON' },
     ];
 
     return (
-        <div className="w-full max-w-[1400px] mx-auto px-8 lg:px-16 relative z-10">
+        <div className="w-full max-w-[1600px] mx-auto px-8 lg:px-16 relative z-10">
             {/* Background */}
             <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div className="absolute w-[800px] h-[800px] rounded-full blur-[180px] bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-emerald-500/20"
@@ -1334,20 +1334,11 @@ function BetaJourneyContent({ progress }: { progress: number }) {
 
             {/* Header */}
             <motion.div 
-                className="text-center mb-16"
+                className="text-center mb-20"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-500/30 mb-6">
-                    <motion.div
-                        className="w-2 h-2 rounded-full bg-emerald-500"
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                    />
-                    <span className="text-sm text-emerald-400 font-medium uppercase tracking-wider">Beta Journey</span>
-                </div>
-                
-                <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+                <h2 className="text-5xl lg:text-6xl font-bold text-white mb-4">
                     From V1 Launch to{' '}
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-emerald-400">
                         Real Customer Calls
@@ -1356,16 +1347,17 @@ function BetaJourneyContent({ progress }: { progress: number }) {
                 <p className="text-xl text-white/60">Rapid iteration from November to February</p>
             </motion.div>
 
-            {/* Timeline */}
-            <div className="relative">
-                <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 rounded-full -translate-y-1/2" />
+            {/* Timeline - Larger */}
+            <div className="relative py-12">
+                <div className="absolute top-1/2 left-[10%] right-[10%] h-2 bg-white/10 rounded-full -translate-y-1/2" />
                 <motion.div
-                    className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500 rounded-full -translate-y-1/2"
+                    className="absolute top-1/2 left-[10%] h-2 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500 rounded-full -translate-y-1/2"
+                    style={{ width: `${Math.min(80, progress * 120)}%` }}
                     initial={{ width: '0%' }}
-                    animate={{ width: `${Math.min(100, progress * 150)}%` }}
+                    animate={{ width: `${Math.min(80, progress * 120)}%` }}
                 />
 
-                <div className="relative flex justify-between items-center">
+                <div className="relative flex justify-between items-center px-[5%]">
                     {milestones.map((milestone, i) => (
                         <motion.div
                             key={milestone.date}
@@ -1375,47 +1367,26 @@ function BetaJourneyContent({ progress }: { progress: number }) {
                             transition={{ delay: 0.2 + i * 0.15 }}
                         >
                             <motion.div
-                                className="w-16 h-16 rounded-full flex items-center justify-center border-4 mb-4"
+                                className="w-24 h-24 rounded-full flex items-center justify-center border-4 mb-6"
                                 style={{ borderColor: milestone.color, backgroundColor: `${milestone.color}20` }}
                                 animate={{ 
                                     boxShadow: [
-                                        `0 0 20px ${milestone.color}30`,
-                                        `0 0 40px ${milestone.color}50`,
-                                        `0 0 20px ${milestone.color}30`,
+                                        `0 0 30px ${milestone.color}30`,
+                                        `0 0 60px ${milestone.color}50`,
+                                        `0 0 30px ${milestone.color}30`,
                                     ]
                                 }}
                                 transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
                             >
-                                <span className="text-white font-bold text-sm">{milestone.badge}</span>
+                                <span className="text-white font-bold text-xl">{milestone.badge}</span>
                             </motion.div>
-                            <span className="text-white/40 text-sm font-medium mb-2">{milestone.date}</span>
-                            <h3 className="text-white font-semibold text-lg mb-1">{milestone.title}</h3>
-                            <p className="text-white/50 text-sm max-w-[200px]">{milestone.description}</p>
+                            <span className="text-white/50 text-base font-medium mb-3">{milestone.date}</span>
+                            <h3 className="text-white font-semibold text-2xl mb-2">{milestone.title}</h3>
+                            <p className="text-white/50 text-base max-w-[280px]">{milestone.description}</p>
                         </motion.div>
                     ))}
                 </div>
             </div>
-
-            {/* Stats */}
-            <motion.div
-                className="mt-16 flex justify-center gap-12"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-            >
-                <div className="text-center">
-                    <p className="text-4xl font-bold text-emerald-400">15</p>
-                    <p className="text-white/50 text-sm">Loan Officers Live</p>
-                </div>
-                <div className="text-center">
-                    <p className="text-4xl font-bold text-blue-400">Real</p>
-                    <p className="text-white/50 text-sm">Customer Calls</p>
-                </div>
-                <div className="text-center">
-                    <p className="text-4xl font-bold text-purple-400">3</p>
-                    <p className="text-white/50 text-sm">AI Assistants</p>
-                </div>
-            </motion.div>
         </div>
     );
 }
