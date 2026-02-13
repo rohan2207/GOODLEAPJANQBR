@@ -13,33 +13,33 @@ import { CapabilityWalkthrough } from './components/CapabilityWalkthrough';
 // TIMING CONFIGURATION (Total: 215 seconds = 3:35)
 // Updated to match final voiceover script
 // ============================================================================
-const TOTAL_DURATION = 215;
+const TOTAL_DURATION = 220;
 
 // Section timing (in seconds) - matches voiceover script
 const SECTIONS = {
-    // SETUP (0:00 - 0:20)
-    steveIntro: { start: 0, end: 10 },          // Steve Hulme Intro
-    industryRevolution: { start: 10, end: 20 }, // Industry Revolution
+    // INTRO (0:00 - 0:20)
+    steveIntro: { start: 0, end: 20 },          // LinkAI Intro - 20 seconds
 
-    // PROBLEM (0:20 - 0:35)
-    firstCallProblem: { start: 20, end: 35 },   // First Call Problem
+    // AI IS RESHAPING (0:20 - 0:34)
+    industryRevolution: { start: 20, end: 34 }, // AI is reshaping - 14 seconds
 
-    // SOLUTION (0:35 - 0:55)
-    aiAssistants: { start: 35, end: 55 },       // AI Assistants in LinkAI
+    // REFINANCE + AI CAPABILITIES (0:34 - 1:13)
+    firstCallProblem: { start: 34, end: 53 },   // Refinance Problem - 19 seconds
+    aiAssistants: { start: 53, end: 73 },       // AI Capabilities - 20 seconds
 
-    // FEATURES (0:55 - 2:18) = 83 seconds (lastMile time redistributed)
+    // THREE FEATURES (1:14 - 2:23) = 69 seconds
     // Each feature has 3 phases: Backend → Panel → App Context
-    rapport: { start: 55, end: 83 },            // Rapport Builder (28s)
-    valuation: { start: 83, end: 111 },         // Valuation AI (28s)
-    salesCoach: { start: 111, end: 138 },       // Sales Coach (27s)
+    rapport: { start: 74, end: 97 },            // Rapport Builder (23s)
+    valuation: { start: 97, end: 120 },         // Valuation AI (23s)
+    salesCoach: { start: 120, end: 143 },       // Sales Coach (23s)
 
-    // JOURNEY & ROADMAP (2:18 - 3:05)
-    betaJourney: { start: 138, end: 170 },      // Beta Journey (Nov to Feb)
-    roadmap: { start: 170, end: 185 },          // Roadmap Preview
+    // JOURNEY & ROADMAP (2:23 - 3:10)
+    betaJourney: { start: 143, end: 175 },      // Beta Journey (32s)
+    roadmap: { start: 175, end: 190 },          // Roadmap Preview (15s)
 
-    // CLOSE (3:05 - 3:35)
-    industryLeadership: { start: 185, end: 198 }, // Industry Leadership
-    executiveClose: { start: 198, end: 215 },   // Executive Close + Handoff
+    // CLOSE (3:10 - 3:40)
+    industryLeadership: { start: 190, end: 203 }, // Industry Leadership (13s)
+    executiveClose: { start: 203, end: 220 },   // Executive Close (17s)
 };
 
 // Feature configurations matching main page style
