@@ -851,10 +851,6 @@ function IndustryRevolutionContent() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
             >
-                <div className="flex items-center gap-2 text-white/40">
-                    <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                    <span>Others: Still Planning</span>
-                </div>
                 <div className="flex items-center gap-2 text-emerald-400">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="font-semibold">GoodLeap: Already Live</span>
@@ -1845,10 +1841,6 @@ function IndustryRevolutionSection({ scrollYProgress }: { scrollYProgress: any }
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
                     >
-                        <div className="flex items-center gap-2 text-white/40">
-                            <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                            <span>Others: Still Planning</span>
-                        </div>
                         <div className="flex items-center gap-2 text-emerald-400">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                             <span className="font-semibold">GoodLeap: Already Live</span>
