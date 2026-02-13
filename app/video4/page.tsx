@@ -763,7 +763,7 @@ function SteveIntroContent() {
                     className="inline-block rounded-2xl p-2"
                 >
                     <Image
-                        src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+                        src="https://cdn.bfldr.com/Q445447Z/at/7kbwvht7vhnq4vh89wv2mb5/LinkAI_BG_FullGradonBlk.jpg?auto=webp&format=jpg"
                         alt="LinkAI"
                         width={280}
                         height={120}
@@ -1583,7 +1583,7 @@ function ExecutiveCloseContent() {
                 animate={{ opacity: 1, scale: 1 }}
             >
                 <Image
-                    src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+                    src="https://cdn.bfldr.com/Q445447Z/at/7kbwvht7vhnq4vh89wv2mb5/LinkAI_BG_FullGradonBlk.jpg?auto=webp&format=jpg"
                     alt="LinkAI"
                     width={200}
                     height={80}
@@ -1743,7 +1743,7 @@ function SteveIntroSection({ scrollYProgress }: { scrollYProgress: any }) {
                             className="inline-block rounded-2xl p-2"
                         >
                             <Image
-                                src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+                                src="https://cdn.bfldr.com/Q445447Z/at/7kbwvht7vhnq4vh89wv2mb5/LinkAI_BG_FullGradonBlk.jpg?auto=webp&format=jpg"
                                 alt="LinkAI"
                                 width={280}
                                 height={120}
@@ -2941,7 +2941,7 @@ function ExecutiveCloseSection({ scrollYProgress }: { scrollYProgress: any }) {
                     animate={{ opacity: 1, scale: 1 }}
                 >
                     <Image
-                        src="https://cdn.bfldr.com/Q445447Z/at/k3spc358jhjrwwn9p2w6k2s/LinkAI_BG_FullGradonWht.png?auto=webp&format=png"
+                        src="https://cdn.bfldr.com/Q445447Z/at/7kbwvht7vhnq4vh89wv2mb5/LinkAI_BG_FullGradonBlk.jpg?auto=webp&format=jpg"
                         alt="LinkAI"
                         width={200}
                         height={80}
