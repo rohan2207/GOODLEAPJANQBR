@@ -1310,7 +1310,8 @@ function BetaJourneyContent({ progress }: { progress: number }) {
     const milestones = [
         { date: 'NOV 2024', title: 'V1 Launch', description: 'Launched to all loan officers', color: '#8B5CF6', badge: 'V1' },
         { date: 'FEB 2025', title: 'V2 Live', description: '15 Loan Officers on real customer calls with 2 AI assistants', color: '#10B981', badge: 'V2' },
-        { date: 'NEXT', title: 'Expanded Rollout', description: 'Reimagined pricing experience and HELOC integration', color: '#3B82F6', badge: 'SOON' },
+        { date: 'Q2 2025', title: 'Expanded Rollout', description: 'Reimagined pricing experience and HELOC integration', color: '#F59E0B', badge: '→' },
+        { date: 'NEXT', title: 'V3', description: 'Full platform expansion', color: '#3B82F6', badge: 'V3' },
     ];
 
     return (
@@ -2496,17 +2497,24 @@ function BetaJourneySection({ scrollYProgress }: { scrollYProgress: any }) {
         },
         { 
             date: 'FEB 2025', 
-            title: 'Beta Live', 
+            title: 'V2 Live', 
             description: '15 Loan Officers on real customer calls with 2 AI assistants',
             color: '#10B981',
-            badge: 'BETA'
+            badge: 'V2'
+        },
+        { 
+            date: 'Q2 2025', 
+            title: 'Expanded Rollout', 
+            description: 'Reimagined pricing experience and HELOC integration',
+            color: '#F59E0B',
+            badge: '→'
         },
         { 
             date: 'NEXT', 
-            title: 'Expanded Rollout', 
-            description: 'Reimagined pricing experience and HELOC integration',
+            title: 'V3', 
+            description: 'Full platform expansion',
             color: '#3B82F6',
-            badge: 'SOON'
+            badge: 'V3'
         },
     ];
 
