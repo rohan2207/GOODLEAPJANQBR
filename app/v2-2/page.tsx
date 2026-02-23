@@ -229,7 +229,7 @@ export default function V22ReleasePage() {
               "L2 Sub-tabs (Liabilities, Details)",
               "AI Assistant Panel"
             ]}
-            screenshotPath="/screenshots/new-ui.png"
+            screenshotPath="/Screenshots/new-ui.png"
             accentColor={{ text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/30", glow: "shadow-cyan-500/10" }}
           />
 
@@ -244,7 +244,7 @@ export default function V22ReleasePage() {
               "Value Propositions",
               "Payment Savings Comparison"
             ]}
-            screenshotPath="/screenshots/scenarios.png"
+            screenshotPath="/Screenshots/scenarios.png"
             accentColor={{ text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/30", glow: "shadow-purple-500/10" }}
           />
 
@@ -259,7 +259,7 @@ export default function V22ReleasePage() {
               "Subject Property",
               "Continue to Figure"
             ]}
-            screenshotPath="/screenshots/application.png"
+            screenshotPath="/Screenshots/application.png"
             accentColor={{ text: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/30", glow: "shadow-amber-500/10" }}
           />
 
@@ -274,7 +274,7 @@ export default function V22ReleasePage() {
               "Property AVM",
               "Sales Coach"
             ]}
-            screenshotPath="/screenshots/ai-assistants.png"
+            screenshotPath="/Screenshots/ai-assistants.png"
             accentColor={{ text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/30", glow: "shadow-emerald-500/10" }}
           />
 
