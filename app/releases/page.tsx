@@ -15,10 +15,9 @@ type Release = {
   status: "released" | "upcoming";
   month: string;
   year: string;
+  color: string;
   bullets: {
     icon: React.ComponentType<{ className?: string }>;
-    color: string;
-    bg: string;
     text: string;
   }[];
 };
@@ -34,11 +33,12 @@ const releases: Release[] = [
     status: "upcoming",
     month: "February",
     year: "2026",
+    color: "orange",
     bullets: [
-      { icon: Layout, color: "text-cyan-400", bg: "bg-cyan-500/20", text: "New UI for Link — Completely redesigned interface for improved workflow" },
-      { icon: Sparkles, color: "text-purple-400", bg: "bg-purple-500/20", text: "Scenarios Tab — Compare multiple loan scenarios side-by-side" },
-      { icon: FileText, color: "text-amber-400", bg: "bg-amber-500/20", text: "Application (Short 1003) — Streamlined application process" },
-      { icon: Bot, color: "text-emerald-400", bg: "bg-emerald-500/20", text: "AI Assistants — Intelligent assistants for rapport building, sales coaching, and valuations" },
+      { icon: Layout, text: "New UI for Link — Completely redesigned interface" },
+      { icon: Sparkles, text: "Scenarios Tab — Compare multiple loan scenarios" },
+      { icon: FileText, text: "Application (Short 1003) — Streamlined process" },
+      { icon: Bot, text: "AI Assistants — Intelligent assistants for sales" },
     ],
   },
   {
@@ -50,14 +50,21 @@ const releases: Release[] = [
     status: "released",
     month: "February",
     year: "2026",
+    color: "blue",
     bullets: [
-      { icon: Home, color: "text-emerald-400", bg: "bg-emerald-500/20", text: "Last Market Sale — View complete sale history including sale price, recorded date, seller/buyer information, and document ID." },
-      { icon: Lock, color: "text-amber-400", bg: "bg-amber-500/20", text: "Open Liens — Instantly see all open liens with lender details, loan amounts, terms, rates, and LTV calculations." },
-      { icon: RefreshCw, color: "text-blue-400", bg: "bg-blue-500/20", text: "Transfers & Conveyances — Access complete transaction history with deed transfer details and arms-length indicators." },
-      { icon: Users, color: "text-purple-400", bg: "bg-purple-500/20", text: "Ownership History — View the complete ownership chain showing all previous owners and transaction dates." },
+      { icon: Home, text: "Last Market Sale — Complete sale history" },
+      { icon: Lock, text: "Open Liens — All liens with details" },
+      { icon: RefreshCw, text: "Transfers & Conveyances — Transaction history" },
+      { icon: Users, text: "Ownership History — Complete chain" },
     ],
   },
 ];
+
+// Color mappings
+const colorMap: { [key: string]: { bg: string; border: string; text: string; light: string; badge: string } } = {
+  orange: { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-600", light: "bg-orange-100", badge: "bg-orange-500" },
+  blue: { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-600", light: "bg-blue-100", badge: "bg-blue-500" },
+};
 
 // Group releases by month/year
 function groupReleasesByMonth(releases: Release[]): { [key: string]: Release[] } {
@@ -70,19 +77,13 @@ function groupReleasesByMonth(releases: Release[]): { [key: string]: Release[] }
 }
 
 // Get unique months for timeline
-function getTimelineMonths(releases: Release[]): { label: string; hasUpcoming: boolean }[] {
-  const months = new Map<string, boolean>();
-  releases.forEach(r => {
-    const key = `${r.month} ${r.year}`;
-    const hasUpcoming = months.get(key) || r.status === "upcoming";
-    months.set(key, hasUpcoming);
-  });
-  // Return unique months in order (most recent first)
-  const uniqueMonths: { label: string; hasUpcoming: boolean }[] = [];
+function getTimelineMonths(releases: Release[]): { label: string; hasUpcoming: boolean; color: string }[] {
+  const uniqueMonths: { label: string; hasUpcoming: boolean; color: string }[] = [];
   releases.forEach(r => {
     const key = `${r.month} ${r.year}`;
     if (!uniqueMonths.find(m => m.label === key)) {
-      uniqueMonths.push({ label: key, hasUpcoming: r.status === "upcoming" });
+      const hasUpcoming = releases.some(rel => `${rel.month} ${rel.year}` === key && rel.status === "upcoming");
+      uniqueMonths.push({ label: key, hasUpcoming, color: hasUpcoming ? "orange" : "blue" });
     }
   });
   return uniqueMonths;
@@ -93,22 +94,18 @@ export default function ReleasesPage() {
   const timelineMonths = getTimelineMonths(releases);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none" />
-      
-      <div className="relative max-w-5xl mx-auto px-6 py-12">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+      <div className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div 
-          className="mb-12"
+          className="mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group mb-6"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors group mb-6"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-medium">Back to Main</span>
@@ -125,57 +122,44 @@ export default function ReleasesPage() {
             />
           </div>
           
-          <h1 className="text-4xl font-bold text-white mb-3">Release Notes</h1>
-          <p className="text-slate-400 text-lg">
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">Release Notes</h1>
+          <p className="text-gray-600 text-lg">
             Complete history of LinkAI product updates and enhancements.
           </p>
         </motion.div>
 
         {/* Timeline Navigator */}
         <motion.div 
-          className="mb-12 p-6 rounded-2xl bg-slate-900/50 border border-slate-800"
+          className="mb-10 p-6 rounded-2xl bg-white border-2 border-gray-200 shadow-sm"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <Calendar className="w-5 h-5 text-blue-400" />
-            <span className="text-sm font-medium text-slate-300">Timeline</span>
+          <div className="flex items-center gap-3 mb-5">
+            <Calendar className="w-5 h-5 text-gray-500" />
+            <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Timeline</span>
           </div>
           
-          <div className="flex items-center gap-4 overflow-x-auto pb-2">
-            {timelineMonths.map((month, idx) => (
-              <a
-                key={month.label}
-                href={`#${month.label.replace(' ', '-').toLowerCase()}`}
-                className="flex-shrink-0 group"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div className={`relative w-4 h-4 rounded-full transition-all ${
-                    month.hasUpcoming 
-                      ? 'bg-orange-500 ring-4 ring-orange-500/30' 
-                      : 'bg-blue-500 group-hover:bg-blue-400'
-                  }`}>
+          <div className="flex items-center gap-8">
+            {timelineMonths.map((month) => {
+              const colors = colorMap[month.color];
+              return (
+                <a
+                  key={month.label}
+                  href={`#${month.label.replace(' ', '-').toLowerCase()}`}
+                  className="group flex flex-col items-center gap-3"
+                >
+                  <div className={`relative w-5 h-5 rounded-full ${colors.badge} shadow-lg transition-transform group-hover:scale-110`}>
                     {month.hasUpcoming && (
-                      <span className="absolute inset-0 rounded-full bg-orange-500 animate-ping opacity-50" />
+                      <span className={`absolute inset-0 rounded-full ${colors.badge} animate-ping opacity-40`} />
                     )}
                   </div>
-                  <span className={`text-sm font-medium transition-colors ${
-                    month.hasUpcoming 
-                      ? 'text-orange-400' 
-                      : 'text-slate-400 group-hover:text-white'
-                  }`}>
+                  <span className={`text-sm font-semibold ${colors.text} group-hover:underline`}>
                     {month.label}
                   </span>
-                </div>
-                {idx < timelineMonths.length - 1 && (
-                  <div className="hidden" /> 
-                )}
-              </a>
-            ))}
-            
-            {/* Timeline line connecting dots */}
-            <div className="absolute left-0 right-0 h-px bg-slate-700 -z-10" style={{ top: '50%' }} />
+                </a>
+              );
+            })}
           </div>
         </motion.div>
 
@@ -184,121 +168,103 @@ export default function ReleasesPage() {
           <motion.section 
             key={monthYear}
             id={monthYear.replace(' ', '-').toLowerCase()}
-            className="mb-12"
+            className="mb-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 + groupIdx * 0.1 }}
+            transition={{ duration: 0.4, delay: 0.15 + groupIdx * 0.05 }}
           >
             {/* Month Header */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
-              <h2 className="text-xl font-bold text-white px-4 py-2 bg-slate-800/50 rounded-full border border-slate-700">
+              <h2 className="text-xl font-bold text-gray-900 bg-white px-4 py-2 rounded-full border-2 border-gray-200 shadow-sm">
                 {monthYear}
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+              <div className="h-px flex-1 bg-gray-200" />
             </div>
 
             {/* Release Cards */}
-            <div className="space-y-6">
-              {monthReleases.map((release, idx) => (
-                <motion.div 
-                  key={release.version}
-                  className={`rounded-2xl border overflow-hidden transition-all hover:border-slate-600 ${
-                    release.status === 'upcoming' 
-                      ? 'bg-gradient-to-br from-orange-950/30 via-slate-900 to-slate-900 border-orange-500/30' 
-                      : 'bg-slate-900/80 border-slate-800'
-                  }`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
-                >
-                  {/* Release Header */}
-                  <div className={`flex items-center justify-between p-6 border-b ${
-                    release.status === 'upcoming' ? 'border-orange-500/20' : 'border-slate-800'
-                  }`}>
-                    <div className="flex items-center gap-4">
-                      <span className={`text-3xl font-black tracking-tight ${
-                        release.status === 'upcoming'
-                          ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400'
-                          : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400'
-                      }`}>
-                        V{release.version}
-                      </span>
-                      <div>
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-xl font-semibold text-white">{release.title}</h3>
-                          {release.status === 'upcoming' && (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-xs font-semibold border border-orange-500/30">
-                              <Clock className="w-3 h-3" />
-                              Coming {release.date.split(',')[0]}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-400 mt-1">
-                          <Calendar className="w-4 h-4" />
-                          {release.date}
+            <div className="space-y-5">
+              {monthReleases.map((release, idx) => {
+                const colors = colorMap[release.color];
+                return (
+                  <motion.div 
+                    key={release.version}
+                    className={`rounded-2xl border-2 ${colors.border} ${colors.bg} overflow-hidden shadow-sm hover:shadow-md transition-shadow`}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 + idx * 0.05 }}
+                  >
+                    {/* Release Header */}
+                    <div className={`flex items-center justify-between p-5 border-b ${colors.border}`}>
+                      <div className="flex items-center gap-4">
+                        <span className={`text-3xl font-black ${colors.text}`}>
+                          V{release.version}
+                        </span>
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <h3 className="text-xl font-semibold text-gray-900">{release.title}</h3>
+                            {release.status === 'upcoming' && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold border border-orange-200">
+                                <Clock className="w-3 h-3" />
+                                Coming Soon
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                            <Calendar className="w-4 h-4" />
+                            {release.date}
+                          </div>
                         </div>
                       </div>
+                      <Link
+                        href={`/${release.slug}`}
+                        className={`inline-flex items-center gap-2 px-5 py-2.5 ${colors.badge} text-white rounded-xl text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity`}
+                      >
+                        View Details
+                        <ChevronRight className="w-4 h-4" />
+                      </Link>
                     </div>
-                    <Link
-                      href={`/${release.slug}`}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                        release.status === 'upcoming'
-                          ? 'bg-orange-500 text-white hover:bg-orange-400 shadow-lg shadow-orange-500/25'
-                          : 'bg-blue-500 text-white hover:bg-blue-400 shadow-lg shadow-blue-500/25'
-                      }`}
-                    >
-                      {release.status === 'upcoming' ? 'Preview' : 'View Details'}
-                      <ChevronRight className="w-4 h-4" />
-                    </Link>
-                  </div>
 
-                  {/* Release Content */}
-                  <div className="p-6">
-                    <p className="text-slate-300 mb-5 text-lg">{release.summary}</p>
-                    
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {release.bullets.map((bullet, bulletIdx) => (
-                        <li 
-                          key={bulletIdx} 
-                          className={`flex gap-3 p-3 rounded-xl transition-colors ${
-                            release.status === 'upcoming' 
-                              ? 'bg-slate-800/50 hover:bg-slate-800' 
-                              : 'bg-slate-800/30 hover:bg-slate-800/50'
-                          }`}
-                        >
-                          <span className={`flex-shrink-0 w-8 h-8 rounded-lg ${bullet.bg} flex items-center justify-center`}>
-                            <bullet.icon className={`w-4 h-4 ${bullet.color}`} />
-                          </span>
-                          <span className="text-slate-300 text-sm leading-relaxed">{bullet.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
-              ))}
+                    {/* Release Content */}
+                    <div className="p-5">
+                      <p className="text-gray-700 mb-4">{release.summary}</p>
+                      
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {release.bullets.map((bullet, bulletIdx) => (
+                          <li 
+                            key={bulletIdx} 
+                            className={`flex gap-3 p-3 rounded-xl ${colors.light} items-center`}
+                          >
+                            <bullet.icon className={`w-5 h-5 ${colors.text} flex-shrink-0`} />
+                            <span className="text-gray-700 text-sm">{bullet.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.section>
         ))}
 
         {/* Footer */}
         <motion.div 
-          className="mt-16 text-center"
+          className="mt-12 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
         >
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-slate-900/50 rounded-full border border-slate-800">
+          <div className="inline-flex items-center gap-3 px-5 py-3 bg-white rounded-full border-2 border-gray-200 shadow-sm">
             <Image
               src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
               alt="LinkAI"
               width={80}
               height={24}
-              className="h-6 w-auto opacity-60"
+              className="h-5 w-auto opacity-60"
               unoptimized
             />
-            <span className="text-slate-500 text-sm">
-              Release Notes • Last updated {releases[0]?.date}
+            <span className="text-gray-500 text-sm">
+              Last updated {releases[0]?.date}
             </span>
           </div>
         </motion.div>

@@ -20,7 +20,7 @@ const features = [
       "Enhanced responsive layout for all screen sizes",
       "Improved accessibility and keyboard navigation",
     ],
-    status: "In Development",
+    imagePlaceholder: "UI Preview",
   },
   {
     id: "scenarios",
@@ -34,7 +34,7 @@ const features = [
       "Easy scenario duplication and modification",
       "Export comparison reports for client presentations",
     ],
-    status: "In Development",
+    imagePlaceholder: "Scenarios Preview",
   },
   {
     id: "application",
@@ -48,7 +48,7 @@ const features = [
       "Progress tracking and save/resume functionality",
       "Direct integration with loan origination systems",
     ],
-    status: "In Development",
+    imagePlaceholder: "Application Preview",
   },
   {
     id: "ai-assistants",
@@ -62,16 +62,16 @@ const features = [
       "Valuation AI — Instant property valuations from multiple data sources",
       "Contextual suggestions throughout the loan process",
     ],
-    status: "In Development",
+    imagePlaceholder: "AI Assistants Preview",
   },
 ];
 
-// Color mappings
-const colorMap: { [key: string]: { bg: string; text: string; border: string; ring: string } } = {
-  cyan: { bg: "bg-cyan-500/20", text: "text-cyan-400", border: "border-cyan-500/30", ring: "ring-cyan-500/30" },
-  purple: { bg: "bg-purple-500/20", text: "text-purple-400", border: "border-purple-500/30", ring: "ring-purple-500/30" },
-  amber: { bg: "bg-amber-500/20", text: "text-amber-400", border: "border-amber-500/30", ring: "ring-amber-500/30" },
-  emerald: { bg: "bg-emerald-500/20", text: "text-emerald-400", border: "border-emerald-500/30", ring: "ring-emerald-500/30" },
+// Color mappings - lighter, more vibrant
+const colorMap: { [key: string]: { bg: string; text: string; border: string; accent: string; light: string } } = {
+  cyan: { bg: "bg-cyan-50", text: "text-cyan-600", border: "border-cyan-200", accent: "bg-cyan-500", light: "bg-cyan-100" },
+  purple: { bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200", accent: "bg-purple-500", light: "bg-purple-100" },
+  amber: { bg: "bg-amber-50", text: "text-amber-600", border: "border-amber-200", accent: "bg-amber-500", light: "bg-amber-100" },
+  emerald: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200", accent: "bg-emerald-500", light: "bg-emerald-100" },
 };
 
 // Plain text version for email
@@ -114,83 +114,61 @@ const emailContentHtml = `
 </div>
 `;
 
-function FeatureSection({ feature, isExpanded, onToggle }: { 
-  feature: typeof features[0]; 
-  isExpanded: boolean; 
-  onToggle: () => void;
-}) {
+function FeatureCard({ feature, index }: { feature: typeof features[0]; index: number }) {
   const colors = colorMap[feature.color];
   const Icon = feature.icon;
+  const isEven = index % 2 === 0;
 
   return (
     <motion.div 
-      className={`rounded-2xl border ${colors.border} bg-slate-900/50 overflow-hidden transition-all hover:bg-slate-900/80`}
-      layout
+      className={`rounded-3xl border-2 ${colors.border} ${colors.bg} overflow-hidden shadow-lg hover:shadow-xl transition-shadow`}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 + index * 0.1 }}
     >
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between p-5 text-left"
-      >
-        <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center`}>
-            <Icon className={`w-6 h-6 ${colors.text}`} />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
-            <p className="text-slate-400 text-sm mt-0.5">{feature.summary}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${colors.bg} ${colors.text} border ${colors.border}`}>
-            {feature.status}
-          </span>
-          {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-slate-400" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-slate-400" />
-          )}
-        </div>
-      </button>
-
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className={`px-5 pb-5 border-t ${colors.border}`}>
-              <ul className="mt-4 space-y-3">
-                {feature.details.map((detail, idx) => (
-                  <motion.li 
-                    key={idx}
-                    className="flex gap-3 items-start"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                  >
-                    <div className={`w-1.5 h-1.5 rounded-full ${colors.text.replace('text-', 'bg-')} mt-2 flex-shrink-0`} />
-                    <span className="text-slate-300">{detail}</span>
-                  </motion.li>
-                ))}
-              </ul>
-              
-              {/* Placeholder for screenshots/demos */}
-              <div className={`mt-5 p-6 rounded-xl border-2 border-dashed ${colors.border} flex items-center justify-center`}>
-                <p className="text-slate-500 text-sm">Screenshots and demos coming soon</p>
-              </div>
+      <div className={`flex flex-col lg:flex-row ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
+        {/* Text Content - Left (or right on alternating) */}
+        <div className="flex-1 p-8">
+          <div className="flex items-center gap-4 mb-5">
+            <div className={`w-14 h-14 rounded-2xl ${colors.light} flex items-center justify-center shadow-sm`}>
+              <Icon className={`w-7 h-7 ${colors.text}`} />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900">{feature.title}</h3>
+            </div>
+          </div>
+          
+          <p className="text-gray-600 text-lg mb-6 leading-relaxed">{feature.summary}</p>
+          
+          <ul className="space-y-3">
+            {feature.details.map((detail, idx) => (
+              <li key={idx} className="flex gap-3 items-start">
+                <div className={`w-2 h-2 rounded-full ${colors.accent} mt-2.5 flex-shrink-0`} />
+                <span className="text-gray-700 leading-relaxed">{detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Image Placeholder - Right (or left on alternating) */}
+        <div className="flex-1 p-6 lg:p-8 flex items-center justify-center">
+          <div className={`w-full h-64 lg:h-80 rounded-2xl ${colors.light} border-2 border-dashed ${colors.border} flex items-center justify-center`}>
+            <div className="text-center">
+              <div className={`w-16 h-16 rounded-2xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                <Icon className="w-8 h-8 text-white" />
+              </div>
+              <p className={`${colors.text} font-medium`}>{feature.imagePlaceholder}</p>
+              <p className="text-gray-400 text-sm mt-1">Coming soon</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }
 
 export default function V22ReleasePage() {
   const [copied, setCopied] = useState(false);
-  const [expandedFeatures, setExpandedFeatures] = useState<string[]>([]);
 
   const handlePrint = () => {
     window.print();
@@ -214,22 +192,6 @@ export default function V22ReleasePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const toggleFeature = (id: string) => {
-    setExpandedFeatures(prev => 
-      prev.includes(id) 
-        ? prev.filter(f => f !== id)
-        : [...prev, id]
-    );
-  };
-
-  const expandAll = () => {
-    if (expandedFeatures.length === features.length) {
-      setExpandedFeatures([]);
-    } else {
-      setExpandedFeatures(features.map(f => f.id));
-    }
-  };
-
   return (
     <>
       {/* Print Styles */}
@@ -238,7 +200,6 @@ export default function V22ReleasePage() {
           body {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            background: white !important;
           }
           .no-print {
             display: none !important;
@@ -250,43 +211,39 @@ export default function V22ReleasePage() {
         }
       `}</style>
 
-      <main className="min-h-screen bg-slate-950 text-white print:bg-white print:text-gray-900">
-        {/* Background gradient */}
-        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pointer-events-none print:hidden" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(251,146,60,0.1),transparent_50%)] pointer-events-none print:hidden" />
-
-        <div className="relative max-w-4xl mx-auto px-4 py-8 print:px-0 print:py-4">
+      <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+        <div className="max-w-6xl mx-auto px-6 py-10 print:px-4 print:py-4">
           {/* Navigation */}
           <motion.div 
-            className="flex items-center justify-between mb-8 no-print"
+            className="flex items-center justify-between mb-10 no-print"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <Link 
               href="/" 
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm font-medium">Back to Main</span>
             </Link>
             
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Link
                 href="/releases"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors text-sm font-medium border border-slate-700"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-gray-700 rounded-xl hover:bg-gray-100 transition-colors text-sm font-medium border border-gray-200 shadow-sm"
               >
                 All Releases
               </Link>
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-500 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors shadow-sm"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 <span className="text-sm font-medium">{copied ? "Copied!" : "Copy Email"}</span>
               </button>
               <button
                 onClick={handlePrint}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors shadow-sm"
               >
                 <Printer className="w-4 h-4" />
                 <span className="text-sm font-medium">Print</span>
@@ -294,103 +251,71 @@ export default function V22ReleasePage() {
             </div>
           </motion.div>
 
-          {/* Release Container */}
+          {/* Header */}
           <motion.div 
-            className="bg-slate-900/50 rounded-2xl border border-slate-800 overflow-hidden print:bg-white print:border-gray-200"
+            className="mb-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.05 }}
           >
-            {/* Header */}
-            <div className="relative p-8 border-b border-slate-800 print:border-gray-200 overflow-hidden">
-              {/* Background decoration */}
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-amber-500/5 to-transparent print:hidden" />
-              
-              <div className="relative flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <Image
-                      src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
-                      alt="LinkAI"
-                      width={100}
-                      height={30}
-                      className="h-8 w-auto print:invert"
-                      unoptimized
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-4 mb-3">
-                    <span className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400 print:text-orange-600">
-                      V2.2
-                    </span>
-                    <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-500/20 text-orange-400 rounded-full text-sm font-semibold border border-orange-500/30 print:bg-orange-100 print:text-orange-700 print:border-orange-200">
-                      <Clock className="w-4 h-4" />
-                      Coming February 25th
-                    </span>
-                  </div>
-                  
-                  <h1 className="text-2xl font-bold text-white mb-2 print:text-gray-900">
-                    Major Platform Update
-                  </h1>
-                  <p className="text-slate-400 print:text-gray-600">
-                    Complete UI overhaul with Scenarios Tab, Application (Short 1003), and AI Assistants integration
-                  </p>
-                </div>
-              </div>
+            <div className="flex items-center gap-4 mb-6">
+              <Image
+                src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
+                alt="LinkAI"
+                width={120}
+                height={36}
+                className="h-10 w-auto"
+                unoptimized
+              />
             </div>
-
-            {/* Release Content */}
-            <div className="p-8">
-              {/* Summary */}
-              <div className="mb-8">
-                <p className="text-slate-300 text-lg print:text-gray-700">
-                  Effective February 25th, 2026, <strong className="text-white print:text-gray-900">LinkAI V2.2</strong> will be released to production. This is our biggest update yet, bringing a completely redesigned interface and powerful new features.
-                </p>
-              </div>
-
-              {/* Features Header */}
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-white print:text-gray-900">What's New</h2>
-                <button
-                  onClick={expandAll}
-                  className="text-sm text-slate-400 hover:text-white transition-colors no-print"
-                >
-                  {expandedFeatures.length === features.length ? 'Collapse All' : 'Expand All'}
-                </button>
-              </div>
-
-              {/* Feature Sections */}
-              <div className="space-y-4">
-                {features.map((feature, idx) => (
-                  <motion.div
-                    key={feature.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + idx * 0.1 }}
-                  >
-                    <FeatureSection
-                      feature={feature}
-                      isExpanded={expandedFeatures.includes(feature.id)}
-                      onToggle={() => toggleFeature(feature.id)}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Feedback CTA */}
-              <div className="mt-8 p-5 rounded-xl bg-slate-800/50 border border-slate-700 print:bg-gray-100 print:border-gray-200">
-                <p className="text-slate-300 text-sm print:text-gray-700">
-                  <strong className="text-white print:text-gray-900">Questions or feedback?</strong> Use the Feedback button in LinkAI or reach out to your account manager.
-                </p>
-              </div>
+            
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+              <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
+                V2.2
+              </span>
+              <span className="inline-flex items-center gap-2 px-5 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold border border-orange-200">
+                <Clock className="w-4 h-4" />
+                February 25th, 2026
+              </span>
             </div>
+            
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+              Major Platform Update
+            </h1>
+            <p className="text-gray-600 text-lg max-w-2xl">
+              Complete UI overhaul with Scenarios Tab, Application (Short 1003), and AI Assistants integration. This is our biggest update yet.
+            </p>
+          </motion.div>
 
-            {/* Footer */}
-            <div className="bg-slate-800/30 border-t border-slate-800 px-8 py-4 print:bg-gray-50 print:border-gray-200">
-              <p className="text-slate-500 text-sm text-center print:text-gray-500">
-                LinkAI V2.2 • February 25th, 2026 • Major Platform Update
-              </p>
-            </div>
+          {/* Feature Cards */}
+          <div className="space-y-8">
+            {features.map((feature, idx) => (
+              <FeatureCard key={feature.id} feature={feature} index={idx} />
+            ))}
+          </div>
+
+          {/* Footer CTA */}
+          <motion.div 
+            className="mt-12 p-6 rounded-2xl bg-gray-100 border border-gray-200"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <p className="text-gray-600 text-center">
+              <strong className="text-gray-900">Questions or feedback?</strong> Use the Feedback button in LinkAI or reach out to your account manager.
+            </p>
+          </motion.div>
+
+          {/* Footer */}
+          <motion.div 
+            className="mt-8 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <p className="text-gray-400 text-sm">
+              LinkAI V2.2 • February 25th, 2026 • Major Platform Update
+            </p>
           </motion.div>
         </div>
       </main>
