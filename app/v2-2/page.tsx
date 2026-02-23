@@ -38,29 +38,6 @@ const emailContentHtml = `
 </div>
 `;
 
-// Arrow SVG component
-function Arrow({ direction, color }: { direction: 'left' | 'right' | 'up' | 'down'; color: string }) {
-  const rotations = { left: 180, right: 0, up: -90, down: 90 };
-  return (
-    <svg 
-      width="40" 
-      height="24" 
-      viewBox="0 0 40 24" 
-      fill="none" 
-      className={`${color}`}
-      style={{ transform: `rotate(${rotations[direction]}deg)` }}
-    >
-      <path 
-        d="M0 12H36M36 12L24 2M36 12L24 22" 
-        stroke="currentColor" 
-        strokeWidth="4" 
-        strokeLinecap="round" 
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 // Feature Section Component with Screenshot
 function FeatureSection({ 
   id,
@@ -69,7 +46,6 @@ function FeatureSection({
   summary, 
   details,
   screenshotPath,
-  annotations,
   accentColor
 }: {
   id: string;
@@ -78,7 +54,6 @@ function FeatureSection({
   summary: string;
   details: string[];
   screenshotPath: string;
-  annotations: { label: string; position: string; color: string; direction: 'left' | 'right' | 'up' | 'down' }[];
   accentColor: { text: string; bg: string; border: string; glow: string };
 }) {
   return (
@@ -110,43 +85,14 @@ function FeatureSection({
         </ul>
       </div>
       
-      {/* Screenshot with Annotations */}
+      {/* Screenshot */}
       <div className="p-6">
-        <div className="relative">
-          {/* Screenshot */}
-          <div className="rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
-            <img 
-              src={screenshotPath}
-              alt={title}
-              className="w-full h-auto"
-            />
-          </div>
-          
-          {/* Annotation Arrows */}
-          {annotations.map((annotation, idx) => (
-            <motion.div
-              key={idx}
-              className={`absolute ${annotation.position} flex items-center gap-2`}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 + idx * 0.1 }}
-            >
-              <div className={`px-3 py-1.5 rounded-lg text-sm font-bold text-white shadow-lg ${annotation.color}`}>
-                {annotation.label}
-              </div>
-              <Arrow direction={annotation.direction} color={annotation.color.replace('bg-', 'text-')} />
-            </motion.div>
-          ))}
-        </div>
-        
-        {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-6">
-          {annotations.map((annotation, idx) => (
-            <div key={idx} className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${annotation.color}`} />
-              <span className="text-slate-400 text-sm">{annotation.label}</span>
-            </div>
-          ))}
+        <div className="rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
+          <img 
+            src={screenshotPath}
+            alt={title}
+            className="w-full h-auto"
+          />
         </div>
       </div>
     </motion.section>
@@ -279,16 +225,11 @@ export default function V22ReleasePage() {
             title="New UI for Link"
             summary="Completely redesigned interface with powerful left-hand navigation for streamlined workflow"
             details={[
-              "L1 Left Navigation — Primary section access",
-              "L2 Sub-tabs — Liabilities, Details views",
-              "AI Assistant Panel — Always accessible"
+              "L1 Left Navigation",
+              "L2 Sub-tabs (Liabilities, Details)",
+              "AI Assistant Panel"
             ]}
             screenshotPath="/screenshots/new-ui.png"
-            annotations={[
-              { label: "L1 Navigation", position: "top-[20%] left-[-10px]", color: "bg-cyan-500", direction: "right" },
-              { label: "L2 Sub-tabs", position: "top-[8%] left-[15%]", color: "bg-purple-500", direction: "down" },
-              { label: "AI Assistants", position: "top-[20%] right-[-10px]", color: "bg-emerald-500", direction: "left" },
-            ]}
             accentColor={{ text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/30", glow: "shadow-cyan-500/10" }}
           />
 
@@ -299,16 +240,11 @@ export default function V22ReleasePage() {
             title="Scenarios Tab"
             summary="Compare multiple loan scenarios side-by-side and instantly generate benefit charts"
             details={[
-              "Configuration Panel — Set loan parameters",
-              "Value Propositions — Current vs Proposed",
-              "Charts Panel — Visual comparisons on selection"
+              "Configuration Panel",
+              "Value Propositions",
+              "Payment Savings Comparison"
             ]}
             screenshotPath="/screenshots/scenarios.png"
-            annotations={[
-              { label: "Configuration", position: "top-[30%] left-[-10px]", color: "bg-purple-500", direction: "right" },
-              { label: "Value Props", position: "top-[10%] left-[45%]", color: "bg-orange-500", direction: "down" },
-              { label: "Charts Panel", position: "top-[20%] right-[-10px]", color: "bg-amber-500", direction: "left" },
-            ]}
             accentColor={{ text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/30", glow: "shadow-purple-500/10" }}
           />
 
@@ -319,15 +255,11 @@ export default function V22ReleasePage() {
             title="Application (Short 1003)"
             summary="Streamlined application process — Take Short 1003 and submit directly to Figure"
             details={[
-              "Simplified Form — Auto-fill capabilities",
-              "Smart Validation — Error prevention",
-              "Direct Submission — Submit to Figure"
+              "Borrower Information",
+              "Subject Property",
+              "Continue to Figure"
             ]}
             screenshotPath="/screenshots/application.png"
-            annotations={[
-              { label: "Short 1003 Form", position: "top-[20%] left-[20%]", color: "bg-amber-500", direction: "down" },
-              { label: "Submit to Figure", position: "bottom-[20%] right-[20%]", color: "bg-orange-500", direction: "up" },
-            ]}
             accentColor={{ text: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/30", glow: "shadow-amber-500/10" }}
           />
 
@@ -338,16 +270,11 @@ export default function V22ReleasePage() {
             title="AI Assistants"
             summary="Intelligent assistants panel for rapport building, sales coaching, and property valuations"
             details={[
-              "Call Prep — Customer briefing for calls",
-              "Property AVM — Valuation analysis",
-              "Sales Coach — Objection handling"
+              "Call Prep",
+              "Property AVM",
+              "Sales Coach"
             ]}
             screenshotPath="/screenshots/ai-assistants.png"
-            annotations={[
-              { label: "Call Prep", position: "top-[25%] left-[-10px]", color: "bg-blue-500", direction: "right" },
-              { label: "Property AVM", position: "top-[45%] left-[-10px]", color: "bg-teal-500", direction: "right" },
-              { label: "Sales Coach", position: "top-[65%] left-[-10px]", color: "bg-indigo-500", direction: "right" },
-            ]}
             accentColor={{ text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/30", glow: "shadow-emerald-500/10" }}
           />
 
