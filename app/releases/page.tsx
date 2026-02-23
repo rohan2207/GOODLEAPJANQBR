@@ -60,10 +60,24 @@ const releases: Release[] = [
   },
 ];
 
-// Color mappings
-const colorMap: { [key: string]: { bg: string; border: string; text: string; light: string; badge: string } } = {
-  orange: { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-600", light: "bg-orange-100", badge: "bg-orange-500" },
-  blue: { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-600", light: "bg-blue-100", badge: "bg-blue-500" },
+// Dark theme color mappings with glows
+const colorMap: { [key: string]: { bg: string; border: string; text: string; glow: string; badge: string; light: string } } = {
+  orange: { 
+    bg: "bg-orange-500/10", 
+    border: "border-orange-500/30", 
+    text: "text-orange-400", 
+    glow: "shadow-orange-500/20",
+    badge: "bg-orange-500",
+    light: "bg-orange-500/20"
+  },
+  blue: { 
+    bg: "bg-blue-500/10", 
+    border: "border-blue-500/30", 
+    text: "text-blue-400", 
+    glow: "shadow-blue-500/20",
+    badge: "bg-blue-500",
+    light: "bg-blue-500/20"
+  },
 };
 
 // Group releases by month/year
@@ -94,7 +108,10 @@ export default function ReleasesPage() {
   const timelineMonths = getTimelineMonths(releases);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+    <main className="min-h-screen bg-slate-950 text-white">
+      {/* Gradient accent at top */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-purple-500 to-blue-500" />
+      
       <div className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div 
@@ -105,7 +122,7 @@ export default function ReleasesPage() {
         >
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors group mb-6"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group mb-6"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-medium">Back to Main</span>
@@ -117,27 +134,27 @@ export default function ReleasesPage() {
               alt="LinkAI"
               width={140}
               height={42}
-              className="h-12 w-auto"
+              className="h-12 w-auto invert"
               unoptimized
             />
           </div>
           
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Release Notes</h1>
-          <p className="text-gray-600 text-lg">
+          <h1 className="text-4xl font-bold text-white mb-3">Release Notes</h1>
+          <p className="text-slate-400 text-lg">
             Complete history of LinkAI product updates and enhancements.
           </p>
         </motion.div>
 
         {/* Timeline Navigator */}
         <motion.div 
-          className="mb-10 p-6 rounded-2xl bg-white border-2 border-gray-200 shadow-sm"
+          className="mb-10 p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
           <div className="flex items-center gap-3 mb-5">
-            <Calendar className="w-5 h-5 text-gray-500" />
-            <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Timeline</span>
+            <Calendar className="w-5 h-5 text-slate-400" />
+            <span className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Timeline</span>
           </div>
           
           <div className="flex items-center gap-8">
@@ -149,7 +166,7 @@ export default function ReleasesPage() {
                   href={`#${month.label.replace(' ', '-').toLowerCase()}`}
                   className="group flex flex-col items-center gap-3"
                 >
-                  <div className={`relative w-5 h-5 rounded-full ${colors.badge} shadow-lg transition-transform group-hover:scale-110`}>
+                  <div className={`relative w-5 h-5 rounded-full ${colors.badge} shadow-lg ${colors.glow} transition-transform group-hover:scale-110`}>
                     {month.hasUpcoming && (
                       <span className={`absolute inset-0 rounded-full ${colors.badge} animate-ping opacity-40`} />
                     )}
@@ -175,10 +192,10 @@ export default function ReleasesPage() {
           >
             {/* Month Header */}
             <div className="flex items-center gap-4 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 bg-white px-4 py-2 rounded-full border-2 border-gray-200 shadow-sm">
+              <h2 className="text-xl font-bold text-white bg-slate-800 px-4 py-2 rounded-full border border-slate-600">
                 {monthYear}
               </h2>
-              <div className="h-px flex-1 bg-gray-200" />
+              <div className="h-px flex-1 bg-slate-700" />
             </div>
 
             {/* Release Cards */}
@@ -188,7 +205,7 @@ export default function ReleasesPage() {
                 return (
                   <motion.div 
                     key={release.version}
-                    className={`rounded-2xl border-2 ${colors.border} ${colors.bg} overflow-hidden shadow-sm hover:shadow-md transition-shadow`}
+                    className={`rounded-2xl border ${colors.border} bg-slate-900/80 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 + idx * 0.05 }}
@@ -201,15 +218,15 @@ export default function ReleasesPage() {
                         </span>
                         <div>
                           <div className="flex items-center gap-3">
-                            <h3 className="text-xl font-semibold text-gray-900">{release.title}</h3>
+                            <h3 className="text-xl font-semibold text-white">{release.title}</h3>
                             {release.status === 'upcoming' && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold border border-orange-200">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs font-semibold border border-orange-500/30">
                                 <Clock className="w-3 h-3" />
                                 Coming Soon
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                          <div className="flex items-center gap-2 text-sm text-slate-400 mt-1">
                             <Calendar className="w-4 h-4" />
                             {release.date}
                           </div>
@@ -226,16 +243,16 @@ export default function ReleasesPage() {
 
                     {/* Release Content */}
                     <div className="p-5">
-                      <p className="text-gray-700 mb-4">{release.summary}</p>
+                      <p className="text-slate-300 mb-4">{release.summary}</p>
                       
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {release.bullets.map((bullet, bulletIdx) => (
                           <li 
                             key={bulletIdx} 
-                            className={`flex gap-3 p-3 rounded-xl ${colors.light} items-center`}
+                            className={`flex gap-3 p-3 rounded-xl ${colors.light} border ${colors.border} items-center`}
                           >
                             <bullet.icon className={`w-5 h-5 ${colors.text} flex-shrink-0`} />
-                            <span className="text-gray-700 text-sm">{bullet.text}</span>
+                            <span className="text-slate-300 text-sm">{bullet.text}</span>
                           </li>
                         ))}
                       </ul>
@@ -254,16 +271,16 @@ export default function ReleasesPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.4 }}
         >
-          <div className="inline-flex items-center gap-3 px-5 py-3 bg-white rounded-full border-2 border-gray-200 shadow-sm">
+          <div className="inline-flex items-center gap-3 px-5 py-3 bg-slate-900 rounded-full border border-slate-700">
             <Image
               src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
               alt="LinkAI"
               width={80}
               height={24}
-              className="h-5 w-auto opacity-60"
+              className="h-5 w-auto invert opacity-60"
               unoptimized
             />
-            <span className="text-gray-500 text-sm">
+            <span className="text-slate-500 text-sm">
               Last updated {releases[0]?.date}
             </span>
           </div>

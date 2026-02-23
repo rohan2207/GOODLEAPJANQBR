@@ -6,73 +6,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-
-// Feature sections for V2.2
-const features = [
-  {
-    id: "new-ui",
-    icon: Layout,
-    title: "New UI for Link",
-    color: "cyan",
-    summary: "Redesigned interface with powerful left-hand navigation for streamlined workflow",
-    details: [
-      "New persistent left sidebar — Quick access to all loan sections",
-      "Visual tab organization — Pricing, Scenarios, Application, Borrower, Property, AI, Documents",
-      "Active state indicators — Always know where you are",
-      "Collapsible navigation — Maximize screen real estate",
-    ],
-    hasScreenshot: true,
-  },
-  {
-    id: "scenarios",
-    icon: Sparkles,
-    title: "Scenarios Tab",
-    color: "purple",
-    summary: "Compare multiple loan scenarios side-by-side",
-    details: [
-      "Create and compare up to 4 scenarios simultaneously",
-      "Real-time rate and payment calculations",
-      "Easy scenario duplication and modification",
-      "Export comparison reports for clients",
-    ],
-    hasScenariosScreenshot: true,
-  },
-  {
-    id: "application",
-    icon: FileText,
-    title: "Application (Short 1003)",
-    color: "orange",
-    summary: "Streamlined application with intelligent form completion",
-    details: [
-      "Simplified Short 1003 with auto-fill",
-      "Smart validation and error prevention",
-      "Progress tracking and save/resume",
-      "Direct LOS integration",
-    ],
-  },
-  {
-    id: "ai-assistants",
-    icon: Bot,
-    title: "AI Assistants",
-    color: "emerald",
-    summary: "Intelligent assistants for rapport, coaching, and valuations",
-    details: [
-      "AI Rapport Builder — Personalized conversation starters",
-      "Sales Coach — Objection handling and rate negotiation",
-      "Valuation AI — Instant property valuations",
-      "Contextual suggestions throughout the process",
-    ],
-  },
-];
-
-// Dark mode color mappings with vibrant accents
-const colorMap: { [key: string]: { accent: string; glow: string; text: string; bg: string } } = {
-  cyan: { accent: "bg-cyan-400", glow: "shadow-cyan-500/30", text: "text-cyan-400", bg: "bg-cyan-500/10" },
-  purple: { accent: "bg-purple-400", glow: "shadow-purple-500/30", text: "text-purple-400", bg: "bg-purple-500/10" },
-  orange: { accent: "bg-orange-400", glow: "shadow-orange-500/30", text: "text-orange-400", bg: "bg-orange-500/10" },
-  emerald: { accent: "bg-emerald-400", glow: "shadow-emerald-500/30", text: "text-emerald-400", bg: "bg-emerald-500/10" },
-};
-
 // Plain text version for email
 const emailContentPlain = `Subject: LinkAI V2.2 Release Notes // February 25th, 2026
 
@@ -105,240 +38,118 @@ const emailContentHtml = `
 </div>
 `;
 
-// Annotated Screenshot Component for Scenarios Tab
-function ScenariosScreenshot() {
+// Arrow SVG component
+function Arrow({ direction, color }: { direction: 'left' | 'right' | 'up' | 'down'; color: string }) {
+  const rotations = { left: 180, right: 0, up: -90, down: 90 };
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      {/* Screenshot Container */}
-      <div className="relative rounded-xl overflow-hidden border-2 border-slate-600 shadow-2xl shadow-purple-500/10">
-        <img 
-          src="/screenshots/scenarios-tab.png" 
-          alt="Scenarios Tab" 
-          className="w-full h-auto"
-        />
-        
-        {/* Scenario Cards Highlight - Left side */}
-        <motion.div 
-          className="absolute left-[140px] top-[100px] w-[400px] h-[300px] border-2 border-purple-400 rounded-lg bg-purple-400/5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        />
-        
-        {/* Charts Panel Highlight - Right side */}
-        <motion.div 
-          className="absolute right-0 top-0 bottom-0 w-[280px] border-l-4 border-amber-400 bg-amber-400/10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        />
-      </div>
-      
-      {/* Labels */}
-      <div className="mt-6 flex justify-between items-start gap-4">
-        {/* Scenarios Label */}
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="w-3 h-3 rounded-full bg-purple-400" />
-          <div>
-            <p className="text-purple-400 font-bold text-sm">Scenario Cards</p>
-            <p className="text-slate-500 text-xs">Compare side-by-side</p>
-          </div>
-        </motion.div>
-        
-        {/* Charts Label */}
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <div className="w-3 h-3 rounded-full bg-amber-400" />
-          <div>
-            <p className="text-amber-400 font-bold text-sm">Charts Panel</p>
-            <p className="text-slate-500 text-xs">Opens on selection</p>
-          </div>
-        </motion.div>
-      </div>
-    </div>
+    <svg 
+      width="40" 
+      height="24" 
+      viewBox="0 0 40 24" 
+      fill="none" 
+      className={`${color}`}
+      style={{ transform: `rotate(${rotations[direction]}deg)` }}
+    >
+      <path 
+        d="M0 12H36M36 12L24 2M36 12L24 22" 
+        stroke="currentColor" 
+        strokeWidth="4" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
-// Annotated Screenshot Component for New UI
-function AnnotatedScreenshot() {
+// Feature Section Component with Screenshot
+function FeatureSection({ 
+  id,
+  icon: Icon, 
+  title, 
+  summary, 
+  details,
+  screenshotPath,
+  annotations,
+  accentColor
+}: {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  summary: string;
+  details: string[];
+  screenshotPath: string;
+  annotations: { label: string; position: string; color: string; direction: 'left' | 'right' | 'up' | 'down' }[];
+  accentColor: { text: string; bg: string; border: string; glow: string };
+}) {
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      {/* Screenshot Container */}
-      <div className="relative rounded-xl overflow-hidden border-2 border-slate-600 shadow-2xl shadow-cyan-500/10">
-        <img 
-          src="/screenshots/new-ui-navigation.png" 
-          alt="New LinkAI Navigation" 
-          className="w-full h-auto"
-        />
-        
-        {/* L1 - Left Navigation Highlight Overlay */}
-        <motion.div 
-          className="absolute left-0 top-0 bottom-0 w-[120px] border-r-4 border-cyan-400 bg-cyan-400/10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        />
-        
-        {/* L2 - Sub-tabs Highlight Overlay */}
-        <motion.div 
-          className="absolute left-[140px] top-[70px] w-[120px] h-[30px] border-2 border-purple-400 rounded bg-purple-400/10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        />
-        
-        {/* AI Assistant Highlight Overlay */}
-        <motion.div 
-          className="absolute right-0 top-0 bottom-0 w-[180px] border-l-4 border-emerald-400 bg-emerald-400/10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        />
-      </div>
-      
-      {/* Labels positioned around the image */}
-      <div className="mt-6 flex justify-between items-start gap-4">
-        {/* L1 Label */}
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="w-3 h-3 rounded-full bg-cyan-400" />
-          <div>
-            <p className="text-cyan-400 font-bold text-sm">L1 Navigation</p>
-            <p className="text-slate-500 text-xs">Primary sections</p>
-          </div>
-        </motion.div>
-        
-        {/* L2 Label */}
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <div className="w-3 h-3 rounded-full bg-purple-400" />
-          <div>
-            <p className="text-purple-400 font-bold text-sm">L2 Sub-tabs</p>
-            <p className="text-slate-500 text-xs">Liabilities, Details</p>
-          </div>
-        </motion.div>
-        
-        {/* AI Label */}
-        <motion.div 
-          className="flex items-center gap-2"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <div className="w-3 h-3 rounded-full bg-emerald-400" />
-          <div>
-            <p className="text-emerald-400 font-bold text-sm">AI Assistants</p>
-            <p className="text-slate-500 text-xs">Call Prep, AVM, Coach</p>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-function FeatureCard({ feature, index }: { feature: typeof features[0]; index: number }) {
-  const colors = colorMap[feature.color];
-  const Icon = feature.icon;
-  const isEven = index % 2 === 0;
-
-  // Full-width layout for screenshot features
-  if (feature.hasScreenshot || feature.hasScenariosScreenshot) {
-    return (
-      <motion.div 
-        className={`rounded-2xl bg-slate-900/80 border border-slate-700 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all duration-300`}
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 + index * 0.1 }}
-      >
-        {/* Header */}
-        <div className="p-8 pb-4">
-          <div className="flex items-center gap-4 mb-5">
-            <div className={`w-12 h-12 rounded-xl ${colors.bg} border border-slate-600 flex items-center justify-center`}>
-              <Icon className={`w-6 h-6 ${colors.text}`} />
-            </div>
-            <h3 className="text-2xl font-bold text-white">{feature.title}</h3>
-          </div>
-          
-          <p className="text-slate-300 text-lg mb-4">{feature.summary}</p>
-          
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {feature.details.map((detail, idx) => (
-              <li key={idx} className="flex gap-2 items-center">
-                <div className={`w-1.5 h-1.5 rounded-full ${colors.accent} flex-shrink-0`} />
-                <span className="text-slate-400 text-sm">{detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        {/* Full-width Screenshot */}
-        <div className="px-8 pb-8">
-          {feature.hasScreenshot && <AnnotatedScreenshot />}
-          {feature.hasScenariosScreenshot && <ScenariosScreenshot />}
-        </div>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div 
-      className={`rounded-2xl bg-slate-900/80 border border-slate-700 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all duration-300`}
+    <motion.section 
+      id={id}
+      className={`rounded-2xl bg-slate-900/80 border border-slate-700 overflow-hidden shadow-xl ${accentColor.glow} mb-8`}
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 + index * 0.1 }}
+      transition={{ delay: 0.1 }}
     >
-      <div className={`flex flex-col lg:flex-row ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
-        {/* Text Content */}
-        <div className="flex-1 p-8">
-          <div className="flex items-center gap-4 mb-5">
-            <div className={`w-12 h-12 rounded-xl ${colors.bg} border border-slate-600 flex items-center justify-center`}>
-              <Icon className={`w-6 h-6 ${colors.text}`} />
-            </div>
-            <h3 className="text-2xl font-bold text-white">{feature.title}</h3>
+      {/* Header */}
+      <div className="p-6 border-b border-slate-700">
+        <div className="flex items-center gap-4 mb-4">
+          <div className={`w-12 h-12 rounded-xl ${accentColor.bg} border ${accentColor.border} flex items-center justify-center`}>
+            <Icon className={`w-6 h-6 ${accentColor.text}`} />
           </div>
-          
-          <p className="text-slate-300 text-lg mb-6">{feature.summary}</p>
-          
-          <ul className="space-y-3">
-            {feature.details.map((detail, idx) => (
-              <li key={idx} className="flex gap-3 items-start">
-                <div className={`w-1.5 h-1.5 rounded-full ${colors.accent} mt-2.5 flex-shrink-0`} />
-                <span className="text-slate-400">{detail}</span>
-              </li>
-            ))}
-          </ul>
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
         </div>
-
-        {/* Visual Area */}
-        <div className="flex-1 p-6 lg:p-8 flex items-center justify-center bg-slate-950/50">
-          <div className={`w-full h-56 lg:h-64 rounded-xl ${colors.bg} border border-slate-700 flex items-center justify-center`}>
-            <div className="text-center">
-              <div className={`w-14 h-14 rounded-xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg ${colors.glow}`}>
-                <Icon className="w-7 h-7 text-slate-900" />
-              </div>
-              <p className={`${colors.text} font-semibold`}>Preview</p>
-            </div>
+        
+        <p className="text-slate-300 text-lg mb-4">{summary}</p>
+        
+        <ul className="flex flex-wrap gap-4">
+          {details.map((detail, idx) => (
+            <li key={idx} className="flex gap-2 items-center">
+              <div className={`w-1.5 h-1.5 rounded-full ${accentColor.text.replace('text-', 'bg-')}`} />
+              <span className="text-slate-400 text-sm">{detail}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      {/* Screenshot with Annotations */}
+      <div className="p-6">
+        <div className="relative">
+          {/* Screenshot */}
+          <div className="rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
+            <img 
+              src={screenshotPath}
+              alt={title}
+              className="w-full h-auto"
+            />
           </div>
+          
+          {/* Annotation Arrows */}
+          {annotations.map((annotation, idx) => (
+            <motion.div
+              key={idx}
+              className={`absolute ${annotation.position} flex items-center gap-2`}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 + idx * 0.1 }}
+            >
+              <div className={`px-3 py-1.5 rounded-lg text-sm font-bold text-white shadow-lg ${annotation.color}`}>
+                {annotation.label}
+              </div>
+              <Arrow direction={annotation.direction} color={annotation.color.replace('bg-', 'text-')} />
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* Legend */}
+        <div className="mt-6 flex flex-wrap gap-6">
+          {annotations.map((annotation, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${annotation.color}`} />
+              <span className="text-slate-400 text-sm">{annotation.label}</span>
+            </div>
+          ))}
         </div>
       </div>
-    </motion.div>
+    </motion.section>
   );
 }
 
@@ -461,12 +272,84 @@ export default function V22ReleasePage() {
             </p>
           </motion.div>
 
-          {/* Feature Cards */}
-          <div className="space-y-6">
-            {features.map((feature, idx) => (
-              <FeatureCard key={feature.id} feature={feature} index={idx} />
-            ))}
-          </div>
+          {/* Feature 1: New UI */}
+          <FeatureSection
+            id="new-ui"
+            icon={Layout}
+            title="New UI for Link"
+            summary="Completely redesigned interface with powerful left-hand navigation for streamlined workflow"
+            details={[
+              "L1 Left Navigation — Primary section access",
+              "L2 Sub-tabs — Liabilities, Details views",
+              "AI Assistant Panel — Always accessible"
+            ]}
+            screenshotPath="/screenshots/new-ui.png"
+            annotations={[
+              { label: "L1 Navigation", position: "top-[20%] left-[-10px]", color: "bg-cyan-500", direction: "right" },
+              { label: "L2 Sub-tabs", position: "top-[8%] left-[15%]", color: "bg-purple-500", direction: "down" },
+              { label: "AI Assistants", position: "top-[20%] right-[-10px]", color: "bg-emerald-500", direction: "left" },
+            ]}
+            accentColor={{ text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/30", glow: "shadow-cyan-500/10" }}
+          />
+
+          {/* Feature 2: Scenarios */}
+          <FeatureSection
+            id="scenarios"
+            icon={Sparkles}
+            title="Scenarios Tab"
+            summary="Compare multiple loan scenarios side-by-side and instantly generate benefit charts"
+            details={[
+              "Configuration Panel — Set loan parameters",
+              "Value Propositions — Current vs Proposed",
+              "Charts Panel — Visual comparisons on selection"
+            ]}
+            screenshotPath="/screenshots/scenarios.png"
+            annotations={[
+              { label: "Configuration", position: "top-[30%] left-[-10px]", color: "bg-purple-500", direction: "right" },
+              { label: "Value Props", position: "top-[10%] left-[45%]", color: "bg-orange-500", direction: "down" },
+              { label: "Charts Panel", position: "top-[20%] right-[-10px]", color: "bg-amber-500", direction: "left" },
+            ]}
+            accentColor={{ text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/30", glow: "shadow-purple-500/10" }}
+          />
+
+          {/* Feature 3: Application */}
+          <FeatureSection
+            id="application"
+            icon={FileText}
+            title="Application (Short 1003)"
+            summary="Streamlined application process — Take Short 1003 and submit directly to Figure"
+            details={[
+              "Simplified Form — Auto-fill capabilities",
+              "Smart Validation — Error prevention",
+              "Direct Submission — Submit to Figure"
+            ]}
+            screenshotPath="/screenshots/application.png"
+            annotations={[
+              { label: "Short 1003 Form", position: "top-[20%] left-[20%]", color: "bg-amber-500", direction: "down" },
+              { label: "Submit to Figure", position: "bottom-[20%] right-[20%]", color: "bg-orange-500", direction: "up" },
+            ]}
+            accentColor={{ text: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/30", glow: "shadow-amber-500/10" }}
+          />
+
+          {/* Feature 4: AI Assistants */}
+          <FeatureSection
+            id="ai-assistants"
+            icon={Bot}
+            title="AI Assistants"
+            summary="Intelligent assistants panel for rapport building, sales coaching, and property valuations"
+            details={[
+              "Call Prep — Customer briefing for calls",
+              "Property AVM — Valuation analysis",
+              "Sales Coach — Objection handling"
+            ]}
+            screenshotPath="/screenshots/ai-assistants.png"
+            annotations={[
+              { label: "Call Prep", position: "top-[25%] left-[-10px]", color: "bg-blue-500", direction: "right" },
+              { label: "Property AVM", position: "top-[45%] left-[-10px]", color: "bg-teal-500", direction: "right" },
+              { label: "Sales Coach", position: "top-[65%] left-[-10px]", color: "bg-indigo-500", direction: "right" },
+            ]}
+            accentColor={{ text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/30", glow: "shadow-emerald-500/10" }}
+          />
 
           {/* Footer */}
           <motion.div 
