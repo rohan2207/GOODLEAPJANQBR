@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Calendar, ChevronRight, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronRight, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -22,23 +22,23 @@ type Release = {
   }[];
 };
 
-// All release notes stored here - add new releases at the top
+// All release notes - benefit-focused language for loan officers
 const releases: Release[] = [
   {
     version: "2.2",
     date: "February 25th, 2026",
     slug: "v2-2",
     title: "Major Platform Update",
-    summary: "Complete UI overhaul with Scenarios Tab, Application (Short 1003), and AI Assistants integration",
+    summary: "Work faster with a redesigned interface, instant loan comparisons, quick applications, and AI-powered sales tools",
     status: "upcoming",
     month: "February",
     year: "2026",
     color: "orange",
     bullets: [
-      { icon: Layout, text: "New UI for Link — Completely redesigned interface" },
-      { icon: Sparkles, text: "Scenarios Tab — Compare multiple loan scenarios" },
-      { icon: FileText, text: "Application (Short 1003) — Streamlined process" },
-      { icon: Bot, text: "AI Assistants — Intelligent assistants for sales" },
+      { icon: Layout, text: "Easier Navigation — Find any section in one click" },
+      { icon: Sparkles, text: "Compare Loan Options — Show customers savings instantly" },
+      { icon: FileText, text: "Quick Application — Submit to Figure in minutes" },
+      { icon: Bot, text: "AI Sales Tools — Get talking points and objection handlers" },
     ],
   },
   {
@@ -46,37 +46,35 @@ const releases: Release[] = [
     date: "February 5th, 2026",
     slug: "feb2",
     title: "Property Intelligence",
-    summary: "Enhancement to 'Property' tab — All relevant data from DataTree now feeds directly into LinkAI",
+    summary: "All property data from DataTree now shows automatically — no more switching between systems",
     status: "released",
     month: "February",
     year: "2026",
     color: "blue",
     bullets: [
-      { icon: Home, text: "Last Market Sale — Complete sale history" },
-      { icon: Lock, text: "Open Liens — All liens with details" },
-      { icon: RefreshCw, text: "Transfers & Conveyances — Transaction history" },
-      { icon: Users, text: "Ownership History — Complete chain" },
+      { icon: Home, text: "Sale History — See what the property sold for" },
+      { icon: Lock, text: "Open Liens — Know all existing liens instantly" },
+      { icon: RefreshCw, text: "Transaction History — Full ownership timeline" },
+      { icon: Users, text: "Owner Info — Current and past owners" },
     ],
   },
 ];
 
-// Dark theme color mappings with glows
-const colorMap: { [key: string]: { bg: string; border: string; text: string; glow: string; badge: string; light: string } } = {
+// Light theme color mappings
+const colorMap: { [key: string]: { bg: string; border: string; text: string; badge: string; light: string } } = {
   orange: { 
-    bg: "bg-orange-500/10", 
-    border: "border-orange-500/30", 
-    text: "text-orange-400", 
-    glow: "shadow-orange-500/20",
+    bg: "bg-orange-50", 
+    border: "border-orange-200", 
+    text: "text-orange-600", 
     badge: "bg-orange-500",
-    light: "bg-orange-500/20"
+    light: "bg-orange-100"
   },
   blue: { 
-    bg: "bg-blue-500/10", 
-    border: "border-blue-500/30", 
-    text: "text-blue-400", 
-    glow: "shadow-blue-500/20",
+    bg: "bg-blue-50", 
+    border: "border-blue-200", 
+    text: "text-blue-600", 
     badge: "bg-blue-500",
-    light: "bg-blue-500/20"
+    light: "bg-blue-100"
   },
 };
 
@@ -90,94 +88,65 @@ function groupReleasesByMonth(releases: Release[]): { [key: string]: Release[] }
   }, {} as { [key: string]: Release[] });
 }
 
-// Get unique months for timeline
-function getTimelineMonths(releases: Release[]): { label: string; hasUpcoming: boolean; color: string }[] {
-  const uniqueMonths: { label: string; hasUpcoming: boolean; color: string }[] = [];
-  releases.forEach(r => {
-    const key = `${r.month} ${r.year}`;
-    if (!uniqueMonths.find(m => m.label === key)) {
-      const hasUpcoming = releases.some(rel => `${rel.month} ${rel.year}` === key && rel.status === "upcoming");
-      uniqueMonths.push({ label: key, hasUpcoming, color: hasUpcoming ? "orange" : "blue" });
-    }
-  });
-  return uniqueMonths;
-}
-
 export default function ReleasesPage() {
   const grouped = groupReleasesByMonth(releases);
-  const timelineMonths = getTimelineMonths(releases);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      {/* Gradient accent at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-purple-500 to-blue-500" />
-      
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
       <div className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div 
-          className="mb-10"
+          className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group mb-6"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors group mb-6"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-medium">Back to Main</span>
           </Link>
 
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-4">
             <Image
               src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
               alt="LinkAI"
               width={140}
               height={42}
-              className="h-12 w-auto invert"
+              className="h-10 w-auto"
               unoptimized
             />
           </div>
           
-          <h1 className="text-4xl font-bold text-white mb-3">Release Notes</h1>
-          <p className="text-slate-400 text-lg">
-            Complete history of LinkAI product updates and enhancements.
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">What's New in LinkAI</h1>
+          <p className="text-gray-600 text-lg">
+            Updates and improvements to help you close more loans, faster.
           </p>
         </motion.div>
 
-        {/* Timeline Navigator */}
+        {/* What's New Summary Box */}
         <motion.div 
-          className="mb-10 p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-xl"
+          className="mb-10 p-6 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <div className="flex items-center gap-3 mb-5">
-            <Calendar className="w-5 h-5 text-slate-400" />
-            <span className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Timeline</span>
+          <div className="flex items-center gap-3 mb-3">
+            <Zap className="w-6 h-6" />
+            <span className="text-lg font-bold">Coming February 25th</span>
           </div>
-          
-          <div className="flex items-center gap-8">
-            {timelineMonths.map((month) => {
-              const colors = colorMap[month.color];
-              return (
-                <a
-                  key={month.label}
-                  href={`#${month.label.replace(' ', '-').toLowerCase()}`}
-                  className="group flex flex-col items-center gap-3"
-                >
-                  <div className={`relative w-5 h-5 rounded-full ${colors.badge} shadow-lg ${colors.glow} transition-transform group-hover:scale-110`}>
-                    {month.hasUpcoming && (
-                      <span className={`absolute inset-0 rounded-full ${colors.badge} animate-ping opacity-40`} />
-                    )}
-                  </div>
-                  <span className={`text-sm font-semibold ${colors.text} group-hover:underline`}>
-                    {month.label}
-                  </span>
-                </a>
-              );
-            })}
-          </div>
+          <p className="text-white/90 text-lg mb-4">
+            V2.2 brings a completely redesigned LinkAI with faster navigation, instant loan comparisons, and AI tools to help you sell.
+          </p>
+          <Link
+            href="/v2-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-orange-600 rounded-xl text-sm font-semibold hover:bg-orange-50 transition-colors"
+          >
+            See What's Coming
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </motion.div>
 
         {/* Grouped Releases */}
@@ -192,10 +161,10 @@ export default function ReleasesPage() {
           >
             {/* Month Header */}
             <div className="flex items-center gap-4 mb-6">
-              <h2 className="text-xl font-bold text-white bg-slate-800 px-4 py-2 rounded-full border border-slate-600">
+              <h2 className="text-lg font-bold text-gray-700 bg-gray-100 px-4 py-2 rounded-full">
                 {monthYear}
               </h2>
-              <div className="h-px flex-1 bg-slate-700" />
+              <div className="h-px flex-1 bg-gray-200" />
             </div>
 
             {/* Release Cards */}
@@ -205,28 +174,32 @@ export default function ReleasesPage() {
                 return (
                   <motion.div 
                     key={release.version}
-                    className={`rounded-2xl border ${colors.border} bg-slate-900/80 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all`}
+                    className={`rounded-2xl border-2 ${colors.border} bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 + idx * 0.05 }}
                   >
                     {/* Release Header */}
-                    <div className={`flex items-center justify-between p-5 border-b ${colors.border}`}>
+                    <div className={`flex items-center justify-between p-5 ${colors.bg} border-b ${colors.border}`}>
                       <div className="flex items-center gap-4">
                         <span className={`text-3xl font-black ${colors.text}`}>
                           V{release.version}
                         </span>
                         <div>
                           <div className="flex items-center gap-3">
-                            <h3 className="text-xl font-semibold text-white">{release.title}</h3>
-                            {release.status === 'upcoming' && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs font-semibold border border-orange-500/30">
-                                <Clock className="w-3 h-3" />
-                                Coming Soon
+                            <h3 className="text-xl font-semibold text-gray-900">{release.title}</h3>
+                            {release.status === 'upcoming' ? (
+                              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-orange-500 text-white rounded-full text-sm font-bold shadow-sm">
+                                <Clock className="w-4 h-4" />
+                                COMING SOON
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-500 text-white rounded-full text-sm font-bold shadow-sm">
+                                ✓ LIVE NOW
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-400 mt-1">
+                          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                             <Calendar className="w-4 h-4" />
                             {release.date}
                           </div>
@@ -234,7 +207,7 @@ export default function ReleasesPage() {
                       </div>
                       <Link
                         href={`/${release.slug}`}
-                        className={`inline-flex items-center gap-2 px-5 py-2.5 ${colors.badge} text-white rounded-xl text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity`}
+                        className={`inline-flex items-center gap-2 px-5 py-2.5 ${colors.badge} text-white rounded-xl text-sm font-semibold shadow-md hover:opacity-90 transition-opacity`}
                       >
                         View Details
                         <ChevronRight className="w-4 h-4" />
@@ -243,16 +216,16 @@ export default function ReleasesPage() {
 
                     {/* Release Content */}
                     <div className="p-5">
-                      <p className="text-slate-300 mb-4">{release.summary}</p>
+                      <p className="text-gray-700 mb-4 text-lg">{release.summary}</p>
                       
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {release.bullets.map((bullet, bulletIdx) => (
                           <li 
                             key={bulletIdx} 
-                            className={`flex gap-3 p-3 rounded-xl ${colors.light} border ${colors.border} items-center`}
+                            className={`flex gap-3 p-4 rounded-xl ${colors.light} items-center`}
                           >
                             <bullet.icon className={`w-5 h-5 ${colors.text} flex-shrink-0`} />
-                            <span className="text-slate-300 text-sm">{bullet.text}</span>
+                            <span className="text-gray-700">{bullet.text}</span>
                           </li>
                         ))}
                       </ul>
@@ -264,26 +237,16 @@ export default function ReleasesPage() {
           </motion.section>
         ))}
 
-        {/* Footer */}
+        {/* Help Footer */}
         <motion.div 
-          className="mt-12 text-center"
+          className="mt-12 p-6 rounded-2xl bg-gray-100 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.4 }}
         >
-          <div className="inline-flex items-center gap-3 px-5 py-3 bg-slate-900 rounded-full border border-slate-700">
-            <Image
-              src="https://cdn.bfldr.com/Q445447Z/at/n85kkcjq5q8r3n6nf4z5jsw/LinkAI_BG_FullGradonBlk.svg?auto=webp&format=svg"
-              alt="LinkAI"
-              width={80}
-              height={24}
-              className="h-5 w-auto invert opacity-60"
-              unoptimized
-            />
-            <span className="text-slate-500 text-sm">
-              Last updated {releases[0]?.date}
-            </span>
-          </div>
+          <p className="text-gray-600">
+            <strong className="text-gray-900">Questions?</strong> Use the Feedback button in LinkAI or contact your manager.
+          </p>
         </motion.div>
       </div>
     </main>
