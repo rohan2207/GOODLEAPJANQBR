@@ -35,6 +35,7 @@ const features = [
       "Easy scenario duplication and modification",
       "Export comparison reports for clients",
     ],
+    hasScenariosScreenshot: true,
   },
   {
     id: "application",
@@ -103,6 +104,69 @@ const emailContentHtml = `
   <p style="color: #666; margin-top: 20px;">Questions? Use the Feedback button in LinkAI.</p>
 </div>
 `;
+
+// Annotated Screenshot Component for Scenarios Tab
+function ScenariosScreenshot() {
+  return (
+    <div className="relative w-full max-w-2xl mx-auto">
+      {/* Screenshot Container */}
+      <div className="relative rounded-xl overflow-hidden border-2 border-slate-600 shadow-2xl shadow-purple-500/10">
+        <img 
+          src="/screenshots/scenarios-tab.png" 
+          alt="Scenarios Tab" 
+          className="w-full h-auto"
+        />
+        
+        {/* Scenario Cards Highlight - Left side */}
+        <motion.div 
+          className="absolute left-[140px] top-[100px] w-[400px] h-[300px] border-2 border-purple-400 rounded-lg bg-purple-400/5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        />
+        
+        {/* Charts Panel Highlight - Right side */}
+        <motion.div 
+          className="absolute right-0 top-0 bottom-0 w-[280px] border-l-4 border-amber-400 bg-amber-400/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        />
+      </div>
+      
+      {/* Labels */}
+      <div className="mt-6 flex justify-between items-start gap-4">
+        {/* Scenarios Label */}
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="w-3 h-3 rounded-full bg-purple-400" />
+          <div>
+            <p className="text-purple-400 font-bold text-sm">Scenario Cards</p>
+            <p className="text-slate-500 text-xs">Compare side-by-side</p>
+          </div>
+        </motion.div>
+        
+        {/* Charts Label */}
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="w-3 h-3 rounded-full bg-amber-400" />
+          <div>
+            <p className="text-amber-400 font-bold text-sm">Charts Panel</p>
+            <p className="text-slate-500 text-xs">Opens on selection</p>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
 
 // Annotated Screenshot Component for New UI
 function AnnotatedScreenshot() {
@@ -194,8 +258,8 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
   const Icon = feature.icon;
   const isEven = index % 2 === 0;
 
-  // Full-width layout for screenshot feature
-  if (feature.hasScreenshot) {
+  // Full-width layout for screenshot features
+  if (feature.hasScreenshot || feature.hasScenariosScreenshot) {
     return (
       <motion.div 
         className={`rounded-2xl bg-slate-900/80 border border-slate-700 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all duration-300`}
@@ -226,7 +290,8 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
         
         {/* Full-width Screenshot */}
         <div className="px-8 pb-8">
-          <AnnotatedScreenshot />
+          {feature.hasScreenshot && <AnnotatedScreenshot />}
+          {feature.hasScenariosScreenshot && <ScenariosScreenshot />}
         </div>
       </motion.div>
     );
