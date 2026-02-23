@@ -6,6 +6,19 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Navigation items for the New UI section
+const navItems = [
+  { icon: "🏠", label: "Dashboard", active: false },
+  { icon: "📊", label: "Pricing", active: false },
+  { icon: "🔄", label: "Scenarios", active: true, isNew: true },
+  { icon: "📝", label: "Application", active: false, isNew: true },
+  { icon: "👤", label: "Borrower", active: false },
+  { icon: "🏦", label: "Property", active: false },
+  { icon: "✨", label: "AI Assistants", active: false, isNew: true },
+  { icon: "📋", label: "Documents", active: false },
+  { icon: "⚙️", label: "Settings", active: false },
+];
+
 // Feature sections for V2.2
 const features = [
   {
@@ -13,14 +26,16 @@ const features = [
     icon: Layout,
     title: "New UI for Link",
     color: "cyan",
-    summary: "Completely redesigned interface for improved workflow and productivity",
+    summary: "Completely redesigned interface with a powerful new left-hand navigation system for streamlined workflow",
     details: [
-      "Modernized visual design with improved navigation",
-      "Streamlined dashboard for faster access to key features",
-      "Enhanced responsive layout for all screen sizes",
-      "Improved accessibility and keyboard navigation",
+      "New persistent left sidebar — Quick access to all loan sections without leaving your current view",
+      "Visual tab organization — Pricing, Scenarios, Application, Borrower, Property, AI, and Documents tabs",
+      "Active state indicators — Always know exactly where you are in the application",
+      "New Scenarios and Application tabs — Easy access to our newest features",
+      "Collapsible navigation — Maximize screen real estate when needed",
     ],
     imagePlaceholder: "UI Preview",
+    hasNavMockup: true,
   },
   {
     id: "scenarios",
@@ -83,7 +98,10 @@ Release Notes:
 
 This major platform update includes:
 
-• New UI for Link — Completely redesigned interface for improved workflow and productivity
+• New UI for Link — Completely redesigned interface with new left-hand navigation
+  - Persistent left sidebar for quick access to all loan sections
+  - Visual tab organization: Pricing, Scenarios, Application, Borrower, Property, AI, and Documents
+  - Collapsible navigation to maximize screen real estate
 
 • Scenarios Tab — Compare multiple loan scenarios side-by-side to find the best option for your borrowers
 
@@ -104,7 +122,14 @@ const emailContentHtml = `
   <p>This major platform update includes:</p>
   
   <ul style="margin: 16px 0; padding-left: 20px;">
-    <li style="margin-bottom: 12px;"><strong>New UI for Link</strong> — Completely redesigned interface for improved workflow and productivity</li>
+    <li style="margin-bottom: 12px;">
+      <strong>New UI for Link</strong> — Completely redesigned interface with new left-hand navigation
+      <ul style="margin-top: 8px; padding-left: 16px; color: #555;">
+        <li>Persistent left sidebar for quick access to all loan sections</li>
+        <li>Visual tab organization: Pricing, Scenarios, Application, Borrower, Property, AI, and Documents</li>
+        <li>Collapsible navigation to maximize screen real estate</li>
+      </ul>
+    </li>
     <li style="margin-bottom: 12px;"><strong>Scenarios Tab</strong> — Compare multiple loan scenarios side-by-side to find the best option</li>
     <li style="margin-bottom: 12px;"><strong>Application (Short 1003)</strong> — Streamlined application process with intelligent form completion</li>
     <li style="margin-bottom: 12px;"><strong>AI Assistants</strong> — Intelligent assistants for rapport building, sales coaching, and property valuations</li>
@@ -113,6 +138,64 @@ const emailContentHtml = `
   <p style="color: #666; margin-top: 20px;">Questions? Use the Feedback button in LinkAI.</p>
 </div>
 `;
+
+// Navigation Mockup Component
+function NavigationMockup() {
+  return (
+    <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#00838f] to-[#006064] p-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+            <span className="text-white text-sm font-bold">L</span>
+          </div>
+          <span className="text-white font-semibold">LinkAI</span>
+        </div>
+      </div>
+      
+      {/* Navigation Items */}
+      <div className="p-3 space-y-1">
+        {navItems.map((item, idx) => (
+          <motion.div
+            key={item.label}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 + idx * 0.05 }}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all ${
+              item.active 
+                ? 'bg-[#e6f2f4] text-[#00838f] font-medium shadow-sm' 
+                : 'text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <span className="text-lg">{item.icon}</span>
+            <span className="text-sm flex-1">{item.label}</span>
+            {item.isNew && (
+              <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">
+                NEW
+              </span>
+            )}
+            {item.active && (
+              <div className="w-1.5 h-1.5 rounded-full bg-[#00838f]" />
+            )}
+          </motion.div>
+        ))}
+      </div>
+      
+      {/* Bottom User Section */}
+      <div className="border-t border-gray-100 p-3 mt-2">
+        <div className="flex items-center gap-3 px-3 py-2 text-gray-500">
+          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm">
+            👤
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-medium text-gray-700">Loan Officer</p>
+            <p className="text-[10px] text-gray-400">View Profile</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FeatureCard({ feature, index }: { feature: typeof features[0]; index: number }) {
   const colors = colorMap[feature.color];
@@ -150,17 +233,21 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
           </ul>
         </div>
 
-        {/* Image Placeholder - Right (or left on alternating) */}
+        {/* Image/Mockup Area - Right (or left on alternating) */}
         <div className="flex-1 p-6 lg:p-8 flex items-center justify-center">
-          <div className={`w-full h-64 lg:h-80 rounded-2xl ${colors.light} border-2 border-dashed ${colors.border} flex items-center justify-center`}>
-            <div className="text-center">
-              <div className={`w-16 h-16 rounded-2xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
-                <Icon className="w-8 h-8 text-white" />
+          {feature.hasNavMockup ? (
+            <NavigationMockup />
+          ) : (
+            <div className={`w-full h-64 lg:h-80 rounded-2xl ${colors.light} border-2 border-dashed ${colors.border} flex items-center justify-center`}>
+              <div className="text-center">
+                <div className={`w-16 h-16 rounded-2xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                  <Icon className="w-8 h-8 text-white" />
+                </div>
+                <p className={`${colors.text} font-medium`}>{feature.imagePlaceholder}</p>
+                <p className="text-gray-400 text-sm mt-1">Coming soon</p>
               </div>
-              <p className={`${colors.text} font-medium`}>{feature.imagePlaceholder}</p>
-              <p className="text-gray-400 text-sm mt-1">Coming soon</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </motion.div>
