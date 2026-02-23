@@ -6,18 +6,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-// Navigation items for the New UI section
-const navItems = [
-  { icon: "🏠", label: "Dashboard", active: false },
-  { icon: "📊", label: "Pricing", active: false },
-  { icon: "🔄", label: "Scenarios", active: true, isNew: true },
-  { icon: "📝", label: "Application", active: false, isNew: true },
-  { icon: "👤", label: "Borrower", active: false },
-  { icon: "🏦", label: "Property", active: false },
-  { icon: "✨", label: "AI Assistants", active: false, isNew: true },
-  { icon: "📋", label: "Documents", active: false },
-  { icon: "⚙️", label: "Settings", active: false },
-];
 
 // Feature sections for V2.2
 const features = [
@@ -33,7 +21,7 @@ const features = [
       "Active state indicators — Always know where you are",
       "Collapsible navigation — Maximize screen real estate",
     ],
-    hasNavMockup: true,
+    hasScreenshot: true,
   },
   {
     id: "scenarios",
@@ -116,55 +104,86 @@ const emailContentHtml = `
 </div>
 `;
 
-// Navigation Mockup Component - Dark themed
-function NavigationMockup() {
+// Annotated Screenshot Component for New UI
+function AnnotatedScreenshot() {
   return (
-    <div className="w-full max-w-xs bg-slate-900 rounded-2xl shadow-2xl shadow-cyan-500/20 border border-slate-700 overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-cyan-600 to-teal-600 p-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur">
-            <span className="text-white text-sm font-bold">L</span>
-          </div>
-          <span className="text-white font-bold tracking-tight">LinkAI</span>
-        </div>
+    <div className="relative w-full max-w-2xl mx-auto">
+      {/* Screenshot Container */}
+      <div className="relative rounded-xl overflow-hidden border-2 border-slate-600 shadow-2xl shadow-cyan-500/10">
+        <img 
+          src="/screenshots/new-ui-navigation.png" 
+          alt="New LinkAI Navigation" 
+          className="w-full h-auto"
+        />
+        
+        {/* L1 - Left Navigation Highlight Overlay */}
+        <motion.div 
+          className="absolute left-0 top-0 bottom-0 w-[120px] border-r-4 border-cyan-400 bg-cyan-400/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        />
+        
+        {/* L2 - Sub-tabs Highlight Overlay */}
+        <motion.div 
+          className="absolute left-[140px] top-[70px] w-[120px] h-[30px] border-2 border-purple-400 rounded bg-purple-400/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        />
+        
+        {/* AI Assistant Highlight Overlay */}
+        <motion.div 
+          className="absolute right-0 top-0 bottom-0 w-[180px] border-l-4 border-emerald-400 bg-emerald-400/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        />
       </div>
       
-      {/* Navigation Items */}
-      <div className="p-2 space-y-0.5">
-        {navItems.map((item, idx) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 + idx * 0.04 }}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all ${
-              item.active 
-                ? 'bg-cyan-500/20 text-cyan-300 font-medium border border-cyan-500/30' 
-                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-            }`}
-          >
-            <span className="text-base">{item.icon}</span>
-            <span className="text-sm flex-1">{item.label}</span>
-            {item.isNew && (
-              <span className="px-1.5 py-0.5 bg-orange-500 text-white text-[9px] font-bold rounded uppercase">
-                New
-              </span>
-            )}
-          </motion.div>
-        ))}
-      </div>
-      
-      {/* Bottom */}
-      <div className="border-t border-slate-700 p-3">
-        <div className="flex items-center gap-3 px-2 text-slate-500">
-          <div className="w-7 h-7 bg-slate-700 rounded-full flex items-center justify-center text-xs">
-            👤
+      {/* Labels positioned around the image */}
+      <div className="mt-6 flex justify-between items-start gap-4">
+        {/* L1 Label */}
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="w-3 h-3 rounded-full bg-cyan-400" />
+          <div>
+            <p className="text-cyan-400 font-bold text-sm">L1 Navigation</p>
+            <p className="text-slate-500 text-xs">Primary sections</p>
           </div>
-          <div className="flex-1">
-            <p className="text-xs font-medium text-slate-300">Loan Officer</p>
+        </motion.div>
+        
+        {/* L2 Label */}
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="w-3 h-3 rounded-full bg-purple-400" />
+          <div>
+            <p className="text-purple-400 font-bold text-sm">L2 Sub-tabs</p>
+            <p className="text-slate-500 text-xs">Liabilities, Details</p>
           </div>
-        </div>
+        </motion.div>
+        
+        {/* AI Label */}
+        <motion.div 
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="w-3 h-3 rounded-full bg-emerald-400" />
+          <div>
+            <p className="text-emerald-400 font-bold text-sm">AI Assistants</p>
+            <p className="text-slate-500 text-xs">Call Prep, AVM, Coach</p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -174,6 +193,44 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
   const colors = colorMap[feature.color];
   const Icon = feature.icon;
   const isEven = index % 2 === 0;
+
+  // Full-width layout for screenshot feature
+  if (feature.hasScreenshot) {
+    return (
+      <motion.div 
+        className={`rounded-2xl bg-slate-900/80 border border-slate-700 overflow-hidden shadow-xl ${colors.glow} hover:shadow-2xl transition-all duration-300`}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 + index * 0.1 }}
+      >
+        {/* Header */}
+        <div className="p-8 pb-4">
+          <div className="flex items-center gap-4 mb-5">
+            <div className={`w-12 h-12 rounded-xl ${colors.bg} border border-slate-600 flex items-center justify-center`}>
+              <Icon className={`w-6 h-6 ${colors.text}`} />
+            </div>
+            <h3 className="text-2xl font-bold text-white">{feature.title}</h3>
+          </div>
+          
+          <p className="text-slate-300 text-lg mb-4">{feature.summary}</p>
+          
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {feature.details.map((detail, idx) => (
+              <li key={idx} className="flex gap-2 items-center">
+                <div className={`w-1.5 h-1.5 rounded-full ${colors.accent} flex-shrink-0`} />
+                <span className="text-slate-400 text-sm">{detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        {/* Full-width Screenshot */}
+        <div className="px-8 pb-8">
+          <AnnotatedScreenshot />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div 
@@ -206,18 +263,14 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
 
         {/* Visual Area */}
         <div className="flex-1 p-6 lg:p-8 flex items-center justify-center bg-slate-950/50">
-          {feature.hasNavMockup ? (
-            <NavigationMockup />
-          ) : (
-            <div className={`w-full h-56 lg:h-64 rounded-xl ${colors.bg} border border-slate-700 flex items-center justify-center`}>
-              <div className="text-center">
-                <div className={`w-14 h-14 rounded-xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg ${colors.glow}`}>
-                  <Icon className="w-7 h-7 text-slate-900" />
-                </div>
-                <p className={`${colors.text} font-semibold`}>Preview</p>
+          <div className={`w-full h-56 lg:h-64 rounded-xl ${colors.bg} border border-slate-700 flex items-center justify-center`}>
+            <div className="text-center">
+              <div className={`w-14 h-14 rounded-xl ${colors.accent} mx-auto mb-4 flex items-center justify-center shadow-lg ${colors.glow}`}>
+                <Icon className="w-7 h-7 text-slate-900" />
               </div>
+              <p className={`${colors.text} font-semibold`}>Preview</p>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </motion.div>
