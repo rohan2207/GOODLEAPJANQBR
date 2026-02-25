@@ -202,7 +202,7 @@ export default function V16ReleasePage() {
         }
       `}</style>
 
-      <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+      <main className="min-h-screen bg-white text-gray-900">
         <div className="max-w-4xl mx-auto px-6 py-8 print:px-4 print:py-4">
           {/* Navigation */}
           <motion.div 
@@ -306,7 +306,7 @@ export default function V16ReleasePage() {
 
           {/* Help Footer */}
           <motion.div 
-            className="mt-8 p-5 rounded-2xl bg-gray-100 text-center"
+            className="mt-8 p-5 rounded-2xl bg-white border border-gray-200 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}

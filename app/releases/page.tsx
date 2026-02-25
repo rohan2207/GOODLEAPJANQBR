@@ -116,7 +116,7 @@ export default function ReleasesPage() {
   const grouped = groupReleasesByMonth(releases);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+    <main className="min-h-screen bg-white text-gray-900">
       <div className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div 
@@ -185,7 +185,7 @@ export default function ReleasesPage() {
           >
             {/* Month Header */}
             <div className="flex items-center gap-4 mb-6">
-              <h2 className="text-lg font-bold text-gray-700 bg-gray-100 px-4 py-2 rounded-full">
+              <h2 className="text-lg font-bold text-gray-700 bg-white border border-gray-200 px-4 py-2 rounded-full">
                 {monthYear}
               </h2>
               <div className="h-px flex-1 bg-gray-200" />
@@ -263,7 +263,7 @@ export default function ReleasesPage() {
 
         {/* Help Footer */}
         <motion.div 
-          className="mt-12 p-6 rounded-2xl bg-gray-100 text-center"
+          className="mt-12 p-6 rounded-2xl bg-white border border-gray-200 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.4 }}

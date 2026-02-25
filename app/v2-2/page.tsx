@@ -150,7 +150,7 @@ function FeatureSection({ feature, index }: { feature: typeof features[0]; index
         </div>
         
         {/* Right: Screenshot (70-75%) */}
-        <div className="lg:w-[70%] p-4 bg-gray-50">
+        <div className="lg:w-[70%] p-4 bg-white">
           <div className="relative rounded-xl overflow-hidden border border-gray-200 shadow-lg">
             <img 
               src={feature.screenshotPath}
@@ -204,7 +204,7 @@ export default function V22ReleasePage() {
         }
       `}</style>
 
-      <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900">
+      <main className="min-h-screen bg-white text-gray-900">
         <div className="max-w-7xl mx-auto px-6 py-8 print:px-4 print:py-4">
           {/* Navigation */}
           <motion.div 
@@ -278,7 +278,7 @@ export default function V22ReleasePage() {
 
           {/* Help Footer */}
           <motion.div 
-            className="mt-8 p-5 rounded-2xl bg-gray-100 text-center"
+            className="mt-8 p-5 rounded-2xl bg-white border border-gray-200 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
