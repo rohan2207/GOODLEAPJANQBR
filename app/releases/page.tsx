@@ -52,8 +52,8 @@ const releases: Release[] = [
     year: "2026",
     color: "teal",
     bullets: [
-      { icon: UserPlus, text: "Name Suffix — Add Jr, Sr, II, III to applicant names" },
-      { icon: Briefcase, text: "Employment Options — Updated job status list that matches Figure" },
+      { icon: UserPlus, text: "Name Updates — Legal name prompt, suffix on first row, Middle Name hidden" },
+      { icon: Briefcase, text: "Employment Options — Updated job status list (hover for full labels)" },
       { icon: DollarSign, text: "Simplified Income — Cleaner, streamlined income section" },
       { icon: MapPin, text: "Smart Defaults — Primary residence auto-selected" },
     ],

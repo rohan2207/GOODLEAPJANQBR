@@ -13,8 +13,8 @@ LinkAI V1.6 is now live with improvements to HELOC submissions.
 
 What's New:
 
-• Name Suffix — Add Jr, Sr, II, III, IV, V to applicant names
-• Employment Options — Updated job status choices that match Figure's system
+• Name & Suffix Updates — Legal name verification prompt added, Middle Name hidden, Suffix moved to first row with blank option
+• Employment Options — Updated job status choices that match Figure (shorter labels with hover for full text)
 • Simplified Income — Cleaner income section (removed "Other Annual Income")
 • Smart Defaults — Primary residence auto-selected for current address
 
@@ -29,8 +29,8 @@ const emailContentHtml = `
   <p><strong>LinkAI V1.6</strong> is now live with improvements to HELOC submissions.</p>
   <h3 style="margin-top: 20px; margin-bottom: 10px;">What's New:</h3>
   <ul style="margin: 16px 0; padding-left: 20px;">
-    <li style="margin-bottom: 12px;"><strong>Name Suffix</strong> — Add Jr, Sr, II, III, IV, V to applicant names</li>
-    <li style="margin-bottom: 12px;"><strong>Employment Options</strong> — Updated job status choices that match Figure</li>
+    <li style="margin-bottom: 12px;"><strong>Name & Suffix Updates</strong> — Legal name verification prompt, Middle Name hidden, Suffix on first row with blank option</li>
+    <li style="margin-bottom: 12px;"><strong>Employment Options</strong> — Updated job status choices (hover for full labels)</li>
     <li style="margin-bottom: 12px;"><strong>Simplified Income</strong> — Cleaner income section</li>
     <li style="margin-bottom: 12px;"><strong>Smart Defaults</strong> — Primary residence auto-selected</li>
   </ul>
@@ -43,14 +43,15 @@ const features = [
   {
     id: "suffix",
     icon: UserPlus,
-    title: "Name Suffix",
-    summary: "Add Jr, Sr, II, III to applicant names",
-    description: "A new dropdown lets you add suffixes like Jr, Sr, II, III, IV, or V to applicant names. This ensures names match official documents and reduces submission errors.",
+    title: "Name & Suffix Updates",
+    summary: "Cleaner name entry with suffix options",
+    description: "The borrower info section now shows a verification prompt and streamlined name fields. Suffix has moved to the first row next to the name.",
     details: [
-      "New dropdown under Applicant Name",
-      "Options: I, II, III, IV, V, Jr, Sr",
-      "Optional — leave blank if not needed",
-      "Automatically included in Figure submission"
+      "New message: \"Please provide the legal name as it appears on government-issued ID\"",
+      "Middle Name field is now hidden",
+      "Suffix dropdown moved to first row (next to First/Last name)",
+      "Options: (blank), I, II, III, IV, V, Jr, Sr",
+      "Select blank to clear — no more getting stuck"
     ],
     howItHelps: "Names on loan documents will match IDs exactly, reducing delays from mismatched information.",
     color: "teal"
@@ -66,10 +67,10 @@ const features = [
       "Employed part-time",
       "Retired",
       "Self-employed",
-      "Alimony/child support/public assistance",
+      "\"Alimony, Child Support, etc.\" (hover for full label)",
       "Unemployed/furloughed"
     ],
-    howItHelps: "No more submission errors from employment type mismatches. Pick the right status and it maps correctly to Figure.",
+    howItHelps: "No more submission errors from employment type mismatches. The shorter label keeps the form clean — hover to see the full description.",
     color: "blue"
   },
   {
@@ -280,7 +281,7 @@ export default function V16ReleasePage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center gap-2">
                 <UserPlus className="w-5 h-5" />
-                <span>Name suffixes (Jr, Sr, II-V)</span>
+                <span>Cleaner name fields + suffix</span>
               </div>
               <div className="flex items-center gap-2">
                 <Briefcase className="w-5 h-5" />
