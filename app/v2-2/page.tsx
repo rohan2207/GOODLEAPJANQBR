@@ -192,8 +192,10 @@ export default function V22ReleasePage() {
 
   return (
     <>
-      {/* Print Styles */}
+      {/* Hide dark overlays + Print Styles */}
       <style jsx global>{`
+        .vignette-overlay, .grain-overlay { display: none !important; }
+        body { background: white !important; }
         @media print {
           body {
             -webkit-print-color-adjust: exact !important;
@@ -204,7 +206,7 @@ export default function V22ReleasePage() {
         }
       `}</style>
 
-      <main className="min-h-screen bg-white text-gray-900">
+      <main className="min-h-screen bg-white text-gray-900 relative z-10">
         <div className="max-w-7xl mx-auto px-6 py-8 print:px-4 print:py-4">
           {/* Navigation */}
           <motion.div 

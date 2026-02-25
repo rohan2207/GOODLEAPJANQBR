@@ -116,7 +116,13 @@ export default function ReleasesPage() {
   const grouped = groupReleasesByMonth(releases);
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <>
+      {/* Hide dark overlays on this light page */}
+      <style jsx global>{`
+        .vignette-overlay, .grain-overlay { display: none !important; }
+        body { background: white !important; }
+      `}</style>
+      <main className="min-h-screen bg-white text-gray-900 relative z-10">
       <div className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div 
@@ -274,5 +280,6 @@ export default function ReleasesPage() {
         </motion.div>
       </div>
     </main>
+    </>
   );
 }
