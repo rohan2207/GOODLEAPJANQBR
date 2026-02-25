@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Calendar, ChevronRight, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronRight, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap, UserPlus, Briefcase, DollarSign, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -42,6 +42,23 @@ const releases: Release[] = [
     ],
   },
   {
+    version: "1.6",
+    date: "February 2026",
+    slug: "v1-6",
+    title: "HELOC Submission Updates",
+    summary: "Smoother HELOC submissions with better name options, employment choices, and smart defaults",
+    status: "released",
+    month: "February",
+    year: "2026",
+    color: "teal",
+    bullets: [
+      { icon: UserPlus, text: "Name Suffix — Add Jr, Sr, II, III to applicant names" },
+      { icon: Briefcase, text: "Employment Options — Updated job status list that matches Figure" },
+      { icon: DollarSign, text: "Simplified Income — Cleaner, streamlined income section" },
+      { icon: MapPin, text: "Smart Defaults — Primary residence auto-selected" },
+    ],
+  },
+  {
     version: "1.5",
     date: "February 5th, 2026",
     slug: "feb2",
@@ -68,6 +85,13 @@ const colorMap: { [key: string]: { bg: string; border: string; text: string; bad
     text: "text-orange-600", 
     badge: "bg-orange-500",
     light: "bg-orange-100"
+  },
+  teal: { 
+    bg: "bg-teal-50", 
+    border: "border-teal-200", 
+    text: "text-teal-600", 
+    badge: "bg-teal-500",
+    light: "bg-teal-100"
   },
   blue: { 
     bg: "bg-blue-50", 
