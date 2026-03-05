@@ -27,7 +27,7 @@ type Release = {
 const releases: Release[] = [
   {
     version: "2.3.1",
-    date: "March 2026",
+    date: "March 5th, 2026",
     slug: "v2-3-1",
     title: "Ownership & Vesting Rights",
     summary: "Instantly see if a property is in a trust, how it's vested, and who owns it — right in the Property screen",
@@ -48,7 +48,7 @@ const releases: Release[] = [
     slug: "v2-2",
     title: "Major Platform Update",
     summary: "Work faster with a redesigned interface, instant loan comparisons, quick applications, and AI-powered sales tools",
-    status: "upcoming",
+    status: "released",
     month: "February",
     year: "2026",
     color: "orange",
@@ -382,9 +382,9 @@ export default function ReleasesPage() {
             </p>
           </motion.div>
 
-          {/* What's Coming Banner */}
+          {/* Latest Release Banner */}
           <motion.div 
-            className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg"
+            className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
@@ -393,17 +393,17 @@ export default function ReleasesPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-5 h-5" />
-                  <span className="font-bold">Coming February 25th — V2.2</span>
+                  <span className="font-bold">Just Released — V2.3.1</span>
                 </div>
                 <p className="text-white/90 text-sm">
-                  Redesigned interface, instant comparisons, AI tools
+                  Ownership & Vesting Rights now visible in Property screen
                 </p>
               </div>
               <Link
-                href="/v2-2"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-orange-600 rounded-xl text-sm font-semibold hover:bg-orange-50 transition-colors"
+                href="/v2-3-1"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-purple-600 rounded-xl text-sm font-semibold hover:bg-purple-50 transition-colors"
               >
-                Preview
+                See Details
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
