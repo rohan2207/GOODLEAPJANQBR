@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ArrowLeft, Calendar, ChevronRight, ChevronDown, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap, UserPlus, Briefcase, DollarSign, MapPin, Search, X } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronRight, ChevronDown, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap, UserPlus, Briefcase, DollarSign, MapPin, Search, X, Shield, Building } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +25,23 @@ type Release = {
 
 // All release notes - benefit-focused language for loan officers
 const releases: Release[] = [
+  {
+    version: "2.3.1",
+    date: "March 2026",
+    slug: "v2-3-1",
+    title: "Ownership & Vesting Rights",
+    summary: "Instantly see if a property is in a trust, how it's vested, and who owns it — right in the Property screen",
+    status: "released",
+    month: "March",
+    year: "2026",
+    color: "purple",
+    bullets: [
+      { icon: Shield, text: "Vesting Rights — See Community Property, Joint Tenancy, Trust, etc." },
+      { icon: Users, text: "Vesting Owner — Know if it's Husband & Wife, Individual, or other" },
+      { icon: Building, text: "Property Screen — All ownership info in one place" },
+      { icon: FileText, text: "Application Tab — Same info in the property modal" },
+    ],
+  },
   {
     version: "2.2",
     date: "February 25th, 2026",
@@ -80,6 +97,13 @@ const releases: Release[] = [
 
 // Light theme color mappings
 const colorMap: { [key: string]: { bg: string; border: string; text: string; badge: string; light: string } } = {
+  purple: { 
+    bg: "bg-purple-50", 
+    border: "border-purple-200", 
+    text: "text-purple-600", 
+    badge: "bg-purple-500",
+    light: "bg-purple-100"
+  },
   orange: { 
     bg: "bg-orange-50", 
     border: "border-orange-200", 
