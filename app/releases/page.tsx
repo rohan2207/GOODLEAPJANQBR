@@ -29,9 +29,9 @@ const releases: Release[] = [
     version: "2.3.2",
     date: "March 23rd, 2026",
     slug: "v2-3-2",
-    title: "Property Status & Liabilities Clarity",
+    title: "PACE Lien & Property Status",
     summary:
-      "Spot PACE liens at a glance on the Property tab, and copy full account numbers from Liabilities without leaving the table.",
+      "PACE Lien leads this release on Property Status; Listed for Sale, In HOA, and other chips still appear when data supports them. Liabilities adds full account numbers on hover with quick copy.",
     status: "released",
     month: "March",
     year: "2026",
@@ -39,11 +39,11 @@ const releases: Release[] = [
     bullets: [
       {
         icon: Home,
-        text: "PACE Lien — Shows with your other Property Status indicators on the Property tab when it applies",
+        text: "PACE Lien (priority) — New Property Status badge; other indicators (Listed for Sale, In HOA, etc.) when applicable",
       },
       {
         icon: Copy,
-        text: "Account numbers — Hover masked entries in Liabilities to see the full number and quick copy",
+        text: "Liabilities — Hover masked account numbers for full number and quick copy",
       },
     ],
   },
@@ -418,7 +418,7 @@ export default function ReleasesPage() {
                   <span className="font-bold">Just Released — V2.3.2</span>
                 </div>
                 <p className="text-white/90 text-sm">
-                  PACE Lien on Property Status; full account numbers in Liabilities
+                  PACE Lien first on Property Status — plus other status chips when they apply
                 </p>
               </div>
               <Link

@@ -6,49 +6,79 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const emailContentPlain = `Subject: LinkAI V2.3.2 Release Notes — Property Status & Liabilities Clarity
+const emailContentPlain = `Subject: LinkAI V2.3.2 Release Notes — PACE Lien & Property Status
 
-LinkAI V2.3.2 is now live with PACE Lien visibility and easier account numbers in Liabilities.
+LinkAI V2.3.2 is now live. The headline addition is PACE Lien on Property Status — plus you still see your other property status chips (Listed for Sale, In HOA, and more) when the data supports them. Liabilities also gets faster access to full account numbers.
 
 What's New:
 
-• PACE Lien — See a PACE Lien badge with your other Property Status indicators on the Property tab when it applies to that loan.
-• Account numbers — Hover masked account numbers in Liabilities to see the full number and use quick copy.
-
-Property status badges reflect available data — you may see PACE Lien and other indicators only when they apply to that property.
+• PACE Lien (priority) — New badge in Property Status on the Property tab when a PACE lien applies. This is the most important new signal for payoff and disclosures.
+• Other Property Status — Continue to see indicators like Listed for Sale, In HOA, and additional status chips alongside PACE when applicable — not every loan shows every badge.
+• Account numbers — In Liabilities, hover masked account numbers for the full number and quick copy.
 
 Questions? Use the Feedback button in LinkAI.
 `;
 
 const emailContentHtml = `
 <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
-  <p><strong>LinkAI V2.3.2</strong> is now live with PACE Lien visibility and easier account numbers in Liabilities.</p>
+  <p><strong>LinkAI V2.3.2</strong> is now live. The headline addition is <strong>PACE Lien</strong> on Property Status — plus you still see your other property status chips (Listed for Sale, In HOA, and more) when the data supports them. Liabilities also gets faster access to full account numbers.</p>
   <h3 style="margin-top: 20px; margin-bottom: 10px;">What's New:</h3>
   <ul style="margin: 16px 0; padding-left: 20px;">
-    <li style="margin-bottom: 12px;"><strong>PACE Lien</strong> — See a PACE Lien badge with your other Property Status indicators on the Property tab when it applies to that loan.</li>
-    <li style="margin-bottom: 12px;"><strong>Account numbers</strong> — Hover masked account numbers in Liabilities to see the full number and use quick copy.</li>
+    <li style="margin-bottom: 12px;"><strong>PACE Lien (priority)</strong> — New badge in Property Status on the Property tab when a PACE lien applies. Most important new signal for payoff and disclosures.</li>
+    <li style="margin-bottom: 12px;"><strong>Other Property Status</strong> — Listed for Sale, In HOA, and additional chips alongside PACE when applicable; not every loan shows every badge.</li>
+    <li style="margin-bottom: 12px;"><strong>Account numbers</strong> — In Liabilities, hover masked numbers for the full account and quick copy.</li>
   </ul>
-  <p style="margin-top: 16px;">Property status badges reflect available data — you may see PACE Lien and other indicators only when they apply to that property.</p>
   <p style="color: #666; margin-top: 20px;">Questions? Use the Feedback button in LinkAI.</p>
 </div>
 `;
 
-const features = [
+type FeatureScreenshot = {
+  src: string;
+  alt: string;
+  caption: string;
+};
+
+const features: Array<{
+  id: string;
+  icon: typeof Home;
+  title: string;
+  summary: string;
+  description: string;
+  examples?: string[];
+  details?: string[];
+  howItHelps: string;
+  color: "blue" | "emerald";
+  screenshots?: FeatureScreenshot[];
+  wide?: boolean;
+}> = [
   {
     id: "pace-lien-property-status",
     icon: Home,
-    title: "PACE Lien in Property Status",
-    summary: "Spot PACE liens alongside your other property indicators",
+    title: "PACE Lien & Property Status indicators",
+    summary: "PACE Lien is the headline addition; other chips show when data supports them",
     description:
-      "On the Property tab, the Property Status section can now include a PACE Lien badge next to indicators such as Listed for Sale or In HOA. When the data shows a PACE assessment lien on the property, you'll see it here without digging through documents.",
+      "The Property tab’s Property Status section now surfaces a PACE Lien badge when it applies — the clearest early warning for PACE-related payoff and disclosure work. You’ll also continue to see other status indicators you already rely on — for example Listed for Sale and In HOA — plus additional property status signals when the data supports them. Not every loan displays every badge; you only see what applies to that property.",
     examples: [
-      "Property tab → Property Status section",
-      "PACE Lien appears with other status chips when applicable",
-      "Not every loan shows every badge — only when data supports it",
+      "Property tab → Property Status",
+      "PACE Lien (priority) when a PACE lien is present",
+      "Other indicators (e.g. Listed for Sale, In HOA) appear alongside when applicable",
     ],
     howItHelps:
-      "PACE financing can affect qualification and payoff — seeing it upfront on the property record keeps surprises out of the late stages.",
+      "PACE can change qualification and payoff math — calling it out in Property Status first keeps the file accurate early. The rest of your status chips still tell the full story when the data is there.",
     color: "blue",
+    wide: true,
+    screenshots: [
+      {
+        src: "/Screenshots/v2-3-2/property-status-pace-lien-and-hoa.png",
+        alt: "Property Status showing PACE Lien and In HOA indicators",
+        caption: "PACE Lien (highlight addition) alongside another Property Status indicator — example: In HOA.",
+      },
+      {
+        src: "/Screenshots/v2-3-2/property-status-listed-for-sale-and-hoa.png",
+        alt: "Property Status showing Listed for Sale and In HOA",
+        caption: "Other combinations you may see include Listed for Sale, In HOA, and more — only when applicable to the loan.",
+      },
+    ],
   },
   {
     id: "liabilities-account-copy",
@@ -56,7 +86,7 @@ const features = [
     title: "Full account numbers in Liabilities",
     summary: "Hover masked numbers for the full account and one-click copy",
     description:
-      "In the Liabilities area (Open Accounts and similar tables), account numbers may display masked for privacy. Hover the masked value to open a tooltip with the full account number and a copy control so you can paste it elsewhere instantly.",
+      "In Liabilities (e.g. Open Accounts), account numbers may display masked for privacy. Hover the masked value to open a tooltip with the full account number and a copy control so you can paste it elsewhere instantly.",
     details: [
       "Go to Liabilities / Open Accounts",
       "Hover the masked account number in the Account column",
@@ -66,6 +96,13 @@ const features = [
     howItHelps:
       "No more asking ops for full numbers or switching tools — copy what you need while you stay in the loan file.",
     color: "emerald",
+    screenshots: [
+      {
+        src: "/Screenshots/v2-3-2/liabilities-account-hover-copy.png",
+        alt: "Liabilities Open Accounts table with hover tooltip showing full account number and copy",
+        caption: "Hover a masked account number to reveal the full number and quick copy.",
+      },
+    ],
   },
 ];
 
@@ -77,11 +114,12 @@ const colorMap: { [key: string]: { bg: string; border: string; text: string; lig
 function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index: number }) {
   const colors = colorMap[feature.color];
   const Icon = feature.icon;
+  const wide = feature.wide;
 
   return (
     <motion.section
       id={feature.id}
-      className={`rounded-2xl border-2 ${colors.border} bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow`}
+      className={`rounded-2xl border-2 ${colors.border} bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${wide ? "md:col-span-2" : ""}`}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 + index * 0.1 }}
@@ -100,6 +138,29 @@ function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index:
 
       <div className="p-5">
         <p className="text-gray-700 mb-4">{feature.description}</p>
+
+        {feature.screenshots && feature.screenshots.length > 0 && (
+          <div
+            className={`mb-4 grid gap-4 ${feature.screenshots.length > 1 ? "sm:grid-cols-2" : "grid-cols-1"}`}
+          >
+            {feature.screenshots.map((shot) => (
+              <figure
+                key={shot.src}
+                className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm"
+              >
+                <Image
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={720}
+                  height={400}
+                  className="h-auto w-full object-contain"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <figcaption className="border-t border-gray-200 px-3 py-2 text-sm text-gray-600">{shot.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
 
         <div className={`p-4 rounded-xl ${colors.light} mb-4`}>
           <p className="text-sm font-semibold text-gray-700 mb-2">
@@ -233,10 +294,11 @@ export default function V232ReleasePage() {
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Property Status & Liabilities Clarity</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">PACE Lien, Property Status & Liabilities</h1>
             <p className="text-gray-600 text-lg">
-              Spot PACE liens at a glance on the Property tab, and copy full account numbers from Liabilities without
-              leaving the table.
+              <strong className="text-gray-800">PACE Lien</strong> is the headline: it now appears in Property Status when
+              it applies. You&apos;ll still see your other property status chips — Listed for Sale, In HOA, and more —
+              when the data supports them. Liabilities adds hover-to-reveal full account numbers with quick copy.
             </p>
           </motion.div>
 
@@ -247,16 +309,28 @@ export default function V232ReleasePage() {
             transition={{ delay: 0.08 }}
           >
             <h2 className="text-lg font-bold mb-3">What&apos;s New</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center gap-2">
-                <Home className="w-5 h-5" />
-                <span>PACE Lien in Property Status</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Copy className="w-5 h-5" />
-                <span>Hover + copy full account numbers</span>
-              </div>
-            </div>
+            <ul className="space-y-2 text-sm sm:text-base">
+              <li className="flex items-start gap-2">
+                <Home className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>PACE Lien (priority)</strong> — New Property Status badge when a PACE lien applies; works
+                  alongside your other status indicators.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Home className="w-5 h-5 mt-0.5 flex-shrink-0 opacity-80" />
+                <span>
+                  <strong>Other Property Status</strong> — Listed for Sale, In HOA, and additional chips only when
+                  applicable (not every loan shows every badge).
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Copy className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Liabilities</strong> — Hover masked account numbers for the full number and quick copy.
+                </span>
+              </li>
+            </ul>
           </motion.div>
 
           <motion.div
@@ -267,9 +341,10 @@ export default function V232ReleasePage() {
           >
             <h3 className="font-bold text-gray-900 mb-2">Why this matters</h3>
             <p className="text-gray-700">
-              <strong>PACE liens</strong> can change how you structure payoffs and disclosures. Seeing them in Property
-              Status keeps the file honest early. <strong>Full account numbers</strong> in Liabilities save time when
-              you&apos;re reconciling credit or talking to a creditor — without breaking your flow.
+              <strong>PACE</strong> is the most important new signal in this release — it can change payoff and disclosure
+              work when it&apos;s on the file. The rest of Property Status still rounds out the picture (sale status, HOA,
+              etc.) when the data is there. <strong>Full account numbers</strong> in Liabilities save time when you&apos;re
+              reconciling credit or talking to a creditor — without leaving the loan.
             </p>
           </motion.div>
 
