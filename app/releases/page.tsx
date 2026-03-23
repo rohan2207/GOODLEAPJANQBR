@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ArrowLeft, Calendar, ChevronRight, ChevronDown, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap, UserPlus, Briefcase, DollarSign, MapPin, Search, X, Shield, Building } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronRight, ChevronDown, Home, Lock, RefreshCw, Users, Sparkles, Layout, FileText, Bot, Clock, Zap, UserPlus, Briefcase, DollarSign, MapPin, Search, X, Shield, Building, Copy } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +25,28 @@ type Release = {
 
 // All release notes - benefit-focused language for loan officers
 const releases: Release[] = [
+  {
+    version: "2.3.2",
+    date: "March 23rd, 2026",
+    slug: "v2-3-2",
+    title: "Property Status & Liabilities Clarity",
+    summary:
+      "Spot PACE liens at a glance on the Property tab, and copy full account numbers from Liabilities without leaving the table.",
+    status: "released",
+    month: "March",
+    year: "2026",
+    color: "blue",
+    bullets: [
+      {
+        icon: Home,
+        text: "PACE Lien — Shows with your other Property Status indicators on the Property tab when it applies",
+      },
+      {
+        icon: Copy,
+        text: "Account numbers — Hover masked entries in Liabilities to see the full number and quick copy",
+      },
+    ],
+  },
   {
     version: "2.3.1",
     date: "March 5th, 2026",
@@ -384,7 +406,7 @@ export default function ReleasesPage() {
 
           {/* Latest Release Banner */}
           <motion.div 
-            className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg"
+            className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-blue-500 to-sky-600 text-white shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
@@ -393,15 +415,15 @@ export default function ReleasesPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-5 h-5" />
-                  <span className="font-bold">Just Released — V2.3.1</span>
+                  <span className="font-bold">Just Released — V2.3.2</span>
                 </div>
                 <p className="text-white/90 text-sm">
-                  Ownership & Vesting Rights now visible in Property screen
+                  PACE Lien on Property Status; full account numbers in Liabilities
                 </p>
               </div>
               <Link
-                href="/v2-3-1"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-purple-600 rounded-xl text-sm font-semibold hover:bg-purple-50 transition-colors"
+                href="/v2-3-2"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 transition-colors"
               >
                 See Details
                 <ChevronRight className="w-4 h-4" />
