@@ -1710,6 +1710,15 @@ const features: Feature[] = [
         ],
       },
       {
+        title: "REO/VOM — Quick Credit Linking",
+        bullets: [
+          "LinkAI scans the credit report and surfaces mortgage liabilities directly in the REO section",
+          "Click any mortgage to link it to the property — monthly payment autofills from the credit data instantly",
+          "Linked liabilities highlight in blue across the 1003 so you always know what's been reconciled",
+          "No mortgage on the report? Add it manually with one tap",
+        ],
+      },
+      {
         title: "Co-Borrower Split Screen",
         bullets: [
           "Toggle co-borrower on and the screen splits — borrower on the left, co-borrower on the right",
@@ -1821,6 +1830,108 @@ const colorMap = {
 };
 
 // ---------------------------------------------------------------------------
+// REO Link Snippet
+// ---------------------------------------------------------------------------
+
+function REOLinkSnippet() {
+  const [linked, setLinked] = useState(false);
+
+  return (
+    <motion.div
+      className="rounded-xl border border-[#E3E0F0] bg-white shadow-sm overflow-hidden"
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.2 }}
+    >
+      {/* REO/VOM header */}
+      <div className="px-4 pt-4 pb-2 border-b border-[#E3E0F0]">
+        <div className="flex items-center justify-between mb-0.5">
+          <h2 className="text-sm font-semibold" style={{ color: "#200f51" }}>REO/VOM</h2>
+        </div>
+        <p className="text-xs" style={{ color: "#67677B" }}>All real estate currently owned by the borrower</p>
+      </div>
+
+      {/* Property count stepper */}
+      <div className="px-4 py-3 border-b border-[#E3E0F0] flex flex-col gap-1">
+        <label className="text-xs font-medium" style={{ color: "#200f51" }}>How many properties do you own?</label>
+        <div className="inline-flex items-center gap-2">
+          <button type="button" disabled className="w-8 h-8 flex items-center justify-center rounded-md border border-[#e3e3ed] bg-white opacity-40 text-[#200f51]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/></svg>
+          </button>
+          <div className="min-w-10 h-8 px-3 flex items-center justify-center rounded-md border border-[#e3e3ed] bg-white text-sm font-semibold tabular-nums" style={{ color: "#200f51" }}>1</div>
+          <button type="button" className="w-8 h-8 flex items-center justify-center rounded-md border border-[#e3e3ed] bg-white text-[#200f51] hover:bg-[#f5f3ff]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Subject Property section */}
+      <div className="px-4 py-3">
+        <h2 className="text-sm font-semibold mb-2" style={{ color: "#200f51" }}>Subject Property</h2>
+        <p className="text-xs mb-2" style={{ color: "#67677B" }}>Select mortgage accounts from the credit report associated with this property.</p>
+
+        {/* Mortgage card — toggles blue when linked */}
+        <button
+          type="button"
+          onClick={() => setLinked(!linked)}
+          className="w-full text-left rounded-md p-3 border transition-all duration-200 mb-3 focus-visible:outline-none"
+          style={{
+            backgroundColor: linked ? "#EEF0FF" : "#ffffff",
+            borderColor: linked ? "#4022BA" : "#e3e3ed",
+            boxShadow: linked ? "0 0 0 2px #4022BA33" : "none",
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-0.5">
+              <span className="flex items-center gap-2 text-sm font-semibold" style={{ color: linked ? "#4022BA" : "#14141A" }}>
+                {linked && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4022BA" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                )}
+                Mortgage ABC — 1
+              </span>
+              <span className="text-xs" style={{ color: linked ? "#472BA4" : "#67677B" }}>
+                MortgageLoan · Balance: $122,500 · Pmt: $1,222/mo
+              </span>
+            </div>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: linked ? "#4022BA" : "#f0f0f0", color: linked ? "white" : "#67677B" }}>
+              {linked ? "Linked" : "Link"}
+            </span>
+          </div>
+        </button>
+
+        {/* Monthly mortgage payment — autofills when linked */}
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium" style={{ color: "#200f51" }}>Monthly Mortgage Payment</label>
+          <div
+            className="rounded-[8px] overflow-hidden h-10 flex items-center px-3 text-sm transition-all duration-300"
+            style={{
+              ring: "1px",
+              border: linked ? "2px solid #4022BA" : "1px solid #e3e0f0",
+              backgroundColor: linked ? "#F7F6FF" : "#f9f9fb",
+              color: linked ? "#200f51" : "#ada6bf",
+              fontWeight: linked ? 600 : 400,
+              boxShadow: "rgba(0,0,0,0.04) 0px 1px 8px",
+            }}
+          >
+            {linked ? "$1,222" : "$0"}
+          </div>
+          {linked && (
+            <p className="text-xs font-medium" style={{ color: "#4022BA" }}>
+              Autofilled from credit report
+            </p>
+          )}
+        </div>
+      </div>
+
+      <p className="text-xs px-4 py-2.5 border-t border-[#E3E0F0] leading-relaxed" style={{ color: "#67677B" }}>
+        Click a mortgage to link it — the payment autofills and the liability row turns blue across the 1003.
+      </p>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Feature Section (Apple-style full-width)
 // ---------------------------------------------------------------------------
 
@@ -1831,7 +1942,7 @@ function FullFeatureSection({ feature, index }: { feature: Feature; index: numbe
   const Icon = feature.icon;
 
   const snippets = {
-    "full-1003": [<LoanBarSnippet key="loan" />, <SectionsNavSnippet key="nav" />, <IncomeTypeSnippet key="income" />, <LiabilitiesRowSnippet key="liab" />, <CoBorrowerSnippet key="co" />],
+    "full-1003": [<LoanBarSnippet key="loan" />, <SectionsNavSnippet key="nav" />, <IncomeTypeSnippet key="income" />, <LiabilitiesRowSnippet key="liab" />, <REOLinkSnippet key="reo" />, <CoBorrowerSnippet key="co" />],
     "smart-panel": [<PanelOverviewSnippet key="panel-overview" />, <PanelResizeSnippet key="panel-resize" />, <AIQuickActionsSnippet key="panel-ai" />],
     "smart-credit": [<OrderCreditSnippet key="order-credit" />, <SelectBorrowersSnippet key="select-borrowers" />, <ViewCreditSnippet key="view-credit" />],
   };
