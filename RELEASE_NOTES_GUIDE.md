@@ -110,7 +110,8 @@ Add new release to the `releases` array:
 | `blue` | Data/intelligence features |
 | `teal` | HELOC/submission updates |
 | `purple` | AI features |
-| `emerald` | Performance/efficiency |
+| `emerald` | Performance/efficiency, Smart Panel |
+| `green` | Quick wins, minor improvements |
 | `amber` | Forms/applications |
 
 ### Available Icons
@@ -187,7 +188,66 @@ Just add to `releases` array in `app/releases/page.tsx`.
 
 1. Add to `releases` array
 2. Create `app/v{version}/page.tsx`
-3. Add screenshots to `public/Screenshots/` (if needed)
+3. Add screenshots to `public/screenshots/v{version}/` (see folder README)
+4. Add videos to `public/videos/v{version}/` or use a YouTube/Vimeo embed URL
+
+### Video Support (V3.0+)
+
+Each feature in the detail page can have a `VideoPlayer` component. Set one of:
+
+- **Local file:** `videoSrc: "/videos/v3-0/smart-credit-demo.mp4"`
+- **YouTube embed:** `videoEmbedUrl: "https://www.youtube.com/embed/VIDEO_ID"`
+- **Vimeo embed:** `videoEmbedUrl: "https://player.vimeo.com/video/VIDEO_ID"`
+- **Nothing yet:** leave both undefined — a placeholder frame renders automatically
+
+```typescript
+{
+  id: "smart-credit",
+  hasVideo: true,
+  videoSrc: "/videos/v3-0/smart-credit-demo.mp4",   // local MP4
+  // OR
+  videoEmbedUrl: "https://www.youtube.com/embed/abc123", // YouTube/Vimeo
+  videoPoster: "/screenshots/v3-0/smart-credit/overview.png", // optional thumbnail
+  videoTitle: "Smart Credit Demo",
+}
+```
+
+---
+
+## Media Upload Folders (V3.0+)
+
+### Screenshots
+
+Create a subfolder per version, then per feature:
+
+```
+public/
+  screenshots/
+    v3-0/
+      full-1003/      ← screenshots of each 1003 section
+      smart-panel/    ← Smart Panel UI screenshots
+      smart-credit/   ← Smart Credit UI screenshots
+      README.md       ← file name reference (auto-generated)
+```
+
+- **Format:** PNG or JPEG
+- **Ideal size:** 1440×900 or 1280×800
+- **Reference in code:** `/Screenshots/v3-0/<folder>/<file>.png`
+- Pages render placeholder frames for missing images — safe to deploy before screenshots are ready
+
+### Videos
+
+```
+public/
+  videos/
+    v3-0/
+      smart-credit-demo.mp4
+      README.md       ← embed URL instructions (auto-generated)
+```
+
+- **Format:** MP4 (H.264), max ~50 MB
+- **Reference in code:** `videoSrc: "/videos/v3-0/smart-credit-demo.mp4"`
+- Pages render a placeholder play button if no video is present
 
 ---
 

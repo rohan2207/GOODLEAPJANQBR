@@ -26,6 +26,22 @@ type Release = {
 // All release notes - benefit-focused language for loan officers
 const releases: Release[] = [
   {
+    version: "3.0",
+    date: "June 17th, 2026",
+    slug: "v3-0",
+    title: "Full 1003, Smart Panel & Smart Credit",
+    summary: "Complete loan applications end-to-end, a unified Smart Panel, and AI-powered credit analysis — the biggest release yet",
+    status: "released",
+    month: "June",
+    year: "2026",
+    color: "orange",
+    bullets: [
+      { icon: FileText, text: "Full 1003 — Complete all sections without leaving LinkAI" },
+      { icon: Layout, text: "Smart Panel — Everything you need, one place" },
+      { icon: Sparkles, text: "Smart Credit — AI reads your credit report instantly" },
+    ],
+  },
+  {
     version: "2.3.2",
     date: "March 23rd, 2026",
     slug: "v2-3-2",
@@ -146,6 +162,20 @@ const colorMap: { [key: string]: { bg: string; border: string; text: string; bad
     text: "text-blue-600", 
     badge: "bg-blue-500",
     light: "bg-blue-100"
+  },
+  emerald: {
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
+    text: "text-emerald-600",
+    badge: "bg-emerald-500",
+    light: "bg-emerald-100"
+  },
+  green: {
+    bg: "bg-green-50",
+    border: "border-green-200",
+    text: "text-green-600",
+    badge: "bg-green-500",
+    light: "bg-green-100"
   },
 };
 
@@ -415,14 +445,14 @@ export default function ReleasesPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-5 h-5" />
-                  <span className="font-bold">Just Released — V2.3.2</span>
+                  <span className="font-bold">Just Released — V3.0</span>
                 </div>
                 <p className="text-white/90 text-sm">
-                  PACE Lien first on Property Status — plus other status chips when they apply
+                  Full 1003, Smart Panel & Smart Credit — the biggest LinkAI release yet
                 </p>
               </div>
               <Link
-                href="/v2-3-2"
+                href="/v3-0"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 transition-colors"
               >
                 See Details
