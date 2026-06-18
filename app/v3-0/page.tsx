@@ -2379,15 +2379,6 @@ export default function V30ReleasePage() {
                   <p className="text-sm font-bold text-gray-900 mb-1">V3.0 is live now</p>
                   <p className="text-sm text-gray-500">Log into LinkAI and open a loan file to see the Full 1003, Smart Panel, and Smart Credit in action.</p>
                 </div>
-                <a
-                  href="https://linkai.goodleap.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-sm font-semibold transition-colors"
-                >
-                  Open LinkAI
-                  <ChevronRight className="w-4 h-4" />
-                </a>
                 <p className="text-xs text-gray-400">
                   <strong className="text-gray-600">Questions?</strong> Use the Feedback button inside LinkAI or contact your manager.
                 </p>
