@@ -1908,7 +1908,7 @@ function FullFeatureSection({ feature, index }: { feature: Feature; index: numbe
             {feature.steps.map((step, sIdx) => (
               <motion.div
                 key={sIdx}
-                className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start"
+                className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -1946,7 +1946,7 @@ function FullFeatureSection({ feature, index }: { feature: Feature; index: numbe
           </div>
         ) : (
           // Standard 40/60 split: bullets left, snippets right
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12 items-center">
 
             {/* LEFT — feature breakdown + how it helps */}
             <motion.div
