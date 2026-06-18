@@ -826,11 +826,7 @@ function PanelOverviewSnippet() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center py-10 px-4">
-                <p className="text-sm font-medium" style={{ color: "#67677B" }}>
-                  {feature} — coming soon
-                </p>
-              </div>
+              <div className="py-8" />
             )}
           </motion.div>
         )}
