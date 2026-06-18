@@ -1445,6 +1445,8 @@ function SmartCreditSnippet() {
 
 function SectionsNavSnippet() {
   const [activeTab, setActiveTab] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const pauseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const tabs = [
     "Borrower Info",
@@ -1454,6 +1456,22 @@ function SectionsNavSnippet() {
     "REO/VOM",
     "Declarations/HMDA",
   ];
+
+  // Auto-advance through tabs; pause for 6s after manual click
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setActiveTab((t) => (t + 1) % tabs.length);
+    }, 2600);
+    return () => clearInterval(id);
+  }, [paused, tabs.length]);
+
+  const handleTabClick = (i: number) => {
+    setActiveTab(i);
+    setPaused(true);
+    if (pauseTimer.current) clearTimeout(pauseTimer.current);
+    pauseTimer.current = setTimeout(() => setPaused(false), 6000);
+  };
 
   const tabContent = [
     // Borrower Info
@@ -1610,7 +1628,7 @@ function SectionsNavSnippet() {
             key={tab}
             role="tab"
             aria-selected={activeTab === i}
-            onClick={() => setActiveTab(i)}
+            onClick={() => handleTabClick(i)}
             className="px-[4px] py-[12px] text-[13px] font-medium leading-[20px] border-b-2 rounded-t-[8px] whitespace-nowrap flex-shrink-0 transition-colors"
             style={{
               borderBottomColor: activeTab === i ? "#472BA4" : "transparent",
