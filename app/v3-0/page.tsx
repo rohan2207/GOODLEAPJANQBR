@@ -2029,7 +2029,6 @@ function REOLinkSnippet() {
           <div
             className="rounded-[8px] overflow-hidden h-10 flex items-center px-3 text-sm transition-all duration-300"
             style={{
-              ring: "1px",
               border: linked ? "2px solid #4022BA" : "1px solid #e3e0f0",
               backgroundColor: linked ? "#F7F6FF" : "#f9f9fb",
               color: linked ? "#200f51" : "#ada6bf",
