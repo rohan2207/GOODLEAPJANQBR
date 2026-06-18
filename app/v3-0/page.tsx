@@ -361,7 +361,50 @@ function IncomeTypeSnippet() {
 }
 
 function CoBorrowerSnippet() {
-  const [on, setOn] = useState(true);
+  const [on, setOn] = useState(false);
+
+  // Auto-animate: OFF → pause → ON → pause → OFF → repeat
+  useEffect(() => {
+    const cycle = () => {
+      setOn(false);
+      const t1 = setTimeout(() => setOn(true), 1500);
+      const t2 = setTimeout(() => setOn(false), 5000);
+      return [t1, t2];
+    };
+    const timers = cycle();
+    const interval = setInterval(() => { cycle(); }, 6500);
+    return () => { timers.forEach(clearTimeout); clearInterval(interval); };
+  }, []);
+
+  const BorrowerCard = ({ name, label, color, isNew }: { name: string; label: string; color: string; isNew?: boolean }) => (
+    <motion.div
+      className="flex flex-1 flex-col"
+      initial={isNew ? { opacity: 0, x: 30, scale: 0.96 } : false}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="px-3 py-2 rounded-t-[8px]" style={{ backgroundColor: color }}>
+        <span className="text-sm font-semibold text-white">{label}</span>
+      </div>
+      <div className="flex flex-1 flex-col gap-3 px-3 border border-[#E3E0F0] rounded-b-[8px] py-3">
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-medium" style={{ color: "#200f51" }}>First Name</p>
+          <div className="rounded-[8px] overflow-hidden ring-1 ring-[#e3e0f0] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>{name.split(" ")[0]}</div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-medium" style={{ color: "#200f51" }}>Last Name</p>
+          <div className="rounded-[8px] overflow-hidden ring-1 ring-[#e3e0f0] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>Homeowner</div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-medium" style={{ color: "#200f51" }}>Marital Status</p>
+          <div className="rounded-[8px] overflow-hidden ring-1 ring-[#e3e0f0] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>
+            Unmarried
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <motion.div
       className="rounded-xl border border-[#E3E0F0] bg-white shadow-sm overflow-hidden"
@@ -370,83 +413,40 @@ function CoBorrowerSnippet() {
       viewport={{ once: true }}
       transition={{ delay: 0.3 }}
     >
-      {/* Co-Borrower toggle header — exact replica from app HTML */}
-      <div className="flex items-center justify-between px-4 py-[10px] bg-white shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] rounded-lg">
-        <p className="text-h5 leading-6 font-semibold" style={{ color: "#200f51" }}>Co-Borrower</p>
+      {/* Toggle header */}
+      <div className="flex items-center justify-between px-4 py-[10px] bg-white shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)]">
+        <p className="text-sm font-semibold" style={{ color: "#200f51" }}>Co-Borrower</p>
         <button
           type="button"
           role="switch"
           aria-checked={on}
           onClick={() => setOn(!on)}
-          className="relative inline-block rounded-full transition-colors duration-200 focus-visible:outline-none w-[83px] h-7"
+          className="relative inline-block rounded-full transition-colors duration-300 focus-visible:outline-none w-[83px] h-7"
           style={{ backgroundColor: on ? "#472BA4" : "#e3e0f0" }}
         >
           <span
-            className="absolute top-1 h-5 w-12 bg-white rounded-full shadow-[0px_4px_12px_0px_rgba(0,0,0,0.12)] transition-transform duration-200 flex items-center justify-center text-sm font-normal select-none"
-            style={{
-              transform: on ? "translateX(31px)" : "translateX(4px)",
-              color: "#200f51",
-            }}
+            className="absolute top-1 h-5 w-12 bg-white rounded-full shadow-[0px_4px_12px_0px_rgba(0,0,0,0.12)] transition-transform duration-300 flex items-center justify-center text-sm font-normal select-none"
+            style={{ transform: on ? "translateX(31px)" : "translateX(4px)", color: "#200f51" }}
           >
             {on ? "ON" : "OFF"}
           </span>
         </button>
       </div>
 
-      {on && (
-        <div className="flex gap-6 px-1 pt-2 pb-1">
-          {/* Primary Borrower column */}
-          <div className="flex flex-1 flex-col">
-            <div className="px-3 py-2 rounded-t-[8px]" style={{ backgroundColor: "#200F51" }}>
-              <span className="text-sm font-semibold text-white">Primary Borrower</span>
-            </div>
-            <div className="flex flex-1 flex-col gap-3 px-3 border border-[#E3E0F0] rounded-b-[8px] py-3">
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>First Name</p>
-                <div className="rounded-[8px] overflow-hidden ring-2 ring-[#d9923b] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>John</div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>Last Name</p>
-                <div className="rounded-[8px] overflow-hidden ring-2 ring-[#d9923b] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>Homeowner</div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>Marital Status</p>
-                <div className="flex gap-1">
-                  {["Married", "Unmarried", "Separated"].map((s, i) => (
-                    <button key={s} className="flex-1 text-xs font-medium rounded-[8px] border-2 py-2 transition-colors" style={{ backgroundColor: i === 1 ? "#4022BA" : "white", color: i === 1 ? "white" : "#67677b", borderColor: i === 1 ? "#4022BA" : "#e3e3ed" }}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Borrower columns */}
+      <div className="flex gap-3 px-3 pt-3 pb-2">
+        {/* Primary — always visible */}
+        <BorrowerCard name="John Homeowner" label="Primary Borrower" color="#200F51" />
 
-          {/* Co-Borrower column */}
-          <div className="flex flex-1 flex-col">
-            <div className="px-3 py-2 rounded-t-[8px]" style={{ backgroundColor: "#472BA4" }}>
-              <span className="text-sm font-semibold text-white">Co-Borrower</span>
-            </div>
-            <div className="flex flex-1 flex-col gap-3 px-3 border border-[#E3E0F0] rounded-b-[8px] py-3">
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>First Name</p>
-                <div className="rounded-[8px] overflow-hidden ring-2 ring-[#d9923b] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>Mary</div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>Last Name</p>
-                <div className="rounded-[8px] overflow-hidden ring-2 ring-[#d9923b] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A" }}>Homeowner</div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium" style={{ color: "#200f51" }}>Marital Status</p>
-                <div className="rounded-[8px] overflow-hidden ring-1 ring-[#e3e0f0] h-9 flex items-center px-3 bg-white text-sm" style={{ color: "#14141A", boxShadow: "rgba(0,0,0,0.04) 0px 1px 8px" }}>
-                  Unmarried
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      <p className="text-xs px-4 py-2.5 leading-relaxed" style={{ color: "#67677B" }}>
+        {/* Co-Borrower — slides in when ON */}
+        <AnimatePresence>
+          {on && (
+            <BorrowerCard key="co" name="Mary Homeowner" label="Co-Borrower" color="#472BA4" isNew />
+          )}
+        </AnimatePresence>
+      </div>
+
+      <p className="text-xs px-4 py-2 border-t border-[#E3E0F0] leading-relaxed" style={{ color: "#67677B" }}>
         Toggle on to work both borrowers side-by-side — combined income always visible below.
       </p>
     </motion.div>
