@@ -553,8 +553,44 @@ function LiabilitiesRowSnippet() {
 
 function PanelOverviewSnippet() {
   const [collapsed, setCollapsed] = useState(false);
-  const [feature, setFeature] = useState("Charts");
+  const [featureIdx, setFeatureIdx] = useState(2); // start on Charts
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hovered, setHovered] = useState<number | null>(null);
   const [chartTab, setChartTab] = useState(0);
+
+  const featureOptions = ["Application Tracker", "Order Services", "Charts"];
+  const feature = featureOptions[featureIdx];
+
+  // Auto-cycle: open → hover next option → select → close → pause → repeat
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let currentIdx = 2;
+
+    const runCycle = (startDelay: number) => {
+      const nextIdx = (currentIdx + 1) % featureOptions.length;
+
+      timers.push(setTimeout(() => setDropdownOpen(true), startDelay));
+      timers.push(setTimeout(() => setHovered(nextIdx), startDelay + 600));
+      timers.push(setTimeout(() => {
+        setFeatureIdx(nextIdx);
+        setDropdownOpen(false);
+        setHovered(null);
+        currentIdx = nextIdx;
+      }, startDelay + 1300));
+    };
+
+    runCycle(1800);
+    runCycle(1800 + 4000);
+    runCycle(1800 + 8000);
+
+    const interval = setInterval(() => {
+      runCycle(1800);
+      runCycle(1800 + 4000);
+      runCycle(1800 + 8000);
+    }, 1800 + 12000);
+
+    return () => { timers.forEach(clearTimeout); clearInterval(interval); };
+  }, []);
 
   const chartTabs = ["Debt Consolidation", "Payment Savings", "Cash Back", "Accelerated Payoff"];
 
@@ -620,19 +656,52 @@ function PanelOverviewSnippet() {
             </svg>
             AI Assistant
           </button>
-          {/* Feature dropdown */}
+          {/* Feature dropdown — custom animated */}
           <div className="relative flex flex-1 min-w-0 items-center justify-center rounded-full bg-white border border-[#E3E0F0] shadow-[0_2px_4px_rgba(0,0,0,0.08)]">
-            <select
-              value={feature}
-              onChange={(e) => setFeature(e.target.value)}
-              className="appearance-none bg-transparent w-full min-w-0 px-7 py-[5px] text-center font-bold text-[13px] leading-[20px] cursor-pointer outline-none truncate"
+            <button
+              type="button"
+              onClick={() => setDropdownOpen((o) => !o)}
+              className="flex w-full items-center justify-center gap-1 px-3 py-[5px] text-[13px] font-bold leading-[20px] truncate rounded-full"
               style={{ color: "#472BA4" }}
             >
-              <option value="ApplicationTracker">Application Tracker</option>
-              <option value="OrderServices">Order Services</option>
-              <option value="Charts">Charts</option>
-            </select>
-            <ChevronRight className="pointer-events-none absolute right-2 w-4 h-4 rotate-90" style={{ color: "#472BA4" }} />
+              <span className="truncate">{feature}</span>
+              <ChevronRight
+                className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                style={{ color: "#472BA4", transform: dropdownOpen ? "rotate(-90deg)" : "rotate(90deg)" }}
+              />
+            </button>
+
+            {/* Dropdown options list */}
+            <AnimatePresence>
+              {dropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full mt-1 left-0 right-0 z-20 rounded-xl border border-[#E3E0F0] bg-white shadow-lg overflow-hidden"
+                >
+                  {featureOptions.map((opt, i) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => { setFeatureIdx(i); setDropdownOpen(false); setHovered(null); }}
+                      className="w-full flex items-center justify-between px-3 py-2 text-[13px] transition-colors"
+                      style={{
+                        backgroundColor: hovered === i ? "#F0EDFF" : featureIdx === i ? "#F7F6FF" : "white",
+                        color: featureIdx === i ? "#472BA4" : "#14141A",
+                        fontWeight: featureIdx === i ? 700 : 400,
+                      }}
+                    >
+                      {opt}
+                      {featureIdx === i && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#472BA4" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
         {/* Collapse button */}
@@ -669,7 +738,7 @@ function PanelOverviewSnippet() {
             transition={{ duration: 0.22 }}
             style={{ overflow: "hidden" }}
           >
-            {feature === "Charts" ? (
+            {featureIdx === 2 ? (
               <div className="flex flex-col p-4 gap-4">
                 {/* Chart tabs */}
                 <div role="tablist" className="flex gap-4 border-b border-[#E3E0F0] overflow-x-auto">
@@ -759,7 +828,7 @@ function PanelOverviewSnippet() {
             ) : (
               <div className="flex items-center justify-center py-10 px-4">
                 <p className="text-sm font-medium" style={{ color: "#67677B" }}>
-                  {feature === "ApplicationTracker" ? "Application Tracker" : "Order Services"} — coming soon
+                  {feature} — coming soon
                 </p>
               </div>
             )}
