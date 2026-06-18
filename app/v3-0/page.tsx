@@ -1105,11 +1105,31 @@ function OrderCreditSnippet() {
 }
 
 function SelectBorrowersSnippet() {
-  const [borrowers, setBorrowers] = useState({ primary: true, co: true });
-  const [consents, setConsents] = useState({ primary: true, co: true });
+  const [borrowers, setBorrowers] = useState({ primary: false, co: false });
+  const [consents, setConsents] = useState({ primary: false, co: false });
   const [ordered, setOrdered] = useState(false);
 
   const canOrder = borrowers.primary && consents.primary && (!borrowers.co || consents.co);
+
+  // Auto-animate: check borrowers then consents one by one, then order, then reset
+  useEffect(() => {
+    const run = (offset: number) => [
+      setTimeout(() => setBorrowers({ primary: true, co: false }), offset + 600),
+      setTimeout(() => setBorrowers({ primary: true, co: true }), offset + 1200),
+      setTimeout(() => setConsents({ primary: true, co: false }), offset + 2000),
+      setTimeout(() => setConsents({ primary: true, co: true }), offset + 2700),
+      setTimeout(() => setOrdered(true), offset + 3600),
+      setTimeout(() => {
+        setOrdered(false);
+        setBorrowers({ primary: false, co: false });
+        setConsents({ primary: false, co: false });
+      }, offset + 5000),
+    ];
+
+    const t1 = run(0);
+    const interval = setInterval(() => run(0), 6200);
+    return () => { t1.forEach(clearTimeout); clearInterval(interval); };
+  }, []);
 
   const CheckBox = ({ checked }: { checked: boolean }) => (
     <div
