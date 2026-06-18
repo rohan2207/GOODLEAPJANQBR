@@ -1934,8 +1934,10 @@ function FullFeatureSection({ feature, index }: { feature: Feature; index: numbe
                 <div className="lg:col-span-3">
                   {featureSnippets[sIdx] && (
                     <div>
-                      <p className={`text-xs font-bold uppercase tracking-wider mb-3 ${colors.text}`}>Live Preview</p>
-                      {featureSnippets[sIdx]}
+                      <p className={`text-xs font-bold uppercase tracking-wider mb-3 ${colors.text} text-center`}>Live Preview</p>
+                      <div style={{ zoom: 0.62, transformOrigin: "top center" }}>
+                        {featureSnippets[sIdx]}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -2000,7 +2002,7 @@ function FullFeatureSection({ feature, index }: { feature: Feature; index: numbe
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: 0.15 }}
               >
-                <p className={`text-xs font-bold uppercase tracking-wider ${colors.text}`}>Live Preview</p>
+                <p className={`text-xs font-bold uppercase tracking-wider text-center ${colors.text}`}>Live Preview</p>
                 {featureSnippets.map((snippet, i) => (
                   <div key={i}>{snippet}</div>
                 ))}
