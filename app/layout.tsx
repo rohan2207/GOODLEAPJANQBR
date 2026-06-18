@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import SmoothScroll from '@/components/SmoothScroll'
+import { Analytics } from '@vercel/analytics/next'
 
 // Inter - the brand font for both display and body
 const inter = Inter({ 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Cinematic overlays */}
         <div className="vignette-overlay" aria-hidden="true" />
         <div className="grain-overlay" aria-hidden="true" />
+        <Analytics />
       </body>
     </html>
   )
