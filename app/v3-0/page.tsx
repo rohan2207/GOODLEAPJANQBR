@@ -1281,6 +1281,17 @@ function ViewCreditSnippet() {
     setTimeout(() => setImported(null), 1600);
   };
 
+  // Auto-animate: import ACME → pause → import NORTHSTAR → pause → repeat
+  useEffect(() => {
+    const run = (offset: number) => [
+      setTimeout(() => handleImport("acme"), offset),
+      setTimeout(() => handleImport("northstar"), offset + 2400),
+    ];
+    const t1 = run(1800);
+    const interval = setInterval(() => run(1800), 6000);
+    return () => { t1.forEach(clearTimeout); clearInterval(interval); };
+  }, []);
+
   const StatRow = ({ label, value }: { label: string; value: string }) => (
     <div className="flex items-center justify-between py-[8px] border-b border-[#E3E0F0] last:border-b-0">
       <span className="text-[12px] font-medium leading-[20px]" style={{ color: "#200F51" }}>{label}</span>
