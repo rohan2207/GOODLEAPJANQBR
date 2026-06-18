@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ---------------------------------------------------------------------------
@@ -1688,44 +1688,36 @@ const features: Feature[] = [
     tagline: "A fully digital URLA — purpose-built for GoodLeap LOs, inside LinkAI",
     description:
       "The 1003 now lives entirely inside LinkAI. It follows the URLA standard you already know — no new login, no switching systems, no re-entry. Fields prepopulate from Salesforce and Encompass so you start with what you already have. Everything is on one page, and every section saves automatically as you go.",
-    sections: [
+    steps: [
       {
-        title: "The Loan Bar — Always Know Where You Stand",
-        bullets: [
-          "Customer name, loan amount, and subject property city/state always visible at the top",
-          "DTI and LTV remain present as you scroll through every section — no guessing mid-conversation",
-        ],
+        title: "The Loan Bar — always know where you stand",
+        description:
+          "Customer name, loan amount, and subject property are pinned at the top. DTI and LTV stay visible as you scroll every section — no mental math mid-conversation with a borrower.",
       },
       {
-        title: "URLA Sections That Work With You",
-        bullets: [
-          "Fields prepopulated from Salesforce and Encompass — start with data you already have",
-          "Current Address auto-syncs from Subject Property; Mailing Address syncs from Current — one entry, not three",
-          "Employment fields are conditional on income type — only shows what's relevant (Employed, Self-Employed, Retired)",
-          "Income summary calculates in real time — total qualifying income always visible as you go",
-          "Liabilities mirrors the credit report — ECOA, balance, utilization, payment, and rate all in one place",
-          "Flag liabilities for payoff or DTI exclusion; edit account types inline without leaving the section",
-          "Declarations keep unanswered questions front and center — answered ones sort to the bottom automatically",
-          "HMDA script is built in and prominent to keep every file compliant",
-        ],
+        title: "Navigate sections independently or scroll",
+        description:
+          "Jump directly to any URLA section from the tab bar — Employment, Income, Assets, Liabilities, and more — or scroll straight through. Fields prepopulate from Salesforce and Encompass so you start with data you already have.",
       },
       {
-        title: "REO/VOM — Quick Credit Linking",
-        bullets: [
-          "LinkAI scans the credit report and surfaces mortgage liabilities directly in the REO section",
-          "Click any mortgage to link it to the property — monthly payment autofills from the credit data instantly",
-          "Linked liabilities highlight in blue across the 1003 so you always know what's been reconciled",
-          "No mortgage on the report? Add it manually with one tap",
-        ],
+        title: "Smart employment & income fields",
+        description:
+          "Employment fields adapt to the borrower's income type — Employed, Self-Employed, or Retired. Only what's relevant is shown. Income summary calculates in real time so total qualifying income is always visible.",
       },
       {
-        title: "Co-Borrower Split Screen",
-        bullets: [
-          "Toggle co-borrower on and the screen splits — borrower on the left, co-borrower on the right",
-          "Employment, income history, declarations, and demographics all side by side",
-          "\"Same as Borrower\" on the address section — no re-entering the same data twice",
-          "Combined income summary always visible at the bottom — one number, both borrowers",
-        ],
+        title: "Liabilities from your credit report",
+        description:
+          "Liabilities mirrors the credit report with ECOA, balance, utilization, payment, and rate in one row. Flag any account for payoff or DTI exclusion, and edit account types inline — without leaving the section.",
+      },
+      {
+        title: "REO/VOM — link mortgages in one click",
+        description:
+          "LinkAI surfaces mortgage liabilities from the credit report directly in the REO section. Click any mortgage to link it to the property — the monthly payment autofills instantly and the liability row highlights blue across the 1003.",
+      },
+      {
+        title: "Co-Borrower split screen",
+        description:
+          "Toggle co-borrower on and the screen splits — primary borrower on the left, co-borrower on the right. Employment, income history, declarations, and demographics are all side by side. Combined income always visible at the bottom.",
       },
     ],
     howItHelps:
@@ -1835,6 +1827,19 @@ const colorMap = {
 
 function REOLinkSnippet() {
   const [linked, setLinked] = useState(false);
+
+  // Auto-animate: unlinked → linked → pause → reset → repeat
+  useEffect(() => {
+    const cycle = () => {
+      setLinked(false);
+      const t1 = setTimeout(() => setLinked(true), 1200);
+      const t2 = setTimeout(() => setLinked(false), 3800);
+      return [t1, t2];
+    };
+    const timers = cycle();
+    const interval = setInterval(() => { cycle(); }, 5000);
+    return () => { timers.forEach(clearTimeout); clearInterval(interval); };
+  }, []);
 
   return (
     <motion.div
